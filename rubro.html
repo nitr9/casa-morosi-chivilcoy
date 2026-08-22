@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rubro · Casa Morosi Chivilcoy</title>
+<meta name="description" content="Catálogo por rubro de Casa Morosi, sucursal Chivilcoy. Av. Mitre 220.">
+<meta name="theme-color" content="#253961">
+
+<link rel="icon" href="img/icono.png">
+<link rel="apple-touch-icon" href="img/icono.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<a class="saltar" href="#contenido">Ir al contenido</a>
+
+<header class="barra barra--fija barra--interior" id="barra">
+  <div class="barra__interior">
+    <a class="barra__marca" href="index.html" aria-label="Casa Morosi, sucursal Chivilcoy, inicio">
+      <span class="barra__logo">
+        <img class="barra__logo-claro" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="200px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
+        <img class="barra__logo-oscuro" src="img/logo.png" srcset="img/logo.png 420w, img/logo@2x.png 840w" sizes="200px" width="420" height="71" alt="" aria-hidden="true">
+      </span>
+      <span class="barra__sucursal">Sucursal<br>Chivilcoy</span>
+    </a>
+
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="index.html#rubros">Rubros</a>
+      <a href="index.html#productos">Ofertas</a>
+      <a href="index.html#local">Nosotros</a>
+      <a href="index.html#contacto">Contacto</a>
+    </nav>
+
+    <div class="barra__acciones">
+      <a class="boton boton--rojo boton--chico" href="https://wa.me/5492345510888" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+
+    <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu-movil">
+      <span class="hamburguesa__lineas" aria-hidden="true"></span>
+      <span class="hamburguesa__texto">Menú</span>
+    </button>
+  </div>
+
+  <nav class="menu-movil" id="menu-movil" aria-label="Secciones" hidden>
+    <a href="index.html#rubros">Rubros</a>
+    <a href="index.html#productos">Ofertas</a>
+    <a href="index.html#local">Nosotros</a>
+    <a href="index.html#contacto">Contacto y cómo llegar</a>
+  </nav>
+</header>
+
+<main id="contenido" class="interior">
+  <section class="seccion">
+    <div class="contenedor">
+      <nav class="miga" aria-label="Dónde estás">
+        <a href="index.html">Inicio</a>
+        <span aria-hidden="true">›</span>
+        <a href="index.html#rubros">Rubros</a>
+        <span aria-hidden="true">›</span>
+        <span data-miga>…</span>
+      </nav>
+
+      <header class="encabezado">
+        <p class="rotulo"><span class="marca-barras" aria-hidden="true"></span><span data-cuenta>Catálogo</span></p>
+        <h1 class="titulo" data-titulo>Cargando…</h1>
+        <p class="entrada">
+          Los precios son de mostrador y pueden cambiar. Consultanos stock por WhatsApp
+          antes de venir: si es algo puntual, te lo separamos.
+        </p>
+      </header>
+
+      <div class="filtros" data-marcas hidden role="group" aria-label="Filtrar por marca"></div>
+
+      <div class="grilla-productos" data-lista aria-live="polite" aria-busy="true">
+        <p class="cargando">Cargando productos…</p>
+      </div>
+
+      <nav class="otros-rubros" data-otros hidden aria-label="Otros rubros">
+        <h2 class="subtitulo">Otros rubros</h2>
+        <ul class="otros-rubros__lista"></ul>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__interior">
+    <div class="pie__marca">
+      <img class="pie__logo" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="220px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
+      <p class="pie__sucursal">Sucursal Chivilcoy</p>
+    </div>
+    <div class="pie__datos">
+      <p>Av. Mitre 220, Chivilcoy (B6620), Buenos Aires</p>
+      <p><a href="tel:+5492345510888">2345 510888</a> · <a href="https://wa.me/5492345510888" target="_blank" rel="noopener">WhatsApp</a></p>
+      <p>Lunes a viernes de 7 a 12:30 y de 15 a 20:30 · Sábados de 7 a 12</p>
+    </div>
+  </div>
+</footer>
+
+<a class="flotante" href="https://wa.me/5492345510888" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
+  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="currentColor">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23a8.23 8.23 0 0 1 0 16.47Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.78.97-.15.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/>
+  </svg>
+</a>
+
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/rubro.js"></script>
+</body>
+</html>

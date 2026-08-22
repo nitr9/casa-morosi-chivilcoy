@@ -1,0 +1,10 @@
+# Basura que dejan Windows y los editores
+Thumbs.db
+desktop.ini
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Por si algún día se instalan dependencias acá
+node_modules/

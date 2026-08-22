@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Morosi · Sucursal Chivilcoy · Ferretería industrial · Av. Mitre 220</title>
+<meta name="description" content="Sucursal Chivilcoy de Casa Morosi, ferretería industrial con más de 100 años. Herramientas eléctricas y manuales, compresores, motosierras, riego y tractores. Av. Mitre 220. Abierto de lunes a sábado.">
+<meta name="theme-color" content="#253961">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Casa Morosi · Sucursal Chivilcoy">
+<meta property="og:description" content="Más de 100 años de experiencia y responsabilidad nos avalan. Av. Mitre 220, Chivilcoy.">
+<meta property="og:image" content="img/hero-fachada-1200.webp">
+<meta property="og:locale" content="es_AR">
+
+<link rel="icon" href="img/icono.png">
+<link rel="apple-touch-icon" href="img/icono.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/hero-fachada-1200.webp" imagesrcset="img/hero-fachada-800.webp 800w, img/hero-fachada-1200.webp 1200w, img/hero-fachada-1449.webp 1449w" imagesizes="100vw" media="(min-width: 700px)">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<a class="saltar" href="#contenido">Ir al contenido</a>
+
+<header class="barra" id="barra">
+  <div class="barra__interior">
+    <a class="barra__marca" href="#inicio" aria-label="Casa Morosi, sucursal Chivilcoy, inicio">
+      <span class="barra__logo">
+        <img class="barra__logo-claro" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="200px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
+        <img class="barra__logo-oscuro" src="img/logo.png" srcset="img/logo.png 420w, img/logo@2x.png 840w" sizes="200px" width="420" height="71" alt="" aria-hidden="true">
+      </span>
+      <span class="barra__sucursal">Sucursal<br>Chivilcoy</span>
+    </a>
+
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="#rubros">Rubros</a>
+      <a href="#productos">Ofertas</a>
+      <a href="#local">Nosotros</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="barra__acciones">
+      <a class="boton boton--rojo boton--chico" href="https://wa.me/5492345510888" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+
+    <button class="hamburguesa" type="button" aria-expanded="false" aria-controls="menu-movil">
+      <span class="hamburguesa__lineas" aria-hidden="true"></span>
+      <span class="hamburguesa__texto">Menú</span>
+    </button>
+  </div>
+
+  <nav class="menu-movil" id="menu-movil" aria-label="Secciones" hidden>
+    <a href="#rubros">Rubros</a>
+    <a href="#productos">Ofertas</a>
+    <a href="#local">Nosotros</a>
+    <a href="#contacto">Contacto y cómo llegar</a>
+  </nav>
+</header>
+
+<main id="contenido">
+
+  <!-- 1 · HERO ................................................. -->
+  <section class="hero" id="inicio">
+    <picture>
+      <source media="(max-width: 699px)" srcset="img/hero-fachada-movil.webp" width="720" height="900">
+      <img class="hero__foto" src="img/hero-fachada-1200.webp"
+           srcset="img/hero-fachada-800.webp 800w, img/hero-fachada-1200.webp 1200w, img/hero-fachada-1449.webp 1449w"
+           sizes="100vw" width="1449" height="815" fetchpriority="high"
+           alt="Frente de Casa Morosi en Chivilcoy: fachada azul con rejas, tractores, carretillas y hormigoneras alineadas en la vereda.">
+    </picture>
+
+    <!-- El video del frente con viento en las hojas. Va sin src a propósito:
+         se lo pone main.js sólo en pantalla ancha y si el visitante no pidió
+         reducir movimiento, así el que entra desde el celular no se baja un
+         megabyte de gusto. Sin JS no pasa nada y queda la foto de atrás.
+         Recortado al 92,5%, por arriba, para sacarle la marca de agua del
+         generador; la foto de acá arriba tiene el mismo recorte. Y la parte
+         quieta del video es esa misma foto: sólo se anima el árbol de la
+         derecha, así que al aparecer no se mueve nada más que las hojas. -->
+    <video class="hero__video" autoplay muted loop playsinline preload="none"
+           width="1184" height="666" aria-hidden="true" tabindex="-1"></video>
+
+    <div class="hero__velo" aria-hidden="true"></div>
+
+    <div class="hero__contenido">
+      <p class="rotulo rotulo--claro">
+        <span class="marca-barras" aria-hidden="true"></span>
+        <span class="rotulo__texto">Sucursal Chivilcoy · Ferretería industrial</span>
+      </p>
+
+      <h1 class="hero__titulo">Más de 100 años</h1>
+      <!-- Junto con el titular arma la frase pintada en el frente del local:
+           "Más de 100 años de experiencia y responsabilidad nos avalan". Son
+           una sola oración, así que no se les mete nada en el medio. -->
+      <p class="hero__cartel">de experiencia y responsabilidad nos avalan</p>
+
+      <p class="hero__bajada">
+        Potenciando tu trabajo con las mejores herramientas: eléctricas y manuales,
+        maquinaria y equipamiento para la industria, la construcción, el campo y la
+        casa. Atendemos en Av. Mitre 220.
+      </p>
+
+      <div class="hero__botones">
+        <a class="boton boton--rojo" href="#rubros">Ver el catálogo</a>
+        <a class="boton boton--contorno" href="https://wa.me/5492345510888" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="hero__pie">
+      <p class="estado estado--hero" data-estado hidden>
+        <span class="estado__punto" aria-hidden="true"></span>
+        <span class="estado__texto"></span>
+      </p>
+      <p class="hero__direccion">Av. Mitre 220 · Chivilcoy</p>
+    </div>
+  </section>
+
+  <!-- 2 · RUBROS .............................................. -->
+  <!-- La banda ocupa el ancho entero y la tira arranca abajo, sin columna de
+       texto al lado: cada píxel de ancho es un rubro más a la vista. La tira
+       sigue yéndose por el borde derecho a propósito, para que se vea que
+       continúa y se puede arrastrar. -->
+  <section class="buscador" id="rubros">
+    <div class="banda">
+      <img class="banda__foto"
+           src="img/banda-rubros-1200.webp"
+           srcset="img/banda-rubros-800.webp 800w, img/banda-rubros-1200.webp 1200w"
+           sizes="100vw" width="1200" height="274" loading="lazy" alt="" aria-hidden="true">
+      <div class="banda__velo" aria-hidden="true"></div>
+      <div class="contenedor banda__contenido">
+        <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>Rubros</p>
+        <h2 class="titulo">¿Qué estás buscando?</h2>
+        <a class="boton boton--contorno" href="#productos">Ver las ofertas</a>
+      </div>
+    </div>
+
+    <div class="riel" data-riel data-paso="pagina">
+      <div class="riel__pista" data-pista>
+        <ul class="riel__lista" data-rubros>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=herramientas-inalambricas" data-rubro="Herramientas inalámbricas">
+              <img src="img/rubros/inalambricas.webp" width="900" height="1100" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Herramientas inalámbricas</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=amoladoras" data-rubro="Amoladoras">
+              <img src="img/rubros/amoladoras.webp" width="900" height="700" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Amoladoras</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=motosierras" data-rubro="Motosierras">
+              <img src="img/rubros/motosierras.webp" width="900" height="700" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Motosierras</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=compresores-de-aire" data-rubro="Compresores de aire">
+              <img src="img/rubros/compresores.webp" width="900" height="1100" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Compresores de aire</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=hidrolavadoras" data-rubro="Hidrolavadoras">
+              <img src="img/rubros/hidrolavadoras.webp" width="900" height="1100" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Hidrolavadoras</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=llaves-y-bocallaves" data-rubro="Llaves y bocallaves">
+              <img src="img/rubros/llaves.webp" width="900" height="700" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Llaves y bocallaves</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=herramientas-de-mano" data-rubro="Herramientas de mano">
+              <img src="img/rubros/mano.webp" width="900" height="700" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Herramientas de mano</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=soldadura" data-rubro="Soldadura">
+              <img src="img/rubros/soldadura.webp" width="900" height="1100" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Soldadura</span>
+            </a>
+          </li>
+          <li>
+            <a class="ficha-rubro" href="rubro.html?r=jardin-y-riego" data-rubro="Jardín y riego">
+              <img src="img/rubros/jardin.webp" width="900" height="700" loading="lazy" alt="">
+              <span class="ficha-rubro__nombre">Jardín y riego</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="riel__flechas" data-flechas></div>
+    </div>
+  </section>
+
+  <!-- 3 · PRODUCTOS Y OFERTAS ................................. -->
+  <section class="seccion seccion--tablero" id="productos">
+
+    <!-- La luz de la sección. Son dos cajas vacías y decoración pura, por eso
+         el aria-hidden: la campana es el perfil de chapa con el tubo adentro y
+         .luz es el charco que cae sobre el tablero. Van antes del contenido
+         para quedar debajo; el contenedor se sube con z-index. Sin JS quedan
+         las dos prendidas y quietas, que es como está escrito el CSS. -->
+    <div class="luz" aria-hidden="true"></div>
+    <div class="campana" aria-hidden="true"><span class="campana__tubo"></span></div>
+
+    <div class="contenedor">
+      <header class="encabezado encabezado--claro">
+        <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>Ofertas</p>
+        <h2 class="titulo">Lo que está en oferta esta semana</h2>
+        <p class="entrada">
+          Precios actualizados por nosotros desde el local. Consultá stock por WhatsApp antes de venir:
+          si es algo puntual, te lo separamos. El catálogo completo está en
+          <a class="enlace enlace--linea" href="#rubros">los rubros</a>.
+        </p>
+      </header>
+
+      <div class="grilla-productos" data-ofertas aria-live="polite" aria-busy="true">
+        <p class="cargando">Cargando ofertas…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · EL LOCAL Y LAS MARCAS ............................... -->
+  <section class="seccion seccion--navy" id="local">
+    <div class="contenedor">
+      <div class="intro-local">
+        <header class="encabezado encabezado--claro">
+          <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>Nosotros</p>
+          <h2 class="titulo">Cien años atendiendo del otro lado del mostrador</h2>
+          <p class="entrada">
+            Somos una ferretería industrial de Chivilcoy con depósito propio y mostrador atendido por
+            gente que conoce la herramienta. Entrás, preguntás y te asesoramos para que encuentres
+            lo que estás buscando.
+          </p>
+          <p class="entrada">
+            Vendemos a la industria, a la construcción, al campo y al que está arreglando algo en su casa.
+            La misma atención para los cuatro.
+          </p>
+        </header>
+
+        <!-- OJO: foto provisoria. Está apuntando al respaldo del hero hasta que
+             entre la toma del frente que eligió Nico —la vereda entera con los
+             tractores y el cartel completo—. Cuando esté, se cambia el src y el
+             srcset y nada más. -->
+        <figure class="intro-local__foto">
+          <img src="img/_respaldo-hero/hero-fachada-1600.webp"
+               srcset="img/_respaldo-hero/hero-fachada-800.webp 800w,
+                       img/_respaldo-hero/hero-fachada-1200.webp 1200w,
+                       img/_respaldo-hero/hero-fachada-1600.webp 1600w"
+               sizes="(min-width: 900px) 46vw, calc(100vw - 2.5rem)"
+               width="1600" height="900" loading="lazy"
+               alt="El frente de Casa Morosi sobre Av. Mitre, con las máquinas y las hormigoneras en la vereda.">
+        </figure>
+      </div>
+
+      <figure class="album" data-album>
+          <div class="album__pila">
+            <div class="album__hoja izq hoja-2">
+              <img src="img/local/deposito.webp" width="1400" height="900" loading="lazy" alt="Depósito con mercadería en estanterías.">
+            </div>
+            <div class="album__hoja der hoja-2">
+              <img src="img/local/bremen.webp" width="900" height="1200" loading="lazy" alt="Estantería con herramientas Bremen.">
+            </div>
+            <div class="album__hoja izq hoja-1">
+              <img src="img/local/pasillo.webp" width="900" height="1200" loading="lazy" alt="Pasillo del salón de ventas.">
+            </div>
+            <div class="album__hoja der hoja-1">
+              <img src="img/local/mostrador.webp" width="1200" height="800" loading="lazy" alt="Mostrador de atención.">
+            </div>
+
+            <div class="album__tapa">
+              <img src="img/local/cartel-100.webp" width="900" height="1600" loading="lazy"
+                   alt="Cartel del frente: Casa Morosi, ferretería industrial. Más de 100 años de experiencia y responsabilidad nos avalan.">
+            </div>
+          </div>
+        <figcaption class="album__pie">El local por dentro</figcaption>
+      </figure>
+    </div>
+
+    <div class="tira" data-tira>
+      <div class="tira__pista" data-pista>
+        <ul class="tira__lista">
+          <li><img src="img/local/milwaukee.webp" width="1200" height="800" loading="lazy" alt="Pared de herramientas Milwaukee."></li>
+          <li><img src="img/local/lusqtoff.webp" width="900" height="1200" loading="lazy" alt="Exhibidor de productos Lusqtoff."></li>
+          <li><img src="img/local/despliegue.webp" width="1200" height="800" loading="lazy" alt="Máquinas desplegadas en el salón."></li>
+          <li><img src="img/local/tractor.webp" width="1200" height="800" loading="lazy" alt="Tractor de corte exhibido en el local."></li>
+          <li><img src="img/local/motosierras.webp" width="1200" height="675" loading="lazy" alt="Pared con motosierras Husqvarna, Niwa y Echo colgadas."></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="contenedor">
+      <h3 class="subtitulo">Las marcas que trabajamos</h3>
+    </div>
+
+    <div class="gondola" data-gondola>
+      <ul class="gondola__fila" data-fila>
+        <li class="chapa"><img src="img/marcas/husqvarna.webp" srcset="img/marcas/husqvarna.webp 260w, img/marcas/husqvarna@2x.webp 520w" sizes="220px" width="260" height="49" loading="lazy" alt="Husqvarna"></li>
+        <li class="chapa"><img src="img/marcas/milwaukee.webp" srcset="img/marcas/milwaukee.webp 213w, img/marcas/milwaukee@2x.webp 426w" sizes="200px" width="213" height="96" loading="lazy" alt="Milwaukee"></li>
+        <li class="chapa"><img src="img/marcas/dewalt.webp" srcset="img/marcas/dewalt.webp 260w, img/marcas/dewalt@2x.webp 520w" sizes="220px" width="260" height="78" loading="lazy" alt="DeWalt"></li>
+        <li class="chapa"><img src="img/marcas/black-decker.webp" srcset="img/marcas/black-decker.webp 260w, img/marcas/black-decker@2x.webp 520w" sizes="220px" width="260" height="45" loading="lazy" alt="Black &amp; Decker"></li>
+        <li class="chapa"><img src="img/marcas/echo.webp" srcset="img/marcas/echo.webp 260w, img/marcas/echo@2x.webp 520w" sizes="220px" width="260" height="54" loading="lazy" alt="Echo"></li>
+        <li class="chapa"><img src="img/marcas/honda.webp" srcset="img/marcas/honda.webp 120w, img/marcas/honda@2x.webp 240w" sizes="85px" width="120" height="96" loading="lazy" alt="Honda"></li>
+        <li class="chapa"><img src="img/marcas/lusqtoff.webp" srcset="img/marcas/lusqtoff.webp 260w, img/marcas/lusqtoff@2x.webp 520w" sizes="220px" width="260" height="44" loading="lazy" alt="Lusqtoff"></li>
+        <li class="chapa"><img src="img/marcas/truper.webp" srcset="img/marcas/truper.webp 260w, img/marcas/truper@2x.webp 520w" sizes="220px" width="260" height="31" loading="lazy" alt="Truper"></li>
+        <li class="chapa"><img src="img/marcas/niwa.webp" srcset="img/marcas/niwa.webp 260w, img/marcas/niwa@2x.webp 520w" sizes="220px" width="260" height="78" loading="lazy" alt="Niwa"></li>
+        <li class="chapa"><img src="img/marcas/bta-tools.webp" srcset="img/marcas/bta-tools.webp 203w, img/marcas/bta-tools@2x.webp 406w" sizes="140px" width="203" height="96" loading="lazy" alt="BTA Tools"></li>
+      </ul>
+    </div>
+
+    <div class="contenedor">
+      <p class="marcas-mas">
+        Y también Bosch, Makita, Bahco, Stanley, Kärcher, Gardena, Einhell, Total,
+        Bremen y Gherardi. Si buscás una marca que no ves acá, preguntanos igual.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5 · CONTACTO ............................................ -->
+  <section class="seccion seccion--cemento" id="contacto">
+
+    <!-- El camino del tesoro. Es decoración de fondo y se dibuja en bucle: va
+         antes del contenedor para quedar debajo, y el contenedor se sube con
+         z-index. Todo el bloque es aria-hidden: no dice nada que no esté ya
+         escrito al lado.
+
+         Hay DOS trazados y no uno porque la sección cambia de forma entera
+         según el ancho: es apaisada en escritorio (2,15:1 en 1920) y un
+         rectángulo parado en celular (0,33:1 en 390). El mismo dibujo estirado
+         a las dos no sirve. Cambian en 700 px, que es donde la grilla de
+         contacto pasa de una columna a dos.
+
+         Los dos esquivan el mapa de Google: es un iframe con fondo blanco
+         opaco, así que cualquier línea que pase por detrás desaparece ahí.
+         En escritorio el mapa arranca en el 52 % del ancho y baja hasta el
+         pie, así que a la derecha el camino sólo puede andar por arriba; en
+         celular el mapa se lleva el tercio de abajo.
+
+         El punto de salida y la cruz NO van adentro del SVG: los dos SVG se
+         estiran con preserveAspectRatio="none" y ahí un círculo saldría ovalado
+         y la cruz torcida. Van aparte, puestos en porcentaje sobre las mismas
+         coordenadas donde empieza y termina el trazado. -->
+    <div class="ruta" data-ruta aria-hidden="true">
+      <svg class="ruta__mapa ruta__mapa--ancha" viewBox="0 0 1400 900" preserveAspectRatio="none">
+        <mask id="ruta-ancha" maskUnits="userSpaceOnUse" x="0" y="0" width="1400" height="900">
+          <path class="ruta__revelado" pathLength="1"
+                d="M 600 866 C 624 792 584 720 516 698 C 452 678 402 690 452 632 C 524 570 478 480 396 466 C 318 452 286 366 352 316 C 420 264 526 300 560 366 C 592 428 660 420 686 356 C 700 292 660 232 596 214 C 540 198 500 160 528 118 C 560 66 664 58 744 72 C 848 90 962 84 1060 68 C 1132 56 1188 54 1234 54"/>
+        </mask>
+        <path class="ruta__linea" mask="url(#ruta-ancha)"
+              d="M 600 866 C 624 792 584 720 516 698 C 452 678 402 690 452 632 C 524 570 478 480 396 466 C 318 452 286 366 352 316 C 420 264 526 300 560 366 C 592 428 660 420 686 356 C 700 292 660 232 596 214 C 540 198 500 160 528 118 C 560 66 664 58 744 72 C 848 90 962 84 1060 68 C 1132 56 1188 54 1234 54"/>
+      </svg>
+
+      <svg class="ruta__mapa ruta__mapa--angosta" viewBox="0 0 400 1200" preserveAspectRatio="none">
+        <mask id="ruta-angosta" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="1200">
+          <path class="ruta__revelado" pathLength="1"
+                d="M 170 258 C 250 272 306 320 292 380 C 278 442 150 430 108 466 C 66 502 96 566 166 570 C 244 574 296 590 280 640"/>
+        </mask>
+        <path class="ruta__linea" mask="url(#ruta-angosta)"
+              d="M 170 258 C 250 272 306 320 292 380 C 278 442 150 430 108 466 C 66 502 96 566 166 570 C 244 574 296 590 280 640"/>
+      </svg>
+
+      <span class="ruta__salida"></span>
+
+      <svg class="ruta__cruz" viewBox="0 0 40 40">
+        <path class="ruta__aspa" pathLength="1" d="M 7 7 L 33 33"/>
+        <path class="ruta__aspa" pathLength="1" d="M 33 7 L 7 33"/>
+      </svg>
+    </div>
+
+    <div class="contenedor">
+      <header class="encabezado">
+        <p class="rotulo"><span class="marca-barras" aria-hidden="true"></span>Contacto</p>
+        <h2 class="titulo">Cómo llegar y cuándo estamos</h2>
+      </header>
+
+      <div class="contacto">
+        <div class="contacto__datos">
+          <p class="estado estado--bloque" data-estado hidden>
+            <span class="estado__punto" aria-hidden="true"></span>
+            <span class="estado__texto"></span>
+          </p>
+
+          <div class="dato">
+            <h3 class="dato__rotulo">Dirección</h3>
+            <p class="dato__valor">Av. Mitre 220<br>Chivilcoy (B6620), Buenos Aires</p>
+            <!-- La ficha real del local, no una búsqueda por dirección -->
+            <a class="enlace" href="https://maps.app.goo.gl/nU4VAqQvKUMEaW3J6" target="_blank" rel="noopener">Abrir en Google Maps</a>
+          </div>
+
+          <div class="dato">
+            <h3 class="dato__rotulo">Teléfono y WhatsApp</h3>
+            <p class="dato__valor"><a href="tel:+5492345510888">2345 510888</a></p>
+            <a class="enlace" href="https://wa.me/5492345510888" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+          </div>
+
+          <div class="dato">
+            <h3 class="dato__rotulo">Horarios</h3>
+            <ul class="horarios">
+              <li>
+                <span class="horarios__dia">Lunes a viernes:</span>
+                07:00 a 12:30 <span class="horarios__corte" aria-hidden="true">|</span> 15:00 a 20:30 hs.
+              </li>
+              <li><span class="horarios__dia">Sábados:</span> 07:00 a 12:00 hs.</li>
+              <li><span class="horarios__dia">Domingos:</span> Cerrado.</li>
+            </ul>
+          </div>
+
+          <a class="boton boton--rojo" href="https://wa.me/5492345510888" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        </div>
+
+        <div class="contacto__mapa">
+          <iframe
+            title="Mapa de Casa Morosi en Av. Mitre 220, Chivilcoy"
+            src="https://www.google.com/maps?q=Casa%20Morosi%20Chivilcoy,%20Av.%20Mitre%20220,%20Chivilcoy&ll=-34.9052837,-60.007853&z=17&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__interior">
+    <div class="pie__marca">
+      <img class="pie__logo" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="220px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
+      <p class="pie__sucursal">Sucursal Chivilcoy</p>
+    </div>
+    <div class="pie__datos">
+      <p>Av. Mitre 220, Chivilcoy (B6620), Buenos Aires</p>
+      <p><a href="tel:+5492345510888">2345 510888</a> · <a href="https://wa.me/5492345510888" target="_blank" rel="noopener">WhatsApp</a></p>
+      <p>Lunes a viernes de 7 a 12:30 y de 15 a 20:30 · Sábados de 7 a 12</p>
+    </div>
+  </div>
+</footer>
+
+<a class="flotante" href="https://wa.me/5492345510888" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
+  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="currentColor">
+    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23a8.23 8.23 0 0 1 0 16.47Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.78.97-.15.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.19 1.13.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/>
+  </svg>
+</a>
+
+<script type="module" src="js/main.js"></script>
+<script type="module" src="js/rubros.js"></script>
+<script type="module" src="js/productos.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HardwareStore",
+  "name": "Casa Morosi · Sucursal Chivilcoy",
+  "branchOf": { "@type": "Organization", "name": "Casa Morosi", "url": "https://casamorosi.com.ar/" },
+  "description": "Ferretería industrial con más de 100 años. Herramientas eléctricas y manuales, maquinaria y equipamiento para industria, construcción, campo y hogar.",
+  "image": "img/hero-fachada-1200.webp",
+  "telephone": "+5492345510888",
+  "hasMap": "https://maps.app.goo.gl/nU4VAqQvKUMEaW3J6",
+  "geo": { "@type": "GeoCoordinates", "latitude": -34.9052837, "longitude": -60.007853 },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Avenida Mitre 220",
+    "addressLocality": "Chivilcoy",
+    "postalCode": "B6620",
+    "addressRegion": "Buenos Aires",
+    "addressCountry": "AR"
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "07:00", "closes": "12:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "15:00", "closes": "20:30" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "07:00", "closes": "12:00" }
+  ]
+}
+</script>
+</body>
+</html>

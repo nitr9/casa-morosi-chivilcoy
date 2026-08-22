@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel de productos · Casa Morosi Chivilcoy</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#253961">
+<link rel="icon" href="img/icono.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="cabecera__interior">
+    <img class="cabecera__logo" src="img/logo.png" srcset="img/logo.png 420w, img/logo@2x.png 840w" sizes="170px" width="420" height="71" alt="Casa Morosi">
+    <p class="cabecera__titulo">Panel de productos<span>Sucursal Chivilcoy</span></p>
+    <button class="boton boton--borde" type="button" data-salir hidden>Salir</button>
+  </div>
+</header>
+
+<main class="hoja">
+
+  <!-- Firebase todavía sin configurar -->
+  <section class="aviso" data-sin-configurar hidden>
+    <h1 class="aviso__titulo">Falta conectar Firebase</h1>
+    <p>El panel ya está listo, pero todavía no tiene a dónde guardar los productos. Para conectarlo:</p>
+    <ol class="pasos">
+      <li>Entrar a <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> y crear un proyecto.</li>
+      <li>Agregar una aplicación web y copiar los datos que muestra la consola.</li>
+      <li>Pegarlos en el archivo <code>js/firebase-config.js</code>.</li>
+      <li>En la consola, activar <strong>Authentication</strong> (usuario y contraseña) y <strong>Firestore</strong>. Storage no hace falta: las fotos van adentro de Firestore.</li>
+      <li>Crear el usuario con el que va a entrar quien carga los productos.</li>
+    </ol>
+  </section>
+
+  <!-- Entrar -->
+  <section class="tarjeta tarjeta--angosta" data-login hidden>
+    <h1 class="tarjeta__titulo">Entrar al panel</h1>
+    <form data-form-login>
+      <label class="campo">
+        <span class="campo__rotulo">Usuario</span>
+        <input type="email" name="correo" autocomplete="username" required>
+      </label>
+      <label class="campo">
+        <span class="campo__rotulo">Contraseña</span>
+        <input type="password" name="clave" autocomplete="current-password" required>
+      </label>
+      <p class="error" data-error-login hidden></p>
+      <p class="aviso-suave" data-aviso-login hidden></p>
+      <button class="boton boton--rojo boton--ancho" type="submit">Entrar</button>
+
+      <!-- Para no depender de que alguien entre a la consola a resetearla -->
+      <button class="enlace-suave" type="button" data-olvide>Me olvidé la contraseña</button>
+    </form>
+  </section>
+
+  <!-- Panel -->
+  <div data-panel hidden>
+
+    <section class="tarjeta">
+      <h1 class="tarjeta__titulo" data-titulo-form>Cargar un producto</h1>
+
+      <form data-form-producto>
+        <label class="campo">
+          <span class="campo__rotulo">Nombre</span>
+          <input type="text" name="nombre" required maxlength="90" placeholder="Amoladora angular 4½&quot; 820 W">
+        </label>
+
+        <div class="campo-doble">
+          <label class="campo">
+            <span class="campo__rotulo">Rubro</span>
+            <select name="rubro" required data-select-rubro>
+              <option value="">Elegir…</option>
+            </select>
+            <span class="campo__ayuda">Los rubros se administran más abajo.</span>
+          </label>
+
+          <!-- Lista y no texto libre: el catálogo agrupa los filtros por el
+               texto de la marca, así que escribirla distinta la parte en dos. -->
+          <div class="campo">
+            <label class="campo__rotulo" for="marca">Marca</label>
+            <select id="marca" name="marca" data-select-marca>
+              <option value="">Elegir…</option>
+            </select>
+            <input class="campo__extra" type="text" name="marcaNueva" maxlength="40"
+                   placeholder="¿Qué marca es?" aria-label="Nombre de la marca nueva"
+                   data-marca-nueva hidden>
+          </div>
+        </div>
+
+        <label class="campo">
+          <span class="campo__rotulo">Código <span class="campo__opcional">opcional</span></span>
+          <input type="text" name="codigo" maxlength="40" placeholder="GWS 850">
+        </label>
+
+        <label class="campo">
+          <span class="campo__rotulo">Resumen <span class="campo__opcional">opcional</span></span>
+          <input type="text" name="resumen" maxlength="120" placeholder="820 W · disco de 115 mm">
+          <span class="campo__ayuda">Una línea corta, la que aparece debajo del nombre.</span>
+        </label>
+
+        <label class="campo">
+          <span class="campo__rotulo">Precio</span>
+          <input type="number" name="precio" min="0" step="100" inputmode="numeric" placeholder="89900">
+          <span class="campo__ayuda">Sin puntos ni signo. Si lo dejás vacío, la página muestra “Consultar”.</span>
+        </label>
+
+        <label class="interruptor">
+          <input type="checkbox" name="oferta" data-oferta>
+          <span>Está en oferta</span>
+        </label>
+
+        <label class="campo" data-campo-anterior hidden>
+          <span class="campo__rotulo">Precio anterior</span>
+          <input type="number" name="precioAnterior" min="0" step="100" inputmode="numeric" placeholder="112000">
+          <span class="campo__ayuda">Aparece tachado al lado del precio nuevo.</span>
+        </label>
+
+        <label class="campo">
+          <span class="campo__rotulo">Fotos <span class="campo__opcional">hasta 4</span></span>
+          <input type="file" name="foto" accept="image/*" multiple data-foto>
+          <span class="campo__ayuda">
+            Podés elegir varias de una vez. La primera es la que se ve en el catálogo;
+            las demás aparecen en la ficha. Se achican solas antes de subirse.
+          </span>
+        </label>
+
+        <ul class="fotos" data-fotos hidden></ul>
+        <p class="fotos__peso" data-peso-fotos hidden></p>
+
+        <!-- La tabla de la ficha: las filas que haga falta, con los nombres
+             que quiera. Al elegir el rubro se cargan las de siempre. -->
+        <fieldset class="grupo">
+          <legend class="grupo__titulo">Especificaciones técnicas</legend>
+          <p class="campo__ayuda campo__ayuda--suelta">
+            Es la tabla que se ve en la ficha del producto. Al elegir el rubro aparecen
+            las filas de siempre para ese rubro; borrá las que no van y agregá las que falten.
+          </p>
+
+          <div data-especificaciones></div>
+
+          <button class="boton boton--borde boton--chico" type="button" data-agregar-fila>
+            Agregar una fila
+          </button>
+        </fieldset>
+
+        <label class="campo">
+          <span class="campo__rotulo">¿Qué incluye? <span class="campo__opcional">opcional</span></span>
+          <textarea name="incluye" rows="4" placeholder="Pistola y lanza&#10;Manguera de 6 metros&#10;Boquilla turbo"></textarea>
+          <span class="campo__ayuda">Una cosa por renglón. Aparecen como lista en la ficha.</span>
+        </label>
+
+        <label class="interruptor">
+          <input type="checkbox" name="activo" checked>
+          <span>Mostrar en la página</span>
+        </label>
+
+        <p class="error" data-error-form hidden></p>
+
+        <div class="botonera">
+          <button class="boton boton--rojo boton--ancho" type="submit" data-guardar>Guardar producto</button>
+          <button class="boton boton--borde" type="button" data-cancelar hidden>Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="tarjeta">
+      <h2 class="tarjeta__titulo">Productos cargados <span class="cuenta" data-cuenta></span></h2>
+      <div data-lista>
+        <p class="espera">Cargando…</p>
+      </div>
+    </section>
+
+    <!-- Rubros: los que se ven en la portada y ordenan el catálogo -->
+    <section class="tarjeta">
+      <h2 class="tarjeta__titulo" data-titulo-rubro>Rubros de la página</h2>
+      <p class="campo__ayuda campo__ayuda--suelta">
+        Cada rubro es una de las fichas con foto de la portada, y su propia página
+        con todos los productos de ese rubro.
+      </p>
+
+      <form data-form-rubro>
+        <label class="campo">
+          <span class="campo__rotulo">Nombre</span>
+          <input type="text" name="nombre" required maxlength="60" placeholder="Motosierras">
+        </label>
+
+        <label class="campo">
+          <span class="campo__rotulo">Foto</span>
+          <input type="file" name="foto" accept="image/*" data-foto-rubro>
+          <span class="campo__ayuda">Una foto vertical del local queda mejor: se recorta a lo alto.</span>
+        </label>
+
+        <figure class="vista-previa" data-vista-rubro hidden>
+          <img alt="Vista previa de la foto del rubro">
+        </figure>
+
+        <label class="campo">
+          <span class="campo__rotulo">Campos de la ficha <span class="campo__opcional">opcional</span></span>
+          <textarea name="plantilla" rows="4" placeholder="Modelo&#10;Cilindrada&#10;Potencia&#10;Largo de espada"></textarea>
+          <span class="campo__ayuda">
+            Uno por renglón. Son los que aparecen ya cargados al hacer un producto
+            de este rubro, para no escribirlos cada vez.
+          </span>
+        </label>
+
+        <label class="interruptor">
+          <input type="checkbox" name="activo" checked>
+          <span>Mostrar en la portada</span>
+        </label>
+
+        <p class="error" data-error-rubro hidden></p>
+
+        <div class="botonera">
+          <button class="boton boton--rojo boton--ancho" type="submit" data-guardar-rubro>Guardar rubro</button>
+          <button class="boton boton--borde" type="button" data-cancelar-rubro hidden>Cancelar</button>
+        </div>
+      </form>
+
+      <div data-lista-rubros>
+        <p class="espera">Cargando…</p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

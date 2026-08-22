@@ -1,0 +1,2596 @@
+/* ==========================================================================
+   Casa Morosi Chivilcoy
+   Paleta y tipografía salen del propio logo: navy #253961, rojo #d83037,
+   y una sola familia variable (Archivo) usada en tres anchos, como los
+   sistemas de cartelería.
+   ========================================================================== */
+
+:root {
+  --navy:        #253961;
+  --navy-hondo:  #16203a;
+  --navy-humo:   #33456b;
+  --rojo:        #d83037;
+  --rojo-hondo:  #ad2229;
+  --cemento:     #e9ecf0;
+  /* el tablero perforado de la sección de ofertas y la luz que lo alumbra.
+     El tablero es oscuro porque si no la luz no existe: una luz se ve por el
+     contraste con lo que no está iluminado, y sobre gris claro la regleta
+     quedaba en una raya y nada más. */
+  --tablero:     #18223a;
+  --luz-tubo:    #fff8ec;
+  --acero:       #8d96a3;
+  --tinta:       #1b2233;
+  --blanco:      #ffffff;
+
+  --borde:       #d3d8e0;
+  /* El único verde del sitio: el porcentaje de descuento. Es más hondo que el
+     de Mercado Libre para que el texto blanco encima se lea (5:1 de contraste
+     contra los 3:1 del original). */
+  --verde:       #0b7a3d;
+  --sombra:      0 1px 2px rgba(22, 32, 58, .08), 0 8px 24px rgba(22, 32, 58, .08);
+  --sombra-alta: 0 2px 4px rgba(22, 32, 58, .10), 0 18px 40px rgba(22, 32, 58, .18);
+
+  --ancho:       1180px;
+  /* El aire de los costados. Es variable porque abajo de 340 px se achica:
+     ahí el encabezado no cierra con 2,5rem. */
+  --margen:      2.5rem;
+  --aire:        clamp(3.5rem, 7vw, 6.5rem);
+  --radio:       4px;
+
+  --fuente: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* --- las tres voces ------------------------------------------------------
+     Una sola familia variable usada como si fueran tres tipografías, cambiando
+     el ancho de la letra: el numeral grande pintado, el texto corriente y el
+     rótulo condensado del estante. Así está escrita una ferretería por dentro,
+     y es el sello de la página.
+
+     Los huecos entre las tres son grandes a propósito. Antes los anchos iban
+     de 76 a 122 en quince escalones y no se percibía que hubiera un sistema:
+     de cerca se leía como que se fue corriendo, no como una decisión. */
+  --ancho-display: "wdth" 120;   /* titulares y precios grandes */
+  --ancho-texto:   "wdth" 100;   /* párrafos, nombres, valores */
+  --ancho-rotulo:  "wdth" 78;    /* todo lo que va en versalita */
+
+  /* El rótulo lleva siempre este espaciado y uno de estos tres cuerpos. */
+  --track-rotulo:  .12em;
+  --rotulo-chico:  .72rem;
+  --rotulo:        .78rem;
+  --rotulo-grande: .84rem;
+}
+
+/* --- base ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Varias clases de acá definen display, que le gana al atributo hidden del
+   HTML. Sin esto, los carteles de estado y el menú aparecen antes de tiempo. */
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Dónde frena el scroll al tocar un enlace del menú. Sin esto el navegador deja
+   el borde de la sección justo arriba de todo, o sea DEBAJO de la barra fija,
+   que mide 73 px en escritorio y 112 en el teléfono: lo primero de cada sección
+   quedaba tapado. Se notó en ofertas, donde lo tapado es la regleta de luz, que
+   es lo que hay que ver — pero pasaba en las cuatro.
+
+   El alto sale de `--alto-barra`, que ya mide `buscador.js` y se vuelve a medir
+   al cargar y al cambiar el tamaño de la ventana. El valor de respaldo es el
+   más alto de los tres, así que sin JS se pasa de largo un poco y nunca de
+   menos: es preferible ver un pedazo de la sección anterior a perder el
+   arranque de ésta. El renglón de aire extra es para que el borde no quede
+   pegado a la barra.
+
+   No lleva #inicio: el hero arranca arriba de todo y ahí la barra es
+   transparente, así que no tapa nada. */
+#rubros,
+#productos,
+#local,
+#contacto { scroll-margin-top: calc(var(--alto-barra, 125px) + 1rem); }
+
+body {
+  margin: 0;
+  background: var(--blanco);
+  color: var(--tinta);
+  font-family: var(--fuente);
+  font-variation-settings: var(--ancho-texto);
+  font-size: clamp(1rem, .96rem + .2vw, 1.075rem);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, picture, svg, iframe { display: block; max-width: 100%; }
+img { height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3 {
+  font-variation-settings: var(--ancho-display);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: 3px solid var(--rojo);
+  outline-offset: 3px;
+}
+
+.saltar {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  background: var(--rojo);
+  color: var(--blanco);
+  padding: .75rem 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.saltar:focus { left: 0; }
+
+.contenedor {
+  width: min(100% - var(--margen), var(--ancho));
+  margin-inline: auto;
+}
+
+/* --- piezas comunes ------------------------------------------------------ */
+
+/* las tres barras del logo, usadas como marca de sección */
+.marca-barras {
+  display: inline-block;
+  width: 11px;
+  height: 1em;
+  margin-right: .6rem;
+  margin-top: .18em;
+  flex: none;
+  vertical-align: -.12em;
+  background: linear-gradient(var(--rojo) 0 0) 0 0 / 100% 26% no-repeat,
+              linear-gradient(var(--rojo) 0 0) 0 50% / 100% 26% no-repeat,
+              linear-gradient(var(--rojo) 0 0) 0 100% / 100% 26% no-repeat;
+}
+
+.rotulo {
+  display: flex;
+  align-items: flex-start;   /* si el rótulo parte en dos líneas, las barras
+                                quedan al lado de la primera, no en el medio */
+  margin: 0 0 1.1rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--navy);
+}
+.rotulo--claro { color: var(--blanco); }
+
+.titulo { font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.1rem); }
+
+.subtitulo {
+  font-size: clamp(1.25rem, 1.05rem + .8vw, 1.6rem);
+  font-variation-settings: var(--ancho-display);
+  margin: 3.5rem 0 1.5rem;
+}
+
+.entrada {
+  max-width: 56ch;
+  margin: 1.25rem 0 0;
+  color: #4a5468;
+}
+
+.encabezado { margin-bottom: clamp(2.5rem, 4vw, 3.5rem); }
+.encabezado--claro .titulo { color: var(--blanco); }
+.encabezado--claro .entrada { color: #b9c2d4; }
+.encabezado--centrado { text-align: center; }
+.encabezado--centrado .rotulo { justify-content: center; }
+.encabezado--centrado .entrada { margin-inline: auto; }
+
+.seccion { padding-block: var(--aire); }
+.seccion--cemento { background: var(--cemento); }
+.seccion--navy { background: var(--navy-hondo); color: var(--blanco); }
+
+/* --- el tablero iluminado ------------------------------------------------
+   La sección de ofertas es la única de la página cuyo trabajo es EXHIBIR
+   producto, así que se le dio la superficie donde una ferretería exhibe: el
+   panel perforado del que cuelga la herramienta, con su regleta de luz
+   arriba. Al entrar en pantalla el tubo prende —titila dos veces, como
+   prenden los tubos— y la luz descubre las ofertas. Antes la sección era
+   blanco liso y con dos ofertas cargadas se veía vacía.
+
+   El tablero es OSCURO por una sola razón: una luz se ve por contraste con lo
+   que no está iluminado. Se probaron los dos y sobre el tablero gris claro la
+   regleta quedaba en una raya oscura arriba y nada más; el lavado de luz no
+   se distinguía del fondo. Con el tablero oscuro la luz cae, se apaga hacia
+   abajo, y las tarjetas blancas quedan como mercadería colgada.
+
+   La perforación es la de un tablero de verdad: agujero de 6,4 px cada 28,
+   que es la proporción del de chapa (1/4 de pulgada cada pulgada). Son dos
+   círculos y no uno: el negro es el agujero y el blanco, 1,5 px más abajo, es
+   el filo donde pega la luz. Sin el segundo se ven puntos impresos; con él se
+   ven agujeros. Es la diferencia entre una trama y un material.
+
+   Cuesta dos degradados repetidos y dos elementos vacíos: ni una imagen ni un
+   pedido más al servidor. */
+/* Ojo con el color del texto: NO va acá. Se probó poner blanco en la sección
+   entera y las tarjetas lo heredan —.producto usa color: inherit—, así que el
+   nombre del producto quedaba blanco sobre tarjeta blanca, invisible. El texto
+   claro lo ponen las clases que la página ya tenía para fondo oscuro:
+   .encabezado--claro y .rotulo--claro, que están puestas en el HTML. */
+.seccion--tablero {
+  position: relative;
+  overflow: hidden;                /* el halo del tubo no se va de la sección */
+  background-color: var(--tablero);
+  /* Tres capas. La primera es la caída de luz: de la mitad para abajo el panel
+     se va a negro, que es lo que hace que la sección de abajo —también oscura—
+     se lea como otra cosa y no como la continuación de ésta. Las otras dos son
+     la perforación. */
+  background-image:
+    linear-gradient(180deg, transparent 55%, rgba(3, 6, 14, .78) 100%),
+    radial-gradient(circle, rgba(0, 0, 0, .55) 0 3.2px, transparent 3.4px),
+    radial-gradient(circle, rgba(255, 255, 255, .10) 0 3.6px, transparent 3.8px);
+  background-size: 100% 100%, 28px 28px, 28px 28px;
+  background-position: 0 0, 0 0, 0 1.5px;
+}
+.seccion--tablero > .contenedor { position: relative; z-index: 1; }
+
+/* La campana: el perfil de chapa que cuelga arriba del panel, con el tubo
+   metido abajo. Va a todo el ancho porque en el local también: es un riel, no
+   un aplique. El degradado son las tres caras del perfil —la de arriba que
+   toma luz del techo, la del frente y la sombra de adentro. */
+.campana {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 18px;
+  background: linear-gradient(180deg, #3a4d75 0%, #1b2740 58%, #0c1322 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .18),
+    0 6px 18px rgba(8, 13, 24, .45);
+}
+
+/* El tubo. No llega a los extremos (el 3 % de cada lado) porque en un perfil
+   real el tubo termina antes que la chapa. Los tres halos son la distancia:
+   el chico es el vidrio, el mediano el reflejo en la chapa y el grande el aire
+   iluminado. Con uno solo parece un borde brillante, no una lámpara. */
+.campana__tubo {
+  position: absolute;
+  inset: auto 3% 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--luz-tubo);
+  box-shadow:
+    0 0 12px 3px rgba(255, 249, 235, 1),
+    0 0 44px 12px rgba(255, 240, 214, .75),
+    0 0 120px 40px rgba(255, 233, 196, .40);
+}
+
+/* El charco de luz: cae desde la regleta y se apaga antes de llegar abajo, así
+   el pie de la sección queda en penumbra y se entiende de dónde viene la luz.
+   Es cálido a propósito —los tubos de las góndolas lo son— y es lo único
+   cálido de la página: contra el navy, esa temperatura es la que hace que
+   parezca luz encendida y no un degradado blanco. */
+.luz {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 82%;
+  pointer-events: none;
+  background: radial-gradient(ellipse 128% 100% at 50% 0%,
+    rgba(255, 246, 226, .26) 0%,
+    rgba(255, 246, 226, .13) 34%,
+    rgba(255, 246, 226, .05) 58%,
+    transparent 78%);
+}
+
+/* El pie del panel. Abajo de esta sección viene «Nosotros», que también es
+   oscura, y las dos pegadas se leían como un solo bloque largo: lo marcó Nico.
+
+   El primer intento fue una franja de cemento de 6 px entre las dos. Separaba,
+   pero medido era un fogonazo: el tablero daba 33,6 de claridad, la franja 236
+   y «Nosotros» 30,8 — o sea, dos secciones con TRES puntos de diferencia
+   partidas por un pico de 173. La franja hacía todo el trabajo y se notaba.
+
+   Lo que separa ahora es la luz, que es de lo que se trata la sección. Con la
+   caída de arriba el pie del panel llega a 4 de claridad contra los 31 de
+   «Nosotros»: la de abajo es siete veces más clara, así que se leen distintas
+   solas. Se probó dejar además una línea de cemento de 3 px marcando el corte y
+   se sacó: con la sombra hecha, la línea no suma nada y se ve como un filo
+   pegado encima. Si alguna vez hace falta marcarlo más, es una sola regla:
+   .seccion--tablero { border-bottom: 3px solid var(--cemento); }
+
+   Y el zócalo dejó de ser un riel iluminado. Antes se aclaraba hacia abajo
+   —de 20 a 62— justo donde la luz ya no llega: era un brillo sin lámpara que
+   lo justificara. Ahora es sombra, que es lo que hay en el pie de un panel. */
+.seccion--tablero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: 22px;
+  background: linear-gradient(180deg,
+    rgba(3, 6, 14, 0) 0%,
+    rgba(2, 4, 10, .9) 70%,
+    rgba(2, 4, 10, 1) 100%);
+  /* Sin uña de luz en el corte: era 1 px claro justo en la juntura y volvía a
+     ser un filo duro, que es lo que se quería evitar. El paso lo hace la
+     sombra sola. */
+}
+
+/* Sobre el tablero las tarjetas cambian de borde a sombra: con borde parecían
+   dibujadas encima y con sombra quedan colgadas. El borde no se saca, se hace
+   transparente, para no mover un píxel la grilla. */
+.seccion--tablero .producto {
+  border-color: transparent;
+  box-shadow: 0 2px 4px rgba(4, 8, 18, .35), 0 16px 38px rgba(4, 8, 18, .45);
+}
+.seccion--tablero .producto:hover {
+  box-shadow: 0 4px 8px rgba(4, 8, 18, .40), 0 26px 60px rgba(4, 8, 18, .55);
+}
+
+/* El cartel de «Cargando ofertas…» era gris cemento: sobre el tablero parecía
+   un agujero. Va blanco, como las tarjetas que va a reemplazar. */
+.seccion--tablero .cargando,
+.seccion--tablero .vacio { background: var(--blanco); }
+
+/* El enlace de adentro del texto no puede quedar rojo acá: el rojo de la marca
+   sobre el tablero da 3,3:1, abajo del 4,5 que pide un texto. Va blanco con la
+   raya roja, así el color de la casa sigue estando y lo que se lee, se lee. */
+.seccion--tablero .entrada .enlace--linea {
+  color: var(--blanco);
+  border-bottom-color: var(--rojo);
+}
+.seccion--tablero .entrada .enlace--linea:hover { color: var(--rojo); }
+
+/* --- el encendido --------------------------------------------------------
+   Las tres clases son de JS y el orden importa:
+
+   · sin ninguna  — todo prendido y quieto. Es el estado del archivo, así que
+     sin JS la sección se ve entera, igual que el resto de la página.
+   · --apagado    — lo pone main.js apenas carga: tubo, luz y tarjetas en cero.
+   · --encendido  — lo pone el observador cuando la sección entra en pantalla.
+
+   Pasa UNA vez y el observador se desconecta. No es un bucle: un tubo que
+   titila cada vez que uno pasa cansa a los dos scrolls, y encima consume. */
+.tablero--apagado .campana__tubo,
+.tablero--apagado .luz,
+.tablero--apagado .producto { opacity: 0; }
+
+.tablero--encendido .campana__tubo,
+.tablero--encendido .luz {
+  animation: prender 1.15s steps(1, end) both;
+}
+
+/* Las tarjetas no se mueven: sólo aparecen. La luz descubre lo que ya estaba
+   colgado; si además subieran, parecería que las trajo alguien. Entran de a
+   una, de 70 en 70 ms, arrancando cuando el tubo ya quedó fijo. El índice lo
+   pone productos.js al crearlas. */
+.tablero--encendido .producto {
+  animation: aparecer .5s ease both;
+  animation-delay: calc(.62s + var(--i, 0) * .07s);
+}
+
+/* Cómo prende un tubo: dos chispazos, un tercero que se sostiene y recién ahí
+   queda. Los saltos son duros —steps(1)— porque un tubo no hace degradé. */
+@keyframes prender {
+  0%   { opacity: 0; }
+  8%   { opacity: .85; }
+  12%  { opacity: .06; }
+  20%  { opacity: .95; }
+  26%  { opacity: .10; }
+  36%  { opacity: 1; }
+  41%  { opacity: .45; }
+  48%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Con «reducir movimiento» la luz ya está prendida cuando se llega: se pierde
+   el chiste del tubo, que es justo lo que hay que perder acá. */
+@media (prefers-reduced-motion: reduce) {
+  .tablero--apagado .campana__tubo,
+  .tablero--apagado .luz,
+  .tablero--apagado .producto { opacity: 1; }
+
+  .tablero--encendido .campana__tubo,
+  .tablero--encendido .luz,
+  .tablero--encendido .producto { animation: none; opacity: 1; }
+}
+
+/* --- botones ------------------------------------------------------------- */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .95rem 1.6rem;
+  border: 2px solid transparent;
+  border-radius: var(--radio);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-grande);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .18s, color .18s, border-color .18s, transform .18s;
+}
+.boton--rojo {
+  background: var(--rojo);
+  border-color: var(--rojo);
+  color: var(--blanco);
+}
+.boton--rojo:hover { background: var(--rojo-hondo); border-color: var(--rojo-hondo); }
+.boton--contorno {
+  border-color: rgba(255, 255, 255, .55);
+  color: var(--blanco);
+}
+.boton--contorno:hover { background: var(--blanco); border-color: var(--blanco); color: var(--navy); }
+.boton--chico { padding: .6rem 1.1rem; font-size: .8rem; }
+.boton:active { transform: translateY(1px); }
+
+.enlace {
+  display: inline-block;
+  margin-top: .5rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--rojo);
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+.enlace:hover { color: var(--navy); }
+
+/* el mismo enlace pero metido dentro de un párrafo, sin mayúsculas */
+.enlace--linea {
+  display: inline;
+  margin: 0;
+  font-size: inherit;
+  font-variation-settings: inherit;
+  font-weight: 700;
+  letter-spacing: inherit;
+  text-transform: none;
+}
+
+/* --- cartel de estado (abierto / cerrado) -------------------------------- */
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0;
+  padding: .4rem .85rem .4rem .7rem;
+  border-radius: 999px;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.estado__punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.estado--abierto .estado__punto { animation: latido 2.4s ease-in-out infinite; }
+@keyframes latido { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) {
+  .estado--abierto .estado__punto { animation: none; }
+}
+
+/* sobre foto o fondo oscuro */
+.estado--hero {
+  background: rgba(10, 16, 30, .55);
+  backdrop-filter: blur(6px);
+  color: var(--blanco);
+}
+.estado--hero.estado--abierto .estado__punto { background: #4ade80; }
+.estado--hero.estado--cerrado .estado__punto { background: var(--rojo); }
+
+/* sobre fondo claro */
+.estado--bloque {
+  margin-bottom: 2rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  color: var(--navy);
+}
+.estado--bloque.estado--abierto .estado__punto { background: #16a34a; }
+.estado--bloque.estado--cerrado .estado__punto { background: var(--rojo); }
+
+/* --- barra superior ------------------------------------------------------ */
+
+.barra {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  transition: background-color .3s, box-shadow .3s;
+}
+.barra__interior {
+  width: min(100% - var(--margen), var(--ancho));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: .9rem;
+}
+
+.barra__marca {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  flex: none;
+  text-decoration: none;
+}
+.barra__logo {
+  position: relative;
+  display: block;
+  width: clamp(150px, 19vw, 205px);   /* el logo nuevo es apaisado: 5,9 a 1 */
+  line-height: 0;
+}
+.barra__logo img { width: 100%; transition: opacity .3s; }
+.barra__logo-oscuro { position: absolute; inset: 0; opacity: 0; }
+
+.barra__sucursal {
+  padding-left: .8rem;
+  border-left: 2px solid var(--rojo);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  line-height: 1.25;
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--blanco);
+  transition: color .3s;
+}
+.barra--fija .barra__sucursal { color: var(--navy); }
+
+.barra__nav {
+  display: flex;
+  gap: 1.75rem;
+  margin-left: auto;
+}
+.barra__nav a {
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-grande);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--blanco);
+  padding-block: .35rem;
+  border-bottom: 2px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+.barra__nav a:hover { border-color: var(--rojo); }
+
+.barra__acciones {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+}
+/* estado sólido, al bajar */
+.barra--fija {
+  background: var(--blanco);
+  box-shadow: var(--sombra);
+}
+.barra--fija .barra__logo-claro { opacity: 0; }
+.barra--fija .barra__logo-oscuro { opacity: 1; }
+.barra--fija .barra__nav a { color: var(--navy); }
+
+.hamburguesa {
+  display: none;
+  align-items: center;
+  gap: .55rem;
+  margin-left: auto;
+  padding: .5rem .2rem;
+  background: none;
+  border: 0;
+  color: var(--blanco);
+  font-family: inherit;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.barra--fija .hamburguesa { color: var(--navy); }
+.hamburguesa__lineas,
+.hamburguesa__lineas::before,
+.hamburguesa__lineas::after {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition: transform .25s, opacity .2s;
+}
+.hamburguesa__lineas { position: relative; }
+.hamburguesa__lineas::before,
+.hamburguesa__lineas::after { content: ""; position: absolute; left: 0; }
+.hamburguesa__lineas::before { top: -7px; }
+.hamburguesa__lineas::after  { top: 7px; }
+.hamburguesa[aria-expanded="true"] .hamburguesa__lineas { background: transparent; }
+.hamburguesa[aria-expanded="true"] .hamburguesa__lineas::before { transform: translateY(7px) rotate(45deg); }
+.hamburguesa[aria-expanded="true"] .hamburguesa__lineas::after  { transform: translateY(-7px) rotate(-45deg); }
+
+.menu-movil {
+  display: none;
+  flex-direction: column;
+  background: var(--blanco);
+  border-top: 1px solid var(--borde);
+  box-shadow: var(--sombra);
+}
+.menu-movil a {
+  padding: 1.05rem 1.25rem;
+  border-bottom: 1px solid var(--borde);
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--navy);
+}
+.menu-movil a:last-child { border-bottom: 0; }
+
+/* --- 1 · hero ------------------------------------------------------------ */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: min(100svh, 780px);
+  padding: 8rem 0 2rem;
+  overflow: hidden;
+  color: var(--blanco);
+}
+
+.hero__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 62%;
+  z-index: -2;
+}
+
+/* El video del frente. Lleva el mismo object-fit y el mismo object-position
+   que la foto, y su archivo tiene el mismo recorte, así que los dos encuadran
+   igual: al aparecer no se corre nada. Arranca invisible y lo destapa main.js
+   recién cuando el navegador pintó el primer cuadro; si se muestra antes se
+   ve un rectángulo negro donde estaba la foto.
+
+   Va después de .hero__foto en el HTML y con el mismo z-index a propósito:
+   sin z-index de por medio manda el orden del documento, y queda encima. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 62%;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.hero__video[data-visible] { opacity: 1; }
+
+/* Doble llave con main.js, que directamente no le pone src. Esta es por si
+   alguien cambia la preferencia con la página ya abierta. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__video { display: none; }
+}
+
+.hero__velo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(11, 18, 34, .86) 0%, rgba(11, 18, 34, .5) 26%, rgba(11, 18, 34, .18) 46%, rgba(11, 18, 34, .6) 78%, rgba(11, 18, 34, .93) 100%),
+    linear-gradient(90deg, rgba(11, 18, 34, .8) 0%, rgba(11, 18, 34, .58) 42%, rgba(11, 18, 34, .06) 80%);
+}
+
+.hero__contenido {
+  width: min(100% - var(--margen), var(--ancho));
+  margin-inline: auto;
+  max-width: min(100% - var(--margen), 44rem);
+  margin-top: auto;
+}
+
+.hero__titulo {
+  font-size: clamp(2.9rem, 1.4rem + 6.2vw, 5.5rem);
+  font-variation-settings: var(--ancho-display);
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+  text-shadow: 0 2px 30px rgba(8, 13, 26, .5);
+}
+
+/* La etiqueta azul, igual a los carteles de pasillo de la ferretería. Lleva
+   el lema de la casa, así que puede irse a dos renglones en pantalla angosta:
+   por eso el max-width y el line-height sueltos. */
+.hero__cartel {
+  display: inline-block;
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  padding: .55rem 1rem;
+  background: var(--navy-hondo);
+  border-left: 5px solid var(--rojo);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: clamp(.82rem, .68rem + .5vw, 1.05rem);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+.hero__bajada {
+  max-width: 40rem;
+  margin: 1.8rem 0 0;
+  font-size: clamp(1rem, .95rem + .35vw, 1.2rem);
+  color: #dbe1ec;
+  text-shadow: 0 1px 18px rgba(8, 13, 26, .6);
+}
+
+.hero__botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+  margin-top: 2.2rem;
+}
+
+.hero__pie {
+  position: relative;
+  width: min(100% - var(--margen), var(--ancho));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 2.5rem;
+}
+.hero__direccion {
+  margin: 0;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: #c8d0de;
+}
+
+/* --- entrada del hero -----------------------------------------------------
+   El orden y el tipo de movimiento salen de medir cuadro por cuadro el hero
+   de btatools.com.ar. No entra de arriba hacia abajo: entra PRIMERO el
+   titular grande, subiendo, y recién después se van llenando las líneas de
+   alrededor. La foto queda quieta — allá hace un zoom lento y acá no.
+
+   Lo que hace cada uno, tal como está allá:
+     · titular  — sube 56 px mientras aparece
+     · cartel   — entra desde la izquierda (allá es el ícono de acento)
+     · rótulo   — entra desde más a la izquierda todavía
+     · bajada   — se mueve primero y el texto enciende sobre el final
+     · botones  — solo aparecen, sin moverse
+
+   Los tiempos sí están apretados: allá cada paso espera a que termine el
+   anterior y la función tarda cuatro segundos, que es mucho para un local
+   que lo que quiere es que lo llamen. Acá se pisan un poco. */
+
+@keyframes entrar-subiendo {
+  from { opacity: 0; transform: translateY(56px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* La distancia la pone cada uno con --corre. */
+@keyframes entrar-de-costado {
+  from { opacity: 0; transform: translateX(var(--corre, -50px)); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Primero se acomoda y recién ahí prende: es el detalle que hace que la
+   bajada no compita con el titular. */
+@keyframes entrar-demorado {
+  from { opacity: 0; transform: translateY(47px); }
+  55%  { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* La misma curva del álbum: el power2.out de GSAP, que es lo que usan. */
+.hero__contenido > *,
+.hero__pie > * {
+  animation-duration: .65s;
+  animation-timing-function: cubic-bezier(.215, .61, .355, 1);
+  animation-fill-mode: both;
+}
+
+/* Los pasos siguen entrando de a uno y en el mismo orden que BTA, pero la
+   cadencia se apretó de ~600 ms a ~200-350 ms entre uno y otro.
+
+   Por qué: sobre las demoras de acá corren los ~550 ms que tarda en aplicarse
+   la hoja de estilos, así que lo de abajo se ve más tarde de lo que dice. Con
+   los tiempos viejos la bajada terminaba de aparecer a los 3,7 s desde que
+   carga la página, los botones a los 4,2 y el cartel de abierto a los 4,5.
+   Nico marcó esas tres: para cuando aparecen, el que entró ya leyó el titular
+   y está esperando. Ahora la función entera termina a los 2,3 s.
+
+   La lentitud del arranque sí se mantiene: el titular sigue tardando lo mismo,
+   porque eso es lo que hace que se lea como una presentación y no como una
+   página que carga a los tirones. Lo que se recortó es el silencio del final. */
+.hero__titulo  { animation-name: entrar-subiendo;   animation-delay: .15s; }
+.hero__cartel  { animation-name: entrar-de-costado; animation-delay: .55s; --corre: -50px; }
+.hero__bajada  { animation-name: entrar-demorado;   animation-delay: 1.35s; animation-duration: .7s; }
+.hero__botones { animation-name: aparecer;          animation-delay: 1.6s;  animation-duration: .55s; }
+.hero__pie > * { animation-name: aparecer;          animation-delay: 1.75s; animation-duration: .55s; }
+
+/* El rótulo entra partido en dos: primero las barras rojas y detrás las
+   palabras, que vienen de más lejos. Es el mismo juego que hace BTA entre su
+   ícono de acento y el rótulo de arriba, pero acá pasa dentro de la misma
+   línea. Por eso el <p> no se anima: se animan sus dos partes. */
+.hero .rotulo .marca-barras,
+.hero .rotulo__texto {
+  animation: entrar-de-costado .65s cubic-bezier(.215, .61, .355, 1) both;
+}
+/* Las barras son chicas: si tardan lo mismo que el resto, no se llegan a ver
+   solas. Entran más cortas y las palabras salen cuando ya están puestas. */
+.hero .rotulo .marca-barras { animation-delay: .95s; animation-duration: .45s; --corre: -26px; }
+.hero .rotulo__texto        { animation-delay: 1.15s; --corre: -60px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__contenido > *,
+  .hero__pie > *,
+  .hero .rotulo .marca-barras,
+  .hero .rotulo__texto { animation: none; }
+}
+
+/* --- 2 · rubros ---------------------------------------------------------- */
+
+/* mosaico en columnas: respeta la proporción real de cada foto */
+/* La pregunta a la izquierda y los rubros desfilando a la derecha, como en
+   btatools.com.ar. La medida de las fichas es la de ellos: 2:3 y apenas 6 px
+   de separación, tan juntas que se leen como una tira y no como tarjetas
+   sueltas. */
+/* El aire de arriba y el de abajo NO son lo mismo y por eso están separados.
+
+   Abajo es una separación de sección común y va con `--aire`, como todas.
+
+   Arriba es otra cosa: es la franja de cemento que impide que la banda toque
+   el hero (punto 20). Con `--aire` medía 96 px en 1366 y se leía como un hueco
+   en blanco, no como una separación — lo marcó Nico el 20/8/2026. Se probaron
+   96, 56, 40, 24 y 0 mirándolos: en 0 las dos fotos oscuras se pegan y se leen
+   como un solo bloque, que es justo lo que la franja evita; a partir de 40 ya
+   se lee como una separación puesta a propósito. Quedó en 40 px (28 en
+   celular, donde la pantalla es más angosta y el mismo hueco pesa más).
+   Si se toca, mirarlo: acá el número no dice si está bien. */
+.buscador {
+  overflow: hidden;             /* la tira se va del ancho a propósito */
+  background: var(--cemento);
+  padding-block: clamp(1.75rem, 3vw, 2.5rem) var(--aire);
+}
+
+/* La banda de rubros: foto de fondo a lo ancho de la pantalla, velo encima y
+   el título centrado. Se hizo el 20/8/2026, sobre una referencia que trajo
+   Nico.
+
+   Lo que más cambió no es el aspecto: al sacar la columna de texto de la
+   izquierda, **la tira se quedó con el ancho completo**. Los dos números que
+   el punto 16 no podía tener a la vez dejaron de estar en conflicto — entran
+   más rubros y además el título recuperó el cuerpo del sistema, en vez de los
+   36 px a los que lo obligaba compartir renglón con la tira. Por eso también
+   desapareció el guardián de container-query: "BUSCANDO?" ya no puede salirse
+   de una columna que no existe.
+
+   Queda cemento arriba y abajo a propósito: sin eso la banda toca el hero, que
+   también es una foto oscura con velo, y los dos se leen como un solo bloque.
+
+   La banda no necesita truco de ancho completo: `.buscador` no tiene padding
+   lateral ni contenedor, así que un hijo en bloque ya mide toda la pantalla.
+   Nada de `100vw`, que suma el ancho de la barra de scroll y desborda. */
+.banda {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(3rem, 5.5vw, 4.75rem);
+  text-align: center;
+  color: var(--blanco);
+  background: var(--navy-hondo);   /* si la foto no carga, el texto se lee igual */
+}
+
+/* La foto la eligió Nico: `Descargasimage_1a2506b9.jpeg`, dos personas
+   pasándose una caja sobre un mesón. Viene ya con forma de franja (4,36:1,
+   casi la proporción de la banda), así que casi no hay que recortarla — sólo
+   se le cortó la esquina inferior derecha, donde tenía la marca de agua del
+   generador: `crop=1200:274:0:0` saca todo lo que esté en x>=1200 o y>=274.
+
+   El blanco y negro viene horneado en el .webp y no puesto con `filter`: pesa
+   menos y no cuesta un repintado al hacer scroll.
+
+   **El original mide 1280 px de ancho y no hay más.** En una pantalla de 1920
+   la banda lo agranda 1,6x. Se deja así a propósito: agrandarlo al generar el
+   .webp sería inventar resolución, y detrás del velo y en blanco y negro no se
+   nota. Si aparece una versión más grande, es cambiar los dos archivos. */
+.banda__foto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* la foto ya viene compuesta como banda: no hace falta correr el encuadre */
+  object-position: 50% 50%;
+}
+
+.banda__velo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg,
+    rgba(11, 18, 34, .84) 0%,
+    rgba(11, 18, 34, .66) 45%,
+    rgba(11, 18, 34, .88) 100%);
+}
+
+.banda .rotulo { justify-content: center; }
+
+/* Va en caja baja: era el único titular en mayúsculas de la página, herencia
+   de btatools, y se corrigió el 19/8/2026 (punto 13). La referencia venía toda
+   en mayúsculas y se dejó igual, para no reabrir eso. */
+.banda .titulo { margin-bottom: 1.6rem; }
+
+/* La tira ahora es hija directa de la sección, así que el margen izquierdo que
+   antes le daba la grilla se lo pone la lista. Alinea con `.contenedor`. */
+.riel { margin-top: clamp(2.25rem, 4vw, 3.25rem); }
+
+.riel__pista {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* El mismo margen que la lista, otra vez. Hace falta las dos veces: el
+     `padding-left` de la lista corre la primera ficha, pero el ajuste
+     automático de `scroll-snap` la lleva al borde del scroller y se come ese
+     margen. `scroll-padding-left` mueve el borde contra el que ajusta. Antes
+     no se notaba porque la pista arrancaba en la columna derecha de la grilla;
+     ahora abarca la pantalla entera. */
+  scroll-padding-left: max(1.25rem, calc((100vw - var(--ancho)) / 2));
+}
+.riel__pista::-webkit-scrollbar { display: none; }
+
+.riel__lista {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0 1.25rem 0 max(1.25rem, calc((100vw - var(--ancho)) / 2));
+  list-style: none;
+}
+.riel__lista li {
+  flex: none;
+  width: clamp(10.5rem, 14vw, 13rem);
+  scroll-snap-align: start;
+}
+
+.ficha-rubro {
+  position: relative;
+  display: block;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--navy-hondo);
+  text-decoration: none;
+  container-type: inline-size;   /* el nombre se mide contra la ficha */
+}
+/* Las fotos del local son de celular y tienen colores muy distintos entre
+   sí; apagarlas un poco las empareja y hace que el nombre se lea. Al pasar
+   el mouse vuelven a su color: ahí se mira una sola. */
+.ficha-rubro img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(.7) brightness(.78) contrast(1.05);
+  transform: scale(1.01);
+  transition: filter .45s, transform .6s cubic-bezier(.2, .7, .3, 1);
+}
+.ficha-rubro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 18, 34, .1) 40%, rgba(11, 18, 34, .82) 100%);
+}
+.ficha-rubro:hover img,
+.ficha-rubro:focus-visible img {
+  filter: grayscale(0) brightness(.92) contrast(1);
+  transform: scale(1.06);
+}
+
+.ficha-rubro__nombre {
+  position: absolute;
+  left: .8rem;
+  right: .6rem;
+  bottom: .9rem;
+  z-index: 1;
+  color: var(--blanco);
+  /* Voz de rótulo pero en grande: es literalmente un cartel de pasillo.
+     Angosta, además, porque entra "HIDROLAVADORAS" —una sola palabra de
+     catorce letras, la más larga del rubrero— sin cortarse. A ancho de
+     display se sale de la ficha: 242 px de texto en una caja de 216. */
+  font-variation-settings: var(--ancho-rotulo);
+  letter-spacing: var(--track-rotulo);
+  font-weight: 800;
+  font-size: clamp(.85rem, 9cqw, 1.25rem);
+  line-height: 1.04;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+/* el filo rojo del sistema, como remate de la ficha */
+.ficha-rubro__nombre::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 4px;
+  margin-bottom: .55rem;
+  background: var(--rojo);
+  transition: width .35s cubic-bezier(.2, .7, .3, 1);
+}
+.ficha-rubro:hover .ficha-rubro__nombre::before { width: 44px; }
+
+.riel__flechas {
+  display: flex;
+  justify-content: flex-end;
+  gap: .6rem;
+  margin-top: 1.5rem;
+  padding-right: max(1.25rem, calc((100vw - var(--ancho)) / 2));
+}
+
+/* --- 3 · productos ------------------------------------------------------- */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 2.5rem;
+}
+.filtro {
+  padding: .5rem 1rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  color: var(--navy);
+  font-family: inherit;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .18s, color .18s, border-color .18s;
+}
+.filtro:hover { border-color: var(--navy); }
+.filtro[aria-pressed="true"] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--blanco);
+}
+
+.grilla-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.producto {
+  display: flex;
+  flex-direction: column;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  transition: box-shadow .25s, transform .25s;
+}
+.producto:hover { box-shadow: var(--sombra-alta); transform: translateY(-3px); }
+
+/* Vertical: las fotos de producto son de celular y así entran casi enteras.
+   La proporción es fija a propósito —y no la de cada foto— porque si no las
+   tarjetas de una misma fila quedarían de distinto alto.
+
+   `min-height: 0` es lo que hace que esa proporción se cumpla, y no es
+   decorativo: la tarjeta es `display: flex` en columna, y un ítem flex trae
+   `min-height: auto`, o sea que no puede achicarse por debajo de su
+   contenido. Con una foto vertical (563x1000) el contenido le ganaba al
+   `aspect-ratio` y la caja se iba a 475 px en vez de 348 — dos tarjetas de la
+   misma fila terminaban con la foto de distinto alto, que era justo lo que
+   esta regla venía a evitar.
+
+   El campo va blanco, no gris. Con `object-fit: contain` cada foto queda con
+   franjas a los costados o arriba y abajo; sobre gris esas franjas se ven como
+   un recuadro alrededor de cada producto y cada tarjeta parece de otro sitio.
+   Sobre blanco desaparecen y la tarjeta se lee como una sola pieza. El gris
+   queda sólo para el cartel de "sin foto", donde sí conviene que se note que
+   falta algo. */
+.producto__foto {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  background: var(--blanco);
+}
+.producto__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: .75rem;
+}
+.producto__sin-foto {
+  display: grid;
+  background: var(--cemento);
+  place-items: center;
+  height: 100%;
+  color: var(--acero);
+  font-variation-settings: var(--ancho-rotulo);
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+}
+
+.producto__oferta {
+  position: absolute;
+  top: .7rem;
+  left: 0;
+  padding: .3rem .7rem;
+  background: var(--rojo);
+  color: var(--blanco);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+}
+
+.producto__cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem 1.1rem 1.2rem;
+  border-top: 1px solid var(--borde);
+}
+.producto__rubro {
+  margin: 0 0 .35rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.producto__nombre {
+  margin: 0;
+  font-size: 1rem;
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+.producto__detalle {
+  margin: .5rem 0 0;
+  font-size: .88rem;
+  color: #59637a;
+}
+.producto__precios {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .1rem .6rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+/* El precio tachado se va a su propia línea —como en Mercado Libre— y abajo
+   quedan juntos el precio y el % OFF. Con los tres en un renglón la línea se
+   hacía larga y quedaba desprolija, sobre todo en la ficha. */
+.producto__precios .producto__anterior,
+.ficha__precio .ficha__anterior { order: -1; width: 100%; }
+
+.producto__precio {
+  font-variation-settings: var(--ancho-display);
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -.01em;
+  color: var(--navy);
+}
+.producto--oferta .producto__precio { color: var(--rojo); }
+.producto__anterior {
+  font-size: .92rem;
+  font-weight: 400;
+  color: var(--acero);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+/* Toda la tarjeta es un enlace a la ficha, así que esto es un rótulo, no un
+   botón: dice adónde lleva y se subraya al pasar por la tarjeta entera. */
+.producto__ver {
+  margin-top: .9rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--rojo);
+}
+.producto { text-decoration: none; color: inherit; }
+.producto:hover .producto__ver { text-decoration: underline; }
+.producto__precio--consultar { font-size: 1.1rem; color: var(--navy-humo); }
+
+.cargando, .vacio {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 3rem 1.5rem;
+  background: var(--cemento);
+  border-radius: var(--radio);
+  text-align: center;
+  color: #59637a;
+}
+.vacio strong {
+  display: block;
+  margin-bottom: .4rem;
+  font-variation-settings: var(--ancho-display);
+  font-size: 1.15rem;
+  color: var(--navy);
+}
+
+/* --- páginas de adentro: rubro y ficha de producto ------------------------
+   La barra de arriba es fija y en estas páginas no hay foto atrás, así que
+   va sólida desde el principio y el contenido arranca más abajo. */
+
+/* Deja lugar para la barra fija. El valor de siempre alcanza cuando la barra
+   es de un renglón; si el buscador la hizo de dos, manda lo que midió el JS. */
+.interior { padding-top: max(clamp(4.5rem, 8vw, 6rem), calc(var(--alto-barra, 0px) + 2rem)); }
+
+.miga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 1.75rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.miga a { color: var(--navy); text-decoration: none; }
+.miga a:hover { text-decoration: underline; }
+
+/* --- la ficha del producto ------------------------------------------------
+   El armado sale de las fichas de btatools.com.ar: foto grande a un lado;
+   del otro el rubro, el nombre, el código y el precio; y abajo, a lo ancho,
+   la tabla de características y el "¿qué incluye?".  */
+
+.ficha {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: start;
+}
+
+.ficha__foto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 15rem;
+  background: var(--cemento);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+/* Manda la foto: la caja crece con ella. El tope de alto es para que una foto
+   muy alargada no se lleve la pantalla entera y el precio quede abajo de todo. */
+.ficha__foto img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 72vh;
+  padding: 1.5rem;
+}
+
+/* --- la galería de la ficha ----------------------------------------------
+   Hasta cuatro fotos: una grande y una tira de miniaturas debajo. La grande
+   es un botón, porque al tocarla se abre a pantalla completa: con fotos de
+   celular es la única forma de que se vean de verdad.  */
+
+.galeria { display: grid; gap: .55rem; }
+
+.galeria__grande {
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: zoom-in;
+}
+
+/* El rótulo de abajo a la derecha. Se ve siempre —apagado— y se enciende al
+   pasar el mouse: en el teléfono no hay hover y si no, no se enteraría. */
+.galeria__lupa {
+  position: absolute;
+  right: .6rem;
+  bottom: .6rem;
+  padding: .3rem .6rem;
+  background: rgba(27, 34, 51, .72);
+  border-radius: var(--radio);
+  color: var(--blanco);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  opacity: .8;
+  transition: opacity .2s;
+}
+.galeria__grande:hover .galeria__lupa { opacity: 1; }
+
+.galeria__tira {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.galeria__mini {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  background: var(--cemento);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .2s, opacity .2s;
+  opacity: .72;
+}
+.galeria__mini img { width: 100%; height: 100%; object-fit: cover; }
+.galeria__mini:hover { opacity: 1; }
+/* La que se está viendo: filo rojo, el mismo recurso que el resto del sitio */
+.galeria__mini--activa {
+  opacity: 1;
+  border-color: var(--rojo);
+  box-shadow: inset 0 0 0 2px var(--rojo);
+}
+
+/* --- el visor a pantalla completa ---------------------------------------- */
+
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 300;              /* por encima de la barra (200) y del botón de WhatsApp (90) */
+  display: grid;
+  /* La fila tiene que tener alto propio. Con la fila en `auto` la altura sale
+     del contenido, y entonces el `max-height: 100%` de la foto se vuelve
+     circular y el navegador lo ignora: una foto vertical se dibujaba a tamaño
+     natural y se salía por abajo de la pantalla. */
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: 4rem clamp(.75rem, 4vw, 4rem);
+  background: rgba(12, 17, 30, .97);
+  animation: visor-entra .18s ease-out;
+}
+.visor__foto {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radio);
+}
+
+.visor__cerrar, .visor__flecha {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 50%;
+  color: var(--blanco);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s;
+}
+.visor__cerrar:hover, .visor__flecha:hover { background: rgba(255, 255, 255, .28); }
+
+.visor__cerrar { top: 1rem; right: 1rem; }
+.visor__flecha { top: 50%; transform: translateY(-50%); font-size: 1.9rem; }
+.visor__flecha--izq { left: .75rem; }
+.visor__flecha--der { right: .75rem; }
+
+.visor__cuenta {
+  position: absolute;
+  bottom: 1.25rem;
+  margin: 0;
+  color: rgba(255, 255, 255, .8);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+}
+
+@keyframes visor-entra { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .visor { animation: none; }
+}
+
+/* Mientras el visor está abierto la página de atrás no se mueve. */
+.sin-scroll { overflow: hidden; }
+
+@media (min-width: 800px) {
+  .visor__cerrar, .visor__flecha { width: 52px; height: 52px; }
+  .visor__cerrar { top: 1.5rem; right: 1.5rem; }
+}
+
+.ficha__nombre {
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
+  font-variation-settings: var(--ancho-display);
+  text-transform: uppercase;
+}
+.ficha__codigo {
+  margin: .8rem 0 0;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.ficha__resumen {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  color: #4a5468;
+}
+.ficha__precio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .1rem .75rem;
+  margin: 1.9rem 0 1.5rem;
+  font-variation-settings: var(--ancho-display);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 1.4rem + 1.4vw, 2.4rem);
+  letter-spacing: -.01em;
+  color: var(--navy);
+}
+/* El precio viejo: más finito que el resto y con la línea de tachado de 1 px.
+   Es lo que lo separa del resumen del producto, que queda justo arriba con un
+   cuerpo parecido — el peso más liviano y el tachado fino lo marcan como
+   precio sin necesidad de ponerle una palabra adelante. */
+.ficha__anterior {
+  font-size: 1.05rem;
+  font-weight: 450;
+  color: var(--acero);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.ficha__precio--consultar { font-size: 1.4rem; color: var(--navy-humo); }
+.ficha__detalle { margin: 1.25rem 0 0; color: #4a5468; }
+.ficha__aviso {
+  margin: 1.25rem 0 0;
+  font-size: .82rem;
+  color: var(--acero);
+}
+
+/* los dos bloques de abajo ocupan el ancho completo de la ficha */
+.bloque { grid-column: 1 / -1; }
+.bloque__titulo {
+  margin: 0 0 1.25rem;
+  padding-bottom: .75rem;
+  border-bottom: 3px solid var(--navy);
+  font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem);
+  font-variation-settings: var(--ancho-display);
+  text-transform: uppercase;
+}
+
+/* Dos columnas, Característica y Valor, igual que allá. Las filas alternan
+   fondo para poder seguir el renglón con el dedo en el celular. */
+.tabla-especificaciones {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .95rem;
+}
+.tabla-especificaciones th,
+.tabla-especificaciones td {
+  padding: .8rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--borde);
+}
+.tabla-especificaciones thead th {
+  background: var(--navy);
+  color: var(--blanco);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+}
+.tabla-especificaciones tbody th {
+  width: 45%;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  color: var(--navy);
+}
+.tabla-especificaciones tbody tr:nth-child(even) { background: var(--cemento); }
+
+.lista-incluye {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: .65rem;
+}
+.lista-incluye li {
+  position: relative;
+  padding-left: 1.6rem;
+}
+.lista-incluye li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 12px;
+  height: 4px;
+  background: var(--rojo);
+}
+
+.relacionados { margin-top: clamp(3rem, 6vw, 5rem); }
+
+/* --- otros rubros, al pie del catálogo ----------------------------------- */
+
+.otros-rubros__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chapa-rubro {
+  display: inline-block;
+  padding: .55rem 1rem;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--navy);
+  text-decoration: none;
+  transition: background-color .18s, color .18s, border-color .18s;
+}
+.chapa-rubro:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--blanco);
+}
+
+@media (min-width: 800px) {
+  .ficha { grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); }
+  /* la tabla y el "qué incluye" van uno al lado del otro si hay lugar */
+  .ficha .bloque { grid-column: auto; }
+  .ficha .bloque:only-of-type { grid-column: 1 / -1; }
+}
+
+/* --- 4 · el local -------------------------------------------------------- */
+
+/* La foto de fondo. El azul no se reemplaza: la foto se mezcla con `luminosity`,
+   así aporta solamente el claroscuro y el color lo sigue poniendo el navy de la
+   sección. Por eso no hay un segundo azul en juego ni riesgo de que el verde
+   flúor de la pared del local pelee con la paleta.
+
+   Va desenfocada a propósito: se busca la textura de una ferretería llena de
+   cosas, no una foto que uno se pare a mirar. De paso, las dos personas del
+   mostrador quedan como manchas y no se reconocen.
+
+   La capa cubre el 72 % de arriba y se desvanece: la sección es larga (álbum,
+   tira y marcas) y con `cover` de punta a punta la foto quedaría con un zoom
+   enorme. Termina de disolverse antes del estante de marcas, que se lee mejor
+   sobre azul plano. */
+#local { position: relative; isolation: isolate; overflow: hidden; }
+
+#local::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -60px -60px auto;      /* se pasa del borde: si no, el desenfoque deja un filo claro */
+  height: 72%;
+  background: url("../img/local/fondo-mostrador.webp") 50% 26% / cover no-repeat;
+  filter: grayscale(1) blur(5px) brightness(.92);
+  opacity: .34;
+  mix-blend-mode: luminosity;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 50%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, #000 50%, transparent 100%);
+  pointer-events: none;
+}
+
+/* El velo, igual que el del hero: la foto queda entera sobre el álbum y las
+   marcas, y se apaga del lado donde va el texto. Sin esto el párrafo cae sobre
+   una mancha clara de la foto y baja a 3,84:1, abajo del 4,5:1 que pide un
+   texto corrido. */
+#local::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(22, 32, 58, .82) 0%, rgba(22, 32, 58, .55) 34%, rgba(22, 32, 58, 0) 72%);
+  pointer-events: none;
+}
+
+/* En pantalla angosta el velo lateral no sirve: con 390 px de ancho el extremo
+   oscuro se come toda la pantalla y la foto desaparece. Pasa a ser vertical,
+   cargado arriba —donde cae el texto— y despejado sobre el álbum. */
+@media (max-width: 899px) {
+  #local::after {
+    background: linear-gradient(180deg, rgba(22, 32, 58, .88) 0%, rgba(22, 32, 58, .74) 30%, rgba(22, 32, 58, 0) 62%);
+  }
+
+  /* Y la foto sube: el recorte es mucho más cerrado que en pantalla ancha y con
+     la misma opacidad casi no se nota que hay algo atrás. */
+  #local::before { opacity: .46; }
+}
+
+/* El texto de «Cien años» y la foto del negocio, uno al lado del otro. La
+   grilla ya estaba armada para dos columnas desde antes: el texto se corta solo
+   a los 56 caracteres y dejaba 628 px de aire a la derecha, que es justo donde
+   entra la foto. Abajo de 900 px pasan a dos renglones, foto abajo. */
+.intro-local {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .intro-local { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.intro-local .encabezado { margin-bottom: 0; }
+
+.intro-local__foto { margin: 0; }
+
+/* La sombra es más honda que la del resto de la página: acá la foto va sobre
+   navy, y la sombra clara de las secciones blancas no se vería. */
+.intro-local__foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radio);
+  box-shadow: 0 4px 10px rgba(4, 8, 18, .35), 0 22px 55px rgba(4, 8, 18, .55);
+}
+
+/* --- el álbum ------------------------------------------------------------
+   Cinco hojas apiladas en el mismo lugar, cada una girando sobre su borde
+   interno como las hojas de un libro. Las tres claves del movimiento:
+   la tapa viene hacia adelante mientras las hojas salen por detrás, las
+   cinco arrancan y terminan juntas, y la profundidad ordena quién tapa a
+   quién. La tapa es la foto del cartel del frente: se abre y aparece el
+   local por dentro. */
+
+.album {
+  margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* la tapa crece al adelantarse: el aire de abajo la deja despegada del pie */
+  gap: clamp(2.25rem, 3.5vw, 3rem);
+  /* las hojas de afuera pueden pasarse de la caja; que se recorten limpio */
+  overflow: hidden;
+  padding-block: 2.5rem;
+}
+
+.album__pila {
+  position: relative;
+  width: clamp(170px, 30vw, 250px);
+  aspect-ratio: 5 / 7;
+  perspective: 2000px;
+  /* A propósito NO va preserve-3d. Con el apilado en 3D real, dos hojas
+     inclinadas se cruzan en el espacio y el navegador las corta por la línea
+     del cruce: se ve un pedazo de una, uno de la otra y de nuevo el de la
+     primera. En plano, cada hoja se dibuja entera y manda el z-index.
+     La perspectiva sigue funcionando porque está en el padre. */
+  transform-style: flat;
+}
+
+/* Cada hoja es una tarjeta: hoja blanca con la foto adentro y una franja
+   diagonal roja arriba y abajo. Ese filo en diagonal es lo que le da el aire
+   de página diseñada; con la foto a sangre las hojas se pegaban entre sí. */
+.album__hoja, .album__tapa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* en porcentaje, para que el marco acompañe el tamaño de la tarjeta */
+  padding: 9% 4%;
+  border-radius: var(--radio);
+  overflow: hidden;
+  background: var(--blanco);
+  transition: transform .8s cubic-bezier(.215, .61, .355, 1);
+}
+.album__hoja img, .album__tapa img {
+  flex: 1;
+  min-height: 0;      /* si no, la foto empuja y desborda la tarjeta */
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 2px;
+  background: var(--cemento);
+}
+
+/* las dos franjas en diagonal, arriba y abajo */
+.album__hoja::before, .album__tapa::before,
+.album__hoja::after,  .album__tapa::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6.5%;
+  background: var(--rojo);
+}
+/* las dos con la misma inclinación, para que se lean paralelas */
+.album__hoja::before, .album__tapa::before {
+  top: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 22%, 0 100%);
+}
+.album__hoja::after, .album__tapa::after {
+  bottom: 0;
+  clip-path: polygon(0 0, 100% 78%, 100% 100%, 0 100%);
+}
+
+/* Las hojas de atrás van apagándose: es lo que las manda al fondo y despega
+   la tapa. Con filtro y no con un velo encima, para no ensuciar el blanco. */
+.hoja-1 { filter: brightness(.9); }
+.hoja-2 { filter: brightness(.76); }
+
+.album__tapa { box-shadow: 0 18px 45px rgba(4, 8, 18, .65); }
+.hoja-1 { box-shadow: 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
+.hoja-2 { box-shadow: 12px 0 22px -14px rgba(4, 8, 18, .85), -12px 0 22px -14px rgba(4, 8, 18, .85); }
+.album__tapa img { object-position: 50% 22%; }   /* que se lea el cartel */
+
+/* La hoja del depósito lleva una foto apaisada (1400x900) en una caja vertical
+   de 5/7: entra el 46 % del ancho y el resto se pierde. Centrada, la ventana
+   caía justo sobre el cartel de Lüsqtoff y lo partía al medio. Corrida al
+   borde izquierdo, el cartel entra entero. Es la única hoja que lo necesita:
+   las otras tres son fotos verticales o escenas sin texto. */
+.album__hoja.izq.hoja-2 img { object-position: 6% 50%; }
+
+/* Quién tapa a quién: la tapa siempre arriba, después las hojas de adelante
+   y al fondo las de atrás. Al ser plano, esto lo decide el z-index y cada
+   hoja se dibuja completa, sin cortarse contra la de al lado. */
+.hoja-2      { z-index: 1; }
+.hoja-1      { z-index: 2; }
+.album__tapa { z-index: 3; }
+
+/* Cerrado: las cinco apiladas en el mismo lugar. */
+.hoja-2      { transform: translate3d(0, 0, 0px); }
+.hoja-1      { transform: translate3d(0, 0, 2px); }
+.album__tapa { transform: translate3d(0, 0, 4px); }
+
+/* Abierto: las hojas salen al costado girando sobre su lomo, y la tapa
+   avanza hacia el que mira. Ese avance de la tapa es lo que hace que se
+   lea como un libro que se abre y no como cuatro fotos separándose. */
+/* Cuánto se corre cada hoja al abrirse. Está en dos variables porque cambia
+   con el ancho de la pantalla y porque las mismas medidas las usa el bloque de
+   «reducir movimiento» de más abajo: si se tocan en dos lugares se
+   desincronizan, y ya pasó con otras cosas de este archivo.
+
+   POR QUÉ SE ABRE MÁS QUE ANTES. Con la apertura vieja —52 y 105— cada hoja
+   asomaba apenas la mitad: medido, 46 % las de adentro y 53 % las de afuera. Y
+   como dos de las fotos son apaisadas metidas en una caja vertical, que ya se
+   comen el 54 % del ancho, de la foto original quedaba a la vista un 24 %. Por
+   eso se veían como pedazos rotos: los carteles del local salían cortados al
+   medio —«SQTOFF» en vez de «LÜSQTOFF», «MEN» en vez de «BREMEN»—. Lo marcó
+   Nico. Con 85 y 170 cada hoja muestra entre el 81 y el 92 % de sí misma y las
+   cinco fotos se leen enteras.
+
+   Y POR QUÉ NO SIEMPRE. El abanico abierto necesita ancho: con 170 % ocupa 4,4
+   veces la hoja, o sea 1100 px. Medido, a 1000 px de pantalla las hojas de
+   afuera ya se salen 44 px de la caja y se cortan contra el borde. Así que la
+   apertura sube en dos escalones, y cada escalón se verificó con el aire que
+   queda hasta el borde: a 1200 sobran 56 px y a 1000, con la apertura del
+   medio, sobran 29. */
+.album {
+  --abre-1: 52%;
+  --abre-2: 105%;
+}
+@media (min-width: 1000px) { .album { --abre-1: 70%; --abre-2: 140%; } }
+@media (min-width: 1200px) { .album { --abre-1: 85%; --abre-2: 170%; } }
+
+.album--abierto .izq.hoja-1 { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
+.album--abierto .der.hoja-1 { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
+.album--abierto .izq.hoja-2 { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
+.album--abierto .der.hoja-2 { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+.album--abierto .album__tapa { transform: translate3d(0, 0, 150px) scale(1.05); }
+
+.album__pie {
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: #b9c2d4;
+}
+
+/* Sin animación: las hojas quedan abiertas de entrada, que es el estado
+   que se entiende. */
+@media (prefers-reduced-motion: reduce) {
+  .album__hoja, .album__tapa { transition: none; }
+  .album .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
+  .album .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
+  .album .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
+  .album .der.hoja-2  { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+  .album .album__tapa { transform: translate3d(0, 0, 150px) scale(1.05); }
+}
+
+/* tira de fotos del local */
+.tira {
+  position: relative;   /* el marco donde se cuelgan las flechas */
+  margin-block: clamp(2.5rem, 5vw, 4rem);
+}
+.tira__pista {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--navy-humo) transparent;
+}
+.tira__lista {
+  display: flex;
+  gap: .75rem;
+  margin: 0;
+  padding: 0 max(1.25rem, calc((100vw - var(--ancho)) / 2)) 1rem;
+  list-style: none;
+}
+.tira__lista li { flex: none; scroll-snap-align: center; }
+.tira__lista img {
+  height: clamp(260px, 40vw, 420px);
+  width: auto;
+  border-radius: var(--radio);
+}
+
+/* --- flechas de arrastre -------------------------------------------------
+   Las mismas para la tira del local y para el riel de rubros: las agrega el
+   JS (sin JS no harían nada) y aparecen solo cuando hay mouse y cuando
+   sobra contenido para correr. Con el dedo se arrastra y no hacen falta. */
+.flecha {
+  display: none;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--borde);
+  background: var(--blanco);
+  color: var(--navy);
+  cursor: pointer;
+  transition: background .2s, color .2s, opacity .2s, box-shadow .2s, border-color .2s;
+}
+.con-flechas .flecha { display: grid; }
+.flecha svg { width: 1.375rem; height: 1.375rem; }
+.flecha--izq svg { transform: rotate(180deg); }
+
+.flecha:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--blanco);
+  box-shadow: var(--sombra-alta);
+}
+/* Al llegar a la punta se apaga en vez de quedar gris: se entiende que no
+   hay más para ese lado. */
+.flecha[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* En la tira van colgadas encima de las fotos, a los costados. */
+.tira .flecha {
+  position: absolute;
+  top: calc(50% - .5rem);        /* la lista lleva 1rem de aire abajo */
+  z-index: 2;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  transform: translateY(-50%);
+}
+.tira .flecha--izq { left: max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem)); }
+.tira .flecha--der { right: max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem)); }
+
+/* En el riel de rubros van abajo a la derecha y son redondas, como allá. */
+.riel .flecha {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 999px;
+  background: transparent;
+  border-color: var(--acero);
+}
+.riel .flecha:hover { background: var(--navy); border-color: var(--navy); }
+/* Acá las dos quedan a la vista aunque no se puedan usar: son un par y de a
+   una sola se ven raras. En la tira, en cambio, van sobre las fotos y ahí sí
+   conviene que desaparezcan. */
+.riel .flecha[disabled] { opacity: .28; }
+
+/* Sin mouse no se muestran nunca. */
+@media (hover: none), (pointer: coarse) {
+  .con-flechas .flecha { display: none; }
+  .riel__flechas { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flecha { transition: none; }
+}
+
+/* La góndola: las marcas desfilan sobre un estante.
+   Sin JavaScript queda una sola fila que se arrastra con el dedo; el JS
+   duplica la fila y recién ahí arranca el movimiento continuo. */
+.gondola {
+  margin-top: 1.75rem;
+  padding-bottom: 1.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--navy-humo);   /* el filo del estante */
+}
+.gondola::-webkit-scrollbar { display: none; }
+
+.gondola--anima {
+  display: flex;
+  overflow: hidden;
+  /* los logos aparecen y desaparecen en vez de cortarse contra el borde */
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.gondola__fila {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0 1.25rem;
+  list-style: none;
+}
+.gondola--anima .gondola__fila {
+  flex: none;
+  padding: 0;
+  padding-right: 1rem;
+  animation: desfile 46s linear infinite;
+}
+.gondola--anima:hover .gondola__fila,
+.gondola--anima:focus-within .gondola__fila { animation-play-state: paused; }
+
+@keyframes desfile { to { transform: translateX(-100%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .gondola--anima { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
+  .gondola--anima .gondola__fila { animation: none; }
+}
+
+/* cada logo en su placa */
+.chapa {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 190px;
+  height: 96px;
+  padding: 1.1rem;
+  background: var(--blanco);
+  border-radius: var(--radio);
+}
+.chapa img {
+  width: auto;
+  max-width: 100%;
+  max-height: 52px;
+  object-fit: contain;
+}
+
+.marcas-mas {
+  max-width: 60ch;
+  margin: 1.75rem 0 0;
+  font-size: .95rem;
+  color: #b9c2d4;
+}
+
+/* --- 5 · contacto -------------------------------------------------------- */
+
+/* El camino del tesoro: se dibuja solo, marca la cruz al llegar y vuelve a
+   empezar. Es fondo, no contenido — el `aria-hidden` está en el HTML.
+
+   Cómo se dibuja una línea PUNTEADA de a poco. El truco de siempre
+   (`stroke-dasharray` + `stroke-dashoffset`) no sirve acá, porque el punteado
+   ES el dibujo: si se usa para revelar, deja de haber guiones. Van dos copias
+   del mismo trazado: la de abajo se ve y lleva el punteado quieto; la de
+   arriba es una máscara, un trazo blanco y gordo al que sí se le corre el
+   `dashoffset`. La máscara destapa la de abajo a medida que avanza.
+
+   `pathLength="1"` es lo que evita tener que medir el largo con JS: le dice al
+   navegador que cuente el trazado como si midiera 1, así el `dashoffset` va de
+   1 a 0 sea cual sea el largo real. Los dos trazados miden distinto y la misma
+   regla les sirve a los dos.
+
+   Se repite siempre, no se dispara con el scroll: lo pidió Nico así. Se pausa
+   sola cuando la sección no está a la vista (lo hace `main.js`), que es lo que
+   evita que un bucle infinito quede consumiendo batería en el resto de la
+   página. */
+.ruta {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* El ciclo entero, de la primera raya a que arranca de nuevo. Está acá
+     arriba porque los cuatro animados lo comparten: si se cambia, se cambia
+     una sola vez y no se desincronizan. */
+  --ciclo: 13s;
+}
+
+/* Dónde empieza y dónde termina el camino, en porcentaje sobre la caja de la
+   sección. Son las mismas coordenadas del trazado divididas por su viewBox:
+   600/1400 y 866/900 para la salida, 1234/1400 y 54/900 para la cruz.
+   **Si se toca el trazado hay que mover estos cuatro números**, o el punto y
+   la cruz quedan colgados en el aire lejos de la línea. Ya pasó una vez. */
+.ruta__salida { --x: 42.86%; --y: 96.22%; }
+.ruta__cruz   { --x: 88.14%; --y: 6%; }
+
+.ruta__mapa {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Abajo de 700 px manda el trazado parado: es donde la grilla de contacto
+   pasa a una sola columna y la sección se vuelve un rectángulo vertical. */
+.ruta__mapa--angosta { display: none; }
+@media (max-width: 699px) {
+  .ruta__mapa--ancha   { display: none; }
+  .ruta__mapa--angosta { display: block; }
+  .ruta__salida { --x: 42.5%; --y: 21.5%; }
+  .ruta__cruz   { --x: 70%;   --y: 53.33%; }
+}
+
+/* `non-scaling-stroke` es obligatorio, no un detalle. Los dos SVG se estiran
+   sin respetar la proporción, y en 1920 el ancho se estira 1,37 mientras el
+   alto queda en 0,99: sin esto los guiones de los tramos horizontales medirían
+   un 38 % más que los de los verticales y se vería el estirón. Con esto el
+   punteado se calcula en píxeles de pantalla y mide igual en todas partes. */
+.ruta__linea {
+  fill: none;
+  stroke: var(--navy-hondo);
+  stroke-width: 3.5px;
+  stroke-linecap: round;
+  stroke-dasharray: 13 11;
+  vector-effect: non-scaling-stroke;
+  opacity: .26;
+}
+
+/* La máscara: blanco es lo que se ve. Va gorda para tapar el punteado entero
+   —3,5 px de trazo más los extremos redondeados— pero no de más: cuanto más
+   ancha, más se adelanta el frente y menos se nota que el camino avanza.
+
+   **Acá está el truco de que se dibuje y después se borre de atrás para
+   adelante, con un solo número.** El punteado de la máscara es `1 1`: un
+   trazado prendido del largo entero y un hueco del largo entero. Al correr el
+   `dashoffset` de 1 a −1 de un tirón pasan las dos cosas seguidas:
+
+     · de 1 a 0 — asoma la cabeza y avanza: el camino se dibuja
+     · de 0 a −1 — la cola se despega de la salida y persigue a la cabeza,
+       que ya está quieta en la cruz: el camino se borra por donde vino
+
+   En −0,5, por ejemplo, lo visible es la mitad de adelante. Por eso la parte
+   de borrar no es una animación aparte ni un desvanecido: es el mismo
+   movimiento siguiendo de largo. Y como en 1 y en −1 no hay nada dibujado,
+   el salto del final al principio del bucle no se ve. */
+.ruta__revelado {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  animation: ruta-camino var(--ciclo) linear infinite;
+}
+
+/* El punto de salida. Es un `span` y no un `<circle>` a propósito: adentro del
+   SVG estirado saldría ovalado. */
+.ruta__salida {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 15px;
+  height: 15px;
+  margin: -7.5px 0 0 -7.5px;
+  border-radius: 999px;
+  background: var(--navy-hondo);
+  opacity: .26;
+  transform: scale(0);
+  animation: ruta-salida var(--ciclo) linear infinite;
+}
+
+/* La cruz. Es lo único rojo y es el rojo de la marca: no entra un color nuevo
+   a la página. Va aparte del SVG grande por lo mismo que el punto: estirada
+   quedaría torcida. */
+.ruta__cruz {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+}
+.ruta__aspa {
+  fill: none;
+  stroke: var(--rojo);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: .78;
+  animation: ruta-aspa var(--ciclo) linear infinite;
+}
+/* La segunda raya sale después: una cruz que se dibuja de a un palo se lee
+   como una mano marcando, las dos juntas se leen como un ícono que aparece. */
+.ruta__aspa:last-child { animation-name: ruta-aspa-2; }
+
+/* Los tiempos del ciclo, sobre 13 s:
+     0-4 %     aparece el punto de salida
+     0-48 %    se dibuja el camino (6,2 s)
+     48-56 %   la primera raya de la cruz
+     52-60 %   la segunda
+     60-70 %   queda quieto y entero, para poder mirarlo (1,3 s)
+     70-74 %   se apaga el punto de salida, que es de donde despega la cola
+     70-97 %   el camino se borra de atrás para adelante (3,5 s)
+     94-100 %  la cruz se apaga recién cuando la cola la alcanza
+     100 %     vuelve a empezar; el salto no se ve porque ahí no hay nada
+               dibujado.
+   Borrar va más rápido que dibujar a propósito: dibujar es lo que hay que
+   mirar, borrar es volver al principio. */
+@keyframes ruta-camino {
+  0%          { stroke-dashoffset: 1; }
+  48%, 70%    { stroke-dashoffset: 0; }
+  97%, 100%   { stroke-dashoffset: -1; }
+}
+@keyframes ruta-salida {
+  0%          { transform: scale(0); }
+  4%, 70%     { transform: scale(1); }
+  74%, 100%   { transform: scale(0); }
+}
+@keyframes ruta-aspa {
+  0%, 48%     { stroke-dashoffset: 1; opacity: .78; }
+  56%, 94%    { stroke-dashoffset: 0; opacity: .78; }
+  100%        { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes ruta-aspa-2 {
+  0%, 52%     { stroke-dashoffset: 1; opacity: .78; }
+  60%, 94%    { stroke-dashoffset: 0; opacity: .78; }
+  100%        { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* Mientras la sección no está a la vista se congela: un bucle infinito que
+   sigue dibujándose cinco pantallas más abajo es batería y nada más. La clase
+   la pone `main.js`; sin JS anda igual, sólo que sin pausarse. */
+.ruta--quieta,
+.ruta--quieta * { animation-play-state: paused; }
+
+/* Sin animación queda el dibujo terminado, con la cruz puesta: la sección no
+   pierde nada, sólo deja de moverse. */
+@media (prefers-reduced-motion: reduce) {
+  .ruta__revelado,
+  .ruta__salida,
+  .ruta__aspa { animation: none; }
+  .ruta__revelado { stroke-dashoffset: 0; }
+  .ruta__salida { transform: scale(1); }
+  .ruta__aspa { stroke-dashoffset: 0; }
+}
+
+/* La sección pasa a ser el marco del camino, y el contenido se sube por
+   encima: el camino le pasa por atrás al texto de la izquierda —a esa altura
+   la sección no tiene margen libre por los costados— y ahí lo único que lo
+   mantiene legible es que la línea vaya al 26 %. */
+#contacto { position: relative; overflow: hidden; }
+#contacto > .contenedor { position: relative; z-index: 1; }
+
+.contacto {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+.dato { margin-bottom: 2rem; }
+.dato__rotulo {
+  margin: 0 0 .4rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.dato__valor {
+  margin: 0;
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  color: var(--navy);
+}
+.dato__valor a { text-decoration: none; }
+.dato__valor a:hover { color: var(--rojo); }
+
+/* Un renglón por día, con el día en negrita adelante. Reemplazó a una tabla
+   de tres filas: la tabla alineaba las horas contra el borde derecho y dejaba
+   un hueco largo en el medio. */
+.horarios {
+  margin: 0;
+  padding: 0;
+  max-width: 30rem;
+  list-style: none;
+}
+.horarios li {
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--borde);
+  color: var(--navy);
+  line-height: 1.5;
+}
+.horarios li:last-child { border-bottom: 0; }
+.horarios__dia {
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 700;
+}
+/* La barrita entre las dos franjas: se lee como separador, no como texto. */
+.horarios__corte {
+  margin: 0 .2rem;
+  color: var(--acero);
+  font-weight: 400;
+}
+
+/* El porcentaje de descuento, como en Mercado Libre. Es lo único verde de la
+   página, así que se lee de una sola pasada. */
+.descuento {
+  align-self: center;
+  padding: .16rem .4rem;
+  background: var(--verde);
+  border-radius: var(--radio);
+  color: var(--blanco);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.contacto__mapa {
+  display: grid;          /* para que el mapa ocupe todo el alto disponible */
+  min-height: 340px;
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+.contacto__mapa iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  border: 0;
+}
+
+/* --- pie ----------------------------------------------------------------- */
+
+.pie {
+  padding-block: 3rem;
+  background: var(--navy-hondo);
+  color: #b9c2d4;
+}
+.pie__interior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  justify-content: space-between;
+}
+.pie__marca { display: flex; align-items: center; gap: 1rem; }
+/* El min-width es lo que evita el único desborde que tenía la página. El logo
+   de 220, la raya y «Sucursal Chivilcoy» piden 396 px en una fila; a 320 hay
+   296 y una imagen con ancho puesto no se achica sola: se iba 16 px al
+   costado. Con esto cede el logo —159 px a 320, todavía más grande que el de
+   la barra— y el pie sigue siendo un solo renglón en todos los anchos. */
+.pie__logo { width: 220px; min-width: 0; }
+.pie__sucursal {
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--rojo);
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--blanco);
+}
+.pie__datos p { margin: 0 0 .35rem; font-size: .93rem; }
+.pie__datos a { color: var(--blanco); text-decoration: none; border-bottom: 1px solid var(--navy-humo); }
+.pie__datos a:hover { border-color: var(--rojo); }
+
+/* --- botón flotante de WhatsApp ------------------------------------------ */
+
+.flotante {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(11, 18, 34, .3);
+  transition: transform .2s;
+}
+.flotante:hover { transform: scale(1.06); }
+
+/* --- aparición al hacer scroll ------------------------------------------- */
+
+.aparece {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .3, 1);
+}
+.aparece--visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .aparece { opacity: 1; transform: none; transition: none; }
+}
+
+/* --- el buscador ----------------------------------------------------------
+   La barra de búsqueda del encabezado, con los resultados colgando abajo. La
+   arma `buscador.js`, porque la barra está repetida en las tres páginas.
+
+   El campo se adapta al fondo: sobre la foto del hero va en blanco translúcido
+   y, cuando la barra se vuelve sólida al bajar, pasa a fondo cemento con texto
+   navy. Es el mismo juego que ya hacen el logo y la hamburguesa.  */
+
+.busca {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 26rem;
+  padding: .5rem .8rem;
+  background: rgba(255, 255, 255, .13);
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: var(--radio);
+  color: var(--blanco);
+  transition: background .2s, border-color .2s;
+}
+.busca:focus-within { background: rgba(255, 255, 255, .2); border-color: rgba(255, 255, 255, .5); }
+
+.barra--fija .busca {
+  background: var(--cemento);
+  border-color: var(--borde);
+  color: var(--navy);
+}
+.barra--fija .busca:focus-within { background: var(--blanco); border-color: var(--navy); }
+
+.busca__lupa { flex: none; opacity: .85; }
+
+.busca__entrada {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  font-variation-settings: var(--ancho-texto);
+  font-size: 1rem;        /* 16px: si es menos, el celular hace zoom solo al tocarlo */
+  line-height: 1.4;
+}
+.busca__entrada::placeholder { color: currentColor; opacity: .72; }
+.busca__entrada:focus { outline: none; }
+.busca__entrada::-webkit-search-cancel-button { display: none; }
+
+.busca__borrar {
+  flex: none;
+  padding: 0 .1rem;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-size: .85rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: .8;
+}
+.busca__borrar:hover { opacity: 1; }
+
+/* --- el desplegable de resultados --- */
+
+.busca__panel {
+  position: absolute;
+  top: calc(100% + .5rem);
+  right: 0;
+  z-index: 1;
+  /* Más ancho que el campo: colgado del borde derecho se estira hacia la
+     izquierda, así los nombres de producto no se parten en tres renglones.
+     En celular el campo ya ocupa todo, y el min-width lo iguala. */
+  min-width: 100%;
+  width: 30rem;
+  max-width: 92vw;
+  max-height: min(70vh, 30rem);
+  overflow-y: auto;
+  background: var(--blanco);
+  border-top: 2px solid var(--rojo);   /* el filo del sistema */
+  border-radius: 0 0 var(--radio) var(--radio);
+  box-shadow: var(--sombra-alta);
+  color: var(--tinta);
+}
+
+.busca__estado {
+  margin: 0;
+  padding: .6rem .85rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.busca__estado .enlace--linea { text-transform: none; }
+
+.busca__resultados {
+  margin: 0;
+  padding: 0 .35rem .35rem;
+  list-style: none;
+}
+
+.resultado {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem;
+  border-radius: var(--radio);
+  color: inherit;
+  text-decoration: none;
+}
+.resultado:hover,
+.resultado--marcado { background: var(--cemento); }
+
+.resultado img,
+.resultado__sin-foto {
+  width: 42px;
+  height: 52px;              /* la misma proporción vertical que la tarjeta */
+  object-fit: contain;
+  background: var(--cemento);
+  border-radius: var(--radio);
+}
+.resultado__texto { display: grid; gap: .1rem; min-width: 0; }
+.resultado__rubro {
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.resultado__nombre {
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 700;
+  font-size: .95rem;
+  line-height: 1.25;
+  color: var(--navy);
+}
+.resultado__precio {
+  font-variation-settings: var(--ancho-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -.01em;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+/* --- adaptación a pantallas ---------------------------------------------- */
+
+@media (min-width: 700px) {
+  .contacto { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .contacto__mapa { min-height: 100%; position: sticky; top: 6rem; }
+}
+
+
+/* En pantalla angosta las fichas se achican para que entre más de una. La
+   pregunta ya no comparte renglón con la tira, así que no hay nada más que
+   reacomodar acá. */
+@media (max-width: 899px) {
+  .riel__lista li { width: clamp(9.5rem, 42vw, 12rem); }
+}
+
+/* Debajo de esto el campo de búsqueda no entra en el mismo renglón que el logo,
+   el menú y el botón: a 940 px queda de 117 px, donde no se lee lo que uno
+   escribe. Así que el encabezado pasa a dos renglones y la búsqueda se lleva
+   el de abajo entero. */
+@media (max-width: 1149px) {
+  .barra__interior { flex-wrap: wrap; gap: .75rem 1.25rem; }
+  .barra__marca    { order: 0; }
+  .barra__nav      { order: 1; }
+  .barra__acciones { order: 2; margin-left: auto; }
+  .hamburguesa     { order: 2; }
+  .busca           { order: 3; flex: 1 1 100%; max-width: none; }
+}
+
+@media (max-width: 879px) {
+  .barra__nav, .barra__acciones { display: none; }
+  .hamburguesa { display: flex; }
+  .menu-movil:not([hidden]) { display: flex; }
+  .hero__pie { flex-direction: column; align-items: flex-start; gap: .75rem; }
+}
+
+@media (max-width: 560px) {
+  .hero { min-height: min(92svh, 720px); }
+  .hero__botones .boton { flex: 1 1 100%; }
+  .grilla-productos { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .85rem; }
+  .producto__cuerpo { padding: .85rem .9rem 1rem; }
+  .producto__precio { font-size: 1.2rem; }
+  .flotante { width: 50px; height: 50px; }
+  /* En pantalla angosta la pila se achica y el abanico abre menos, para que
+     las hojas de afuera entren enteras en vez de cortarse contra el borde. */
+  .album__pila { width: clamp(132px, 37vw, 168px); }
+  .album { --abre-1: 38%; --abre-2: 74%; }
+  .album--abierto .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 34px) rotateY(-15deg); }
+  .album--abierto .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 34px) rotateY(15deg); }
+  .album--abierto .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
+  .album--abierto .der.hoja-2  { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+  .album--abierto .album__tapa { transform: translate3d(0, 0, 100px) scale(1.03); }
+  .chapa { width: 152px; height: 82px; padding: .85rem; }
+  .chapa img { max-height: 42px; }
+  .gondola__fila { gap: .7rem; }
+}
+
+/* El botón de menú, en pantalla angosta: se va la palabra y queda el ícono.
+   El logo (150) más «Sucursal Chivilcoy» (85) más el botón con la palabra
+   (74) no entran: a 375 px el botón se caía a un renglón propio, con «MENÚ»
+   solo pegado a la derecha, y el encabezado pasaba de 112 a 154 px de alto.
+
+   El corte está en 400 y no en 380 por la tipografía de repuesto. Si Google
+   Fonts no contesta y entra la del sistema, el rótulo y la palabra crecen
+   —el botón pasa de 74 a 81 px— y entonces el renglón ya se rompe a 390 y a
+   386, que es justo la medida de los teléfonos más comunes. Medido cortando
+   el pedido a fonts.gstatic.com.
+
+   La palabra no se pierde: queda recortada, no escondida, así que sigue
+   siendo el nombre del botón y el lector de pantalla la dice igual. */
+@media (max-width: 400px) {
+  .hamburguesa__texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Más abajo todavía no cierra: a 320 px el renglón de arriba pide 314 y con
+   2,5rem de margen quedan 280. Se achica el aire de los costados —el de toda
+   la página, no sólo el de la barra, para que la búsqueda siga alineada con
+   el texto de abajo— y se acorta el hueco entre el rótulo y la hamburguesa.
+   Con eso el encabezado vuelve a un solo renglón, 112 px en vez de 142, sin
+   achicar el logo ni sacar «Sucursal Chivilcoy».
+
+   El corte va en 360 y no en 340, que sería lo justo: con la tipografía de
+   repuesto la franja de 341 a 344 se caía igual. 360 deja margen y es una
+   medida de teléfono real, no un número al borde. */
+@media (max-width: 360px) {
+  :root { --margen: 1.5rem; }
+  .barra__interior { gap: .75rem; }
+}
