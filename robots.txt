@@ -1,0 +1,9 @@
+# El sitio entero se puede indexar salvo el panel, que además ya lleva
+# noindex en su propio HTML y una cabecera X-Robots-Tag en netlify.toml.
+# Las tres cosas dicen lo mismo a propósito: robots.txt es una sugerencia,
+# las otras dos son la que manda.
+User-agent: *
+Disallow: /admin.html
+Allow: /
+
+Sitemap: __SITIO__/sitemap.xml

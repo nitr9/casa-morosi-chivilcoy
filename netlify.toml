@@ -1,0 +1,110 @@
+# Cómo se publica el sitio
+# =============================================================================
+# El proyecto es HTML puro y no tiene dependencias, así que acá no se compila
+# nada. Lo único que corre es un reemplazo de texto: las etiquetas de vista
+# previa (og:) necesitan direcciones ABSOLUTAS, y el dominio no se sabe hasta
+# que Netlify lo asigna. Se escribe __SITIO__ en el HTML y Netlify lo cambia
+# por el dominio de verdad en cada publicación, incluido el propio si algún día
+# se compra uno.
+#
+# Los dos puntos por si algo falla:
+#   · si el título de la vista previa de WhatsApp sale bien pero la foto no,
+#     mirar que og:image haya quedado absoluta en el HTML publicado;
+#   · si el panel no deja entrar, falta agregar el dominio en la consola de
+#     Firebase (está explicado en DESPLIEGUE.md).
+
+# ---8<--- publicar.mjs corta desde acá
+# Este bloque sólo sirve publicando desde el repositorio. En un despliegue por
+# arrastre Netlify no ejecuta ninguna orden, así que `publicar.mjs` recorta
+# estas líneas al armar la carpeta y hace el reemplazo él mismo.
+[build]
+  publish = "."
+  # Si Netlify no pasa URL, la publicación falla acá en vez de subir el sitio
+  # con las direcciones rotas y que nadie se entere.
+  command = 'sed -i "s|__SITIO__|${URL:?Netlify no pasó la variable URL}|g" index.html sitemap.xml robots.txt'
+# ---8<--- hasta acá
+
+# --- lo que no se publica ----------------------------------------------------
+# Estos archivos viajan en el repositorio pero no tienen por qué quedar a la
+# vista: son las notas internas del proyecto. Van uno por uno porque los
+# comodines de Netlify sólo funcionan al final de la ruta, no como "*.md".
+# force = true es imprescindible: sin eso, el archivo real le gana a la regla.
+
+[[redirects]]
+  from = "/PENDIENTES.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/FIREBASE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/DESPLIEGUE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/servidor.mjs"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/publicar.mjs"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# Publicando desde la raíz, este mismo archivo queda dentro de lo que se sirve.
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# --- cabeceras ---------------------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=(), usb=()"
+
+    # Probada contra las cuatro páginas antes de ponerla acá: cero violaciones,
+    # con Firestore trayendo productos y rubros, la tipografía cargando y el
+    # mapa andando. Una CSP mal escrita no da error visible —simplemente deja
+    # de cargar cosas—, así que si se toca, hay que volver a probarla.
+    #
+    # Qué habilita cada cosa y por qué:
+    #   script-src  www.gstatic.com   de ahí se importa el SDK de Firebase
+    #   style-src   fonts.googleapis  la hoja de estilos de Google Fonts
+    #   font-src    fonts.gstatic     los archivos de la tipografía Archivo
+    #   img-src     data:             las fotos de los rubros vienen en base64
+    #                                 adentro del documento de Firestore
+    #   connect-src firestore/…       Firestore y el login del panel
+    #   frame-src   www.google.com    el mapa de "Cómo llegar"
+    # No hace falta 'unsafe-inline' en ningún lado: el sitio no tiene ni un
+    # estilo ni un script escrito dentro del HTML. Si alguna vez se agrega uno,
+    # esta cabecera lo va a bloquear, y está bien que así sea.
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' https://www.gstatic.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; frame-src https://www.google.com https://maps.google.com"
+
+# El panel no se indexa ni se guarda en ninguna cache intermedia.
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+# A propósito NO se toca el Cache-Control del resto. Los nombres de archivo no
+# llevan huella (es `estilos.css`, no `estilos.9f3a2.css`), así que una cache
+# larga dejaría a la gente viendo la versión vieja después de cada cambio. Lo
+# que trae Netlify de fábrica ya guarda todo en su red y lo renueva solo al
+# publicar. Cuando las fotos del local dejen de moverse (puntos 27 y 28), ahí sí
+# conviene ponerle cache larga a /img/*.

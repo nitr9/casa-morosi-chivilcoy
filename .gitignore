@@ -8,3 +8,6 @@ desktop.ini
 
 # Por si algún día se instalan dependencias acá
 node_modules/
+
+# La carpeta que arma publicar.mjs para subir a Netlify: se regenera sola.
+publicar/

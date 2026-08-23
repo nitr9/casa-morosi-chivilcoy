@@ -7,11 +7,22 @@
 <meta name="description" content="Sucursal Chivilcoy de Casa Morosi, ferretería industrial con más de 100 años. Herramientas eléctricas y manuales, compresores, motosierras, riego y tractores. Av. Mitre 220. Abierto de lunes a sábado.">
 <meta name="theme-color" content="#253961">
 
+<!-- La vista previa que arma WhatsApp o Facebook cuando alguien pega el link.
+     og:image y og:url tienen que ser direcciones ABSOLUTAS: con una ruta
+     relativa la foto no aparece. __SITIO__ lo reemplaza Netlify al publicar
+     por el dominio de verdad; está explicado en netlify.toml. Abriendo el
+     archivo en la computadora estas cuatro líneas quedan sin resolver, y no
+     pasa nada: sólo las leen los robots. -->
+<link rel="canonical" href="__SITIO__/">
 <meta property="og:type" content="website">
+<meta property="og:url" content="__SITIO__/">
+<meta property="og:site_name" content="Casa Morosi Chivilcoy">
 <meta property="og:title" content="Casa Morosi · Sucursal Chivilcoy">
 <meta property="og:description" content="Más de 100 años de experiencia y responsabilidad nos avalan. Av. Mitre 220, Chivilcoy.">
-<meta property="og:image" content="img/hero-fachada-1200.webp">
+<meta property="og:image" content="__SITIO__/img/hero-fachada-1200.webp">
+<meta property="og:image:alt" content="El frente de Casa Morosi sobre Av. Mitre, con las máquinas y las hormigoneras en la vereda.">
 <meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="img/icono.png">
 <link rel="apple-touch-icon" href="img/icono.png">
@@ -288,12 +299,36 @@
 
     <div class="tira" data-tira>
       <div class="tira__pista" data-pista>
+        <!-- Trece de las catorce que mandó Santiago el 20/8, más `despliegue`,
+             que es la única que quedó de la tanda anterior y va primera porque
+             la eligió Nico para abrir. De las dos del sector Bremen queda sólo
+             `sector-bremen`, la frontal; `panel-llaves` es el mismo sector de
+             costado y sale (sigue en img/local/ para las hojas del álbum).
+
+             El orden está pensado, no es el de la carpeta: las tres verticales
+             caen en los lugares 2, 5 y 9 para que no se junten, y no hay dos
+             fotos del mismo color o del mismo sector una al lado de la otra.
+             `despliegue` y `milwaukee-packout` son las dos muy rojas de
+             Milwaukee, por eso van en el 1 y en el 6. Las dos de cortadoras de
+             césped son casi la misma foto: van en el 5 y en el 9.
+
+             Todas entran a 840 px de alto, que es el doble del máximo al que
+             se muestran (`height: clamp(260px, 40vw, 420px)` en estilos.css). -->
         <ul class="tira__lista">
-          <li><img src="img/local/milwaukee.webp" width="1200" height="800" loading="lazy" alt="Pared de herramientas Milwaukee."></li>
-          <li><img src="img/local/lusqtoff.webp" width="900" height="1200" loading="lazy" alt="Exhibidor de productos Lusqtoff."></li>
-          <li><img src="img/local/despliegue.webp" width="1200" height="800" loading="lazy" alt="Máquinas desplegadas en el salón."></li>
-          <li><img src="img/local/tractor.webp" width="1200" height="800" loading="lazy" alt="Tractor de corte exhibido en el local."></li>
-          <li><img src="img/local/motosierras.webp" width="1200" height="675" loading="lazy" alt="Pared con motosierras Husqvarna, Niwa y Echo colgadas."></li>
+          <li><img src="img/local/despliegue.webp" width="1200" height="800" loading="lazy" alt="Valijas y bolsos Milwaukee Packout desplegados en el piso del salón."></li>
+          <li><img src="img/local/mesa-electrica.webp" width="623" height="840" loading="lazy" alt="Mesa larga con herramienta eléctrica en sus valijas, bajo el cartel de Lüsqtoff."></li>
+          <li><img src="img/local/sector-bremen.webp" width="1133" height="840" loading="lazy" alt="El sector de Bremen de frente: el toldo, los paneles azules de herramienta y la escalera."></li>
+          <li><img src="img/local/compresores-lusqtoff.webp" width="1133" height="840" loading="lazy" alt="Compresores de aire Lüsqtoff sobre el piso de césped sintético verde."></li>
+          <li><img src="img/local/cortadoras-niwa.webp" width="623" height="840" loading="lazy" alt="Cortadoras de césped en el estante, bajo el cartel de Niwa."></li>
+          <li><img src="img/local/milwaukee-packout.webp" width="1133" height="840" loading="lazy" alt="Pared de Milwaukee con los taladros colgados y las cajas Packout apiladas abajo."></li>
+          <li><img src="img/local/motosierras-sol.webp" width="1133" height="840" loading="lazy" alt="Pared de motosierras Husqvarna con el sol entrando de costado."></li>
+          <li><img src="img/local/gondola-bateria.webp" width="1133" height="840" loading="lazy" alt="Góndola de herramienta a batería de punta a punta, con máquinas de varias marcas."></li>
+          <li><img src="img/local/cortadoras-fila.webp" width="623" height="840" loading="lazy" alt="Fila de cortadoras de césped con las motoguadañas colgadas detrás."></li>
+          <li><img src="img/local/pared-mano.webp" width="1133" height="840" loading="lazy" alt="Pared de herramienta de mano: destornilladores, martillos, palas y rastrillos."></li>
+          <li><img src="img/local/salon-ancho.webp" width="1133" height="840" loading="lazy" alt="El salón a lo ancho, con la pluma, el carro de cajones y los compresores."></li>
+          <li><img src="img/local/maquinas-grandes.webp" width="1133" height="840" loading="lazy" alt="Hormigonera, hidrolavadoras y aspiradoras industriales juntas en el salón."></li>
+          <li><img src="img/local/panel-lusqtoff.webp" width="1133" height="840" loading="lazy" alt="Panel negro de Lüsqtoff con sopladores, bordeadoras y herramienta naranja."></li>
+          <li><img src="img/local/exhibidores.webp" width="1133" height="840" loading="lazy" alt="Exhibidores de Lüsqtoff y el panel de herramienta de la pared del fondo."></li>
         </ul>
       </div>
     </div>
@@ -319,8 +354,8 @@
 
     <div class="contenedor">
       <p class="marcas-mas">
-        Y también Bosch, Makita, Bahco, Stanley, Kärcher, Gardena, Einhell, Total,
-        Bremen y Gherardi. Si buscás una marca que no ves acá, preguntanos igual.
+        Y también Bosch, Makita, Bahco, Gardena, Einhell, Bremen y Gherardi.
+        Si buscás una marca que no ves acá, preguntanos igual.
       </p>
     </div>
   </section>
@@ -435,10 +470,26 @@
       <img class="pie__logo" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="220px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
       <p class="pie__sucursal">Sucursal Chivilcoy</p>
     </div>
-    <div class="pie__datos">
+
+    <nav class="pie__bloque" aria-label="Secciones de la página">
+      <h2 class="pie__titulo">La página</h2>
+      <ul class="pie__lista">
+        <li><a href="/#rubros">Rubros</a></li>
+        <li><a href="/#productos">Ofertas</a></li>
+        <li><a href="/#local">Nosotros</a></li>
+        <li><a href="/#contacto">Cómo llegar</a></li>
+      </ul>
+    </nav>
+
+    <!-- Por ahora el contacto es WhatsApp y por eso va primero y destacado. Si
+         más adelante se suma el correo, entra como un renglón más de esta lista
+         y no hay que tocar nada más. -->
+    <div class="pie__bloque pie__datos">
+      <h2 class="pie__titulo">Contacto</h2>
+      <p class="pie__wa"><a href="https://wa.me/5492345510888" target="_blank" rel="noopener">Escribinos por WhatsApp</a></p>
+      <p><a href="tel:+5492345510888">2345 510888</a></p>
       <p>Av. Mitre 220, Chivilcoy (B6620), Buenos Aires</p>
-      <p><a href="tel:+5492345510888">2345 510888</a> · <a href="https://wa.me/5492345510888" target="_blank" rel="noopener">WhatsApp</a></p>
-      <p>Lunes a viernes de 7 a 12:30 y de 15 a 20:30 · Sábados de 7 a 12</p>
+      <p>Lunes a viernes de 7 a 12:30 y de 15 a 20:30<br>Sábados de 7 a 12</p>
     </div>
   </div>
 </footer>

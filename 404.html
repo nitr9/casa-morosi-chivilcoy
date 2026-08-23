@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esta página no existe · Casa Morosi Chivilcoy</title>
+<meta name="description" content="La dirección que buscabas no existe en el sitio de Casa Morosi, sucursal Chivilcoy.">
+<meta name="theme-color" content="#253961">
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="img/icono.png">
+<link rel="apple-touch-icon" href="img/icono.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="error">
+
+<!-- Armada sólo con clases que ya existen en estilos.css. No lleva ni un
+     estilo escrito acá adentro a propósito: la CSP de netlify.toml no
+     permite estilos en línea, y esta página tiene que seguir andando el día
+     que alguien la abra desde un link viejo. -->
+
+<main class="seccion seccion--navy" id="contenido">
+  <div class="contenedor">
+    <header class="encabezado encabezado--claro">
+      <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>Error 404</p>
+      <h1 class="titulo">Esta página no existe</h1>
+      <p class="entrada">
+        Puede que el link esté viejo o que la dirección tenga un error de tipeo.
+        El catálogo y los datos del local están todos en la portada.
+      </p>
+      <p class="entrada">
+        Si estabas buscando un producto que te pasamos por WhatsApp y ya no aparece,
+        escribinos y te lo mandamos de nuevo.
+      </p>
+    </header>
+
+    <div class="error__botones">
+      <a class="boton boton--rojo" href="/">Ir a la portada</a>
+      <a class="boton boton--contorno" href="https://wa.me/5492345510888" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+    </div>
+  </div>
+</main>
+
+<footer class="pie">
+  <div class="contenedor pie__interior">
+    <div class="pie__marca">
+      <img class="pie__logo" src="img/logo-blanco.png" srcset="img/logo-blanco.png 420w, img/logo-blanco@2x.png 840w" sizes="220px" width="420" height="71" alt="Casa Morosi, ferretería industrial">
+      <p class="pie__sucursal">Sucursal Chivilcoy</p>
+    </div>
+
+    <nav class="pie__bloque" aria-label="Secciones de la página">
+      <h2 class="pie__titulo">La página</h2>
+      <ul class="pie__lista">
+        <li><a href="/#rubros">Rubros</a></li>
+        <li><a href="/#productos">Ofertas</a></li>
+        <li><a href="/#local">Nosotros</a></li>
+        <li><a href="/#contacto">Cómo llegar</a></li>
+      </ul>
+    </nav>
+
+    <!-- Por ahora el contacto es WhatsApp y por eso va primero y destacado. Si
+         más adelante se suma el correo, entra como un renglón más de esta lista
+         y no hay que tocar nada más. -->
+    <div class="pie__bloque pie__datos">
+      <h2 class="pie__titulo">Contacto</h2>
+      <p class="pie__wa"><a href="https://wa.me/5492345510888" target="_blank" rel="noopener">Escribinos por WhatsApp</a></p>
+      <p><a href="tel:+5492345510888">2345 510888</a></p>
+      <p>Av. Mitre 220, Chivilcoy (B6620), Buenos Aires</p>
+      <p>Lunes a viernes de 7 a 12:30 y de 15 a 20:30<br>Sábados de 7 a 12</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,13 +1,20 @@
 # Pendientes
 
-Al 21/8/2026, cerrado al final del día. Firebase está conectado y el primer producto quedó cargado y
-probado desde el panel. El hero ya tiene el video del frente con viento en las
-hojas (punto 17), el encabezado y el pie entran bien en los teléfonos
-angostos (punto 23) y la sección de ofertas dejó de ser un blanco liso: ahora
-es un tablero perforado con su regleta de luz, que prende cuando la sección
-entra en pantalla (puntos 24 y 25). El álbum de «Nosotros» abre más el abanico
-y las fotos dejaron de verse cortadas (punto 26), y los enlaces del menú frenan
-donde se ve el arranque de cada sección (punto 29).
+Al 22/8/2026, cerrado al final del día. **El sitio está listo para publicarse en
+Netlify**: la configuración, las cabeceras y la guía están en `DESPLIEGUE.md`
+(punto 8). La base quedó limpia —se borraron los dos productos de prueba— y se
+comprobó que con cero productos la portada se ve bien, que es el estado con el
+que va a arrancar (punto 3). La tira de fotos del local se rehízo entera con las
+catorce que mandó Santiago (puntos 31 y 32), el pie pasó a tener las secciones y
+el contacto (punto 32), y el botón de WhatsApp dejó de tapar las flechas de los
+carruseles (punto 30).
+
+**Lo que se está pensando ahora es el punto 33**, una vidriera para las máquinas
+que entran al local. Está en debate, sin nada decidido ni tocado.
+
+**Lo que frena la publicación** son dos cosas de fotos: la fachada aparece dos
+veces seguidas en «Nosotros» (punto 27) y falta elegir las hojas del álbum
+(punto 28).
 
 Abajo hay dos listas: **lo que falta** y **lo que ya está hecho**. La segunda no es
 un registro de méritos: casi cada punto salió de algo que se midió y guarda el
@@ -47,15 +54,53 @@ para no volver a mirarlo foto por foto:
 | `frente-vertical` | vertical | el frente, casi igual a la tapa | sin usar |
 | `fondo-mostrador` | apaisada | **el mostrador con los muchachos atendiendo** | fondo de la sección, al 8 % |
 
-**La regla, que es la que importa:** la hoja es una caja vertical de 5/7. Las
-verticales entran enteras y **las apaisadas pierden la mitad del ancho**. Hoy dos
-de las cinco son apaisadas y por eso se veían cortadas (punto 26). Si se sacan
-fotos nuevas para las hojas, que sean **verticales**.
+**La regla, que es la que importa** (corregida el 22/8/2026, midiendo en el
+navegador): la **hoja** es de 5/7, pero el **hueco de la foto adentro** es de
+**3/4**. La tarjeta mide 250×350 px y el hueco, 230×305: da 0,754. La diferencia
+sale de que `padding: 9% 4%` se mide siempre contra el **ancho**, también arriba
+y abajo, así que el marco se come más alto que ancho. De ahí:
 
-**Lo que se propuso** (queda a decisión de Nico): traer `lusqtoff` de la tira y
-sumar `motosierras` —que aunque es apaisada se lee recortada, porque es un
-patrón que se repite— en lugar de `deposito` y `mostrador`, que se irían a la
-tira, que es donde las apaisadas van bien.
+- las verticales de **900×1200 son exactamente 3/4**: entran enteras;
+- las apaisadas de 1200×800 pierden **la mitad justa** del ancho;
+- para `deposito` (1400×900) entra el **48,5 %**, no el 46 % que decía esta nota
+  cuando la caja se creía de 5/7.
+
+Hoy dos de las cinco son apaisadas y por eso se veían cortadas (punto 26). Si se
+sacan fotos nuevas para las hojas, que sean verticales **de 3/4**, que es la
+proporción del hueco; 5/7 deja una franja de más.
+
+**Las catorce de Santiago (22/8/2026).** Ya entraron al proyecto: están en
+`img/local/` con nombre propio, a 840 px de alto, y **las catorce se usan en la
+tira** (punto 31). El original de cada una sigue en
+`Desktop\fotos nuevas landing chivilcoy` por si hace falta otro recorte.
+Vienen todas de 1186×1599 o 1599×1186 —pasaron por WhatsApp y quedaron del mismo
+tamaño—, así que las cuatro verticales dan 0,742 y **entran en la hoja al 98 %**,
+igual que las viejas. Con eso hay **ocho fotos que entran enteras para cuatro
+hojas**: el álbum se puede armar sin una sola apaisada, y la propuesta de abajo
+—que resignaba una hoja a `motosierras` recortada al 42 %— ya no hace falta.
+
+Dos cosas que las nuevas **no** resuelven: no hay ninguna del frente, así que el
+punto 27 sigue abierto; y ninguna reemplaza a `fondo-mostrador`, que sigue siendo
+la única con gente atendiendo.
+
+**Antes de usar dos de ellas, preguntar.** `5c687d54` y `dbb84c4d` —las dos
+verticales de cortadoras de césped, que por forma son de las mejores— tienen
+**piso de baldosa**, no el césped sintético verde del salón. Puede ser otro
+sector del mismo local, pero es justo el tipo de detalle que separa una sede de
+la otra: vale confirmarlo con Nico antes de ponerlas.
+
+**Para elegir mirando** hay una hoja aparte con las **veintisiete** fotos metidas
+en la hoja de verdad y, al lado, la foto entera con el recorte marcado encima:
+<https://claude.ai/code/artifact/7a5803a7-b120-4bc7-a449-1207ce797e2b>. Las
+fotos van embebidas en esa página, así que se sostiene sola; el guion que la
+armó era de un solo uso y no se guardó en el repo a propósito, para no meterle
+un `herramientas/` a un proyecto que no tiene dependencias.
+
+**Lo que se propuso cuando había trece** (superado por las nuevas, se deja
+porque el punto 26 lo referencia): traer `lusqtoff` de la tira y sumar
+`motosierras` —que aunque es apaisada se lee recortada, porque es un patrón que
+se repite— en lugar de `deposito` y `mostrador`, que se irían a la tira, que es
+donde las apaisadas van bien.
 
 **Y una para mirar aparte:** `fondo-mostrador` es el mostrador con los muchachos
 atendiendo y hoy está sólo de fondo al 8 %, casi invisible. La sección se llama
@@ -71,8 +116,15 @@ el proyecto. Hay que guardarla en `img/local/` y pasar las tres medidas a webp;
 después es cambiar `src` y `srcset` y nada más. **Está marcado con un OJO en el
 HTML** para que no se publique así.
 
-**3. Borrar la motosierra de prueba**, si no se borró ya, para que la base
-arranque limpia.
+**3. ~~Borrar los productos de prueba.~~ HECHO (22/8/2026).** Eran dos, no sólo
+la motosierra: también un `Milwaukee 18V M18 FUEL` con «disco de 115 mm
+triangular» y 53 % de descuento. Nico los borró desde el panel.
+
+Con la base vacía se probó la portada, que es el estado con el que va a arrancar
+el sitio recién publicado: la sección de ofertas muestra su propio cartel
+—«Por ahora no hay ofertas publicadas», con la remisión a los rubros y al
+WhatsApp—, sin layout roto ni errores de consola, en escritorio y en celular.
+Queda cargar ofertas de verdad, pero ya no frena la publicación.
 
 **7. Vista previa de WhatsApp — la decisión más importante que queda.**
 WhatsApp y Facebook **no ejecutan JavaScript** al armar la vista previa de un
@@ -86,14 +138,32 @@ página aparte. Opciones:
   queda descartado por ahora);
 - dejarlo así y que la vista previa sea la del sitio.
 
-**8. Hosting.**
-Firebase Hosting entra en el plan Spark y da un dominio `.web.app` gratis; se
-publica con la consola de comandos de Firebase. Falta decidir si va con dominio
-propio. Dos cosas para no olvidar cuando se publique:
+**8. Hosting: va por Netlify, y ya está preparado (22/8/2026).**
+Se descartó Firebase Hosting. Todo lo necesario quedó en el repositorio y las
+instrucciones en **`DESPLIEGUE.md`**: `netlify.toml` (carpeta a publicar,
+cabeceras de seguridad y los 404 de los archivos internos), `publicar.mjs` (arma
+una carpeta para arrastrar, si se prefiere ese camino), `robots.txt`,
+`sitemap.xml` y `404.html`.
+
+Falta sólo **decidir si va con dominio propio**, y después de publicar:
 - agregar el dominio a **Authentication → Settings → Dominios autorizados**, si
-  no, no se puede entrar al panel desde ahí;
+  no, no se puede entrar al panel desde ahí. El catálogo sí anda igual: leer
+  Firestore no mira el dominio;
 - `admin.html` queda accesible para cualquiera que sepa la dirección. Los datos
   están protegidos por las reglas, pero conviene tenerlo presente.
+
+Dos decisiones que quedaron escritas y conviene no deshacer sin leer el motivo:
+la **cache** quedó en lo que trae Netlify de fábrica porque los nombres de
+archivo no llevan huella, y la **CSP** se probó contra las cuatro páginas antes
+de ponerla —se apoya en que no hay ni un estilo ni un script escritos adentro
+del HTML, así que si algún día se agrega uno, lo va a bloquear en silencio—.
+
+**El teléfono está confirmado (22/8/2026).** Se deja anotado porque el proyecto
+anterior —el de Astro, en `Desktoplanding casa de herramientas`— marcó el
+número como sospechoso y propuso cambiarlo: razonó que 2345 es la
+característica de Veinticinco de Mayo y que la de Chivilcoy es 2346, y dejó
+escrito `+54 9 2346 51-0888` como corrección probable. **Nico confirmó que el
+bueno es el que está en el sitio: 2345 510888.** No cambiarlo por esa nota.
 
 **9. Instagram propio de la sede**, si tiene. Es el único dato de contacto que
 quedó sin confirmar.
@@ -102,6 +172,71 @@ quedó sin confirmar.
 Queda decidir. Hoy es 4/5. En cuadrado la grilla baja un 11 % más (614 → 544 px
 con 4 tarjetas) y es la proporción de Mercado Libre y Amazon, pero un producto
 vertical como la motosierra se ve más chico. Es una línea en `.producto__foto`.
+
+
+**33. La vidriera: una sección para lo que entra al local. EN DEBATE — no decidido.**
+Charlado el 22/8/2026 a la tarde, sin tocar código a pedido de Nico. Se deja
+entero porque la idea se movió tres veces y lo que se descartó explica lo que
+quedó.
+
+**Cómo empezó y en qué terminó.** Arrancó como «aprovechar mejor las tarjetas de
+rubro», pasó por «lo nuevo que llegó», siguió por «catálogos de las marcas en
+PDF» —con una referencia del sitio de Lüsqtoff, tapas con las hojas abiertas en
+abanico detrás— y terminó en algo distinto y mejor: **una vidriera**. Una o dos
+máquinas grandes exhibidas en serio, no una grilla de tarjetas chicas.
+
+**Por qué esta versión y no las otras.** Porque la casa **ya tiene una vidriera y
+es la vereda**: la foto del hero son los tractores, las carretillas y las
+hormigoneras alineadas en la puerta. La sección no importa una idea de otro
+rubro, traduce algo que ya hacen. Y con el catálogo casi vacío, una máquina bien
+exhibida se ve deliberada donde una grilla se ve pelada.
+
+**Dos hallazgos técnicos que salieron revisando esto:**
+
+- **La fecha ya existe y nadie la usa.** Cada producto guarda `creado`, que pone
+  Firebase sola (`admin.js:370`), y el panel ya ordena por ahí. **La página
+  pública no la lee en ningún lado.** O sea que cualquier cosa basada en «lo
+  último que entró» no le pide ni un clic más a Santiago.
+- **Hoy la portada muestra sólo ofertas.** `productos.js` pide
+  `traerProductos({ soloOfertas: true })`, así que **un producto cargado sin
+  tildar «oferta» no aparece nunca en la portada**: queda enterrado en su rubro.
+  La única palanca que tiene Santiago para que algo se vea adelante es marcarlo
+  como oferta, **lo cual lo empuja a inventar descuentos para ganar
+  visibilidad**. Esto vale arreglarlo aunque la vidriera no se haga.
+
+**Las tres cosas que hay que resolver antes de encararlo:**
+
+1. **La foto lo decide todo.** La referencia de Lüsqtoff funciona porque esas
+   tapas son diseño de agencia. Una máquina sacada con el celular contra el
+   estante y luz de tubo no se ve así, y **una vidriera falla más fuerte que una
+   grilla: si la foto está mal, está mal en grande**. Esto convierte al **punto 2**
+   —la guía de fotos para Santiago— de «estaría bueno» en **requisito previo**.
+2. **Cómo se llama cambia si envejece mal.** «Lo que llegó» promete que es
+   reciente y a los dos meses miente. **«En la vidriera» no promete fechas**: la
+   misma máquina puede estar un mes y sigue siendo cierto. Con ese encuadre
+   Santiago no queda obligado a cargar todas las semanas para que la sección no
+   quede vieja.
+3. **«Las más caras» contradice la página.** La sección «Nosotros» dice «la
+   misma atención para los cuatro» —industria, construcción, campo y el que
+   arregla algo en su casa—. Una vidriera ordenada por precio dice en silencio
+   que lo que importa es lo caro. Es la misma máquina: **«la máquina grande que
+   entró» dice otra cosa que «la más cara»**.
+
+**La versión barata para probar la idea**, si no se quiere comprometer una
+sección: un solo producto destacado, grande, **arriba de las ofertas**. Si se
+gana la atención, después crece a sección propia con las hojas en abanico —gesto
+que la página ya sabe dibujar, es el del álbum de «Nosotros»—.
+
+**Lo de los catálogos de marca quedó aparte, no descartado.** Si se retoma, la
+decisión que ordena todo lo demás es **alojar el PDF o linkear al de la marca**:
+el sitio entero pesa 7,1 MB y un catálogo de marca anda entre 20 y 80, o sea que
+un solo PDF puede pesar diez veces más que toda la página. Linkear da peso cero
+y siempre la versión al día; alojar da control pero infla el repositorio y el
+ancho de banda del plan gratis. Y hay que mirar cada PDF antes de subirlo, por
+si trae «precio sugerido» que contradiga los de Santiago.
+
+**Lo que falta preguntarle a Santiago:** cuántos catálogos tiene y de qué marcas,
+y si son los PDF públicos de la marca o algo que le pasa el proveedor.
 
 ---
 
@@ -1062,3 +1197,99 @@ eso -50 % es hasta donde conviene ir.
 las cuatro anclas caen debajo de la barra en escritorio y en teléfono; y los dos
 modos de llegar —por el menú y bajando a mano, despacio y rápido— prenden con el
 tablero a la vista.
+
+**30. ~~El botón de WhatsApp tapaba las flechas de los carruseles.~~ HECHO (22/8/2026).**
+El botón flotante es fijo en la esquina de abajo a la derecha; las flechas del
+riel de rubros viven en esa misma esquina del riel, y las de la tira de fotos
+quedan ahí cuando la tira está casi toda arriba de la pantalla. Al pisarse, el
+clic se lo llevaba el botón: tiene `z-index: 90` contra el `2` de las flechas.
+
+**Medido antes y después**, con el peor caso de scroll en cada ancho:
+
+| ancho, con mouse | riel antes | tira antes | después |
+|---|---|---|---|
+| 1440 | ok | ok | ok |
+| 1320 · 1280 · 1200 | se pisaban | se pisaban | ok |
+| 1100 · 1024 · 900 · 768 | se pisaban | se pisaban | ok |
+| 600 · 480 · 390 | se pisaban | se pisaban | ok |
+
+**En pantalla táctil no pasaba nunca**, y esto es lo que casi me hace escribir
+la nota al revés: hay un `@media (hover: none), (pointer: coarse)` que esconde
+las flechas cuando no hay mouse, así que en un teléfono de verdad el problema
+no existe. Una captura a 390 px en un navegador de escritorio lo muestra igual
+y engaña: parece un problema de celular y es de notebook.
+
+**El arreglo** son tres variables nuevas —`--wa-lado`, `--wa-margen` y
+`--wa-pasillo`— y un tercer término en el `max()` del `padding-right` de
+`.riel__flechas` y del `left`/`right` de las flechas de la tira. La idea: el
+botón se reserva un pasillo contra el borde derecho y nada en lo que haya que
+hacer clic entra ahí. Con la ventana ancha no cambia nada, porque el margen de
+la columna ya empujaba las flechas más adentro que el pasillo.
+
+En la tira se corrieron **las dos** flechas y no sólo la derecha: son un par
+enfrentado y con una corrida y la otra no, se lee como un error de maquetado.
+
+**31. ~~La tira de fotos del local: cambiar las fotos.~~ HECHO (22/8/2026).**
+Nico marcó cuáles sacar sobre una captura. **Salieron** `milwaukee`, `lusqtoff`,
+`tractor` y `motosierras`; **quedó** `despliegue`, la única de la tanda anterior.
+**Entraron trece de las catorce de Santiago**, así que la tira pasó de 5 fotos
+a 14. En una segunda vuelta Nico sacó `panel-llaves` —el sector Bremen visto de
+costado, con el toldo en diagonal— y dejó sólo `sector-bremen`, que es el mismo
+sector de frente. Y pidió que abra `despliegue`, las valijas Milwaukee Packout
+desplegadas en el piso.
+
+**El orden no es el de la carpeta, está armado:** `despliegue` abre, las tres
+verticales caen en los lugares 2, 5 y 9 para que no se junten, y no hay dos
+fotos del mismo color o del mismo sector una al lado de la otra. `despliegue` y
+`milwaukee-packout` son las dos muy rojas de Milwaukee: van en el 1 y en el 6.
+Las dos de cortadoras de césped (`cortadoras-niwa` y `cortadoras-fila`) son casi
+la misma foto, por eso van en el 5 y en el 9.
+
+**Las medidas.** En la tira las fotos se muestran con
+`height: clamp(260px, 40vw, 420px)` y el ancho lo pone la proporción, así que
+entraron **a 840 px de alto** —el doble del máximo, para pantallas densas, que
+es la medida de las que ya estaban—. Las apaisadas quedaron en 1133×840 y las
+verticales en 623×840. Las catorce suman 1,92 MB, pero todas llevan
+`loading="lazy"`: no pesan en la primera pantalla.
+
+Comprobado después del cambio: las 14 cargan, ninguna rota, todas a la misma
+altura, la pista mide 7471 px de ancho y la página no desborda a lo ancho.
+
+**Las que salieron no se borraron.** `milwaukee`, `lusqtoff`, `tractor` y
+`motosierras` siguen en `img/local/`, igual que `panel-llaves`, `frente-vertical`
+y `niwa`, que no se usan en ninguna página: son candidatas de las hojas del álbum (punto 28). Ojo con una
+si se hace limpieza: **`fondo-mostrador` parece no usarse en ningún HTML pero sí
+se usa** —es el fondo de la sección, y está puesto desde `estilos.css`—.
+
+Queda una pregunta abierta que Nico no contestó todavía: dos de las nuevas
+(`cortadoras-niwa` y `cortadoras-fila`) tienen **piso de baldosa** y no el
+césped sintético verde del salón. Puede ser otro sector del mismo local. Están
+puestas igual porque Nico pidió las catorce.
+
+**32. ~~El pie tenía sólo los datos de contacto.~~ HECHO (22/8/2026).**
+Ahora tiene tres columnas: la marca, **las secciones de la página** y **el
+contacto**. Lo decidió Nico; la alternativa que se había propuesto —listar los
+nueve rubros en vez de las cuatro secciones— quedó descartada.
+
+**Los enlaces llevan barra adelante: `/#rubros`, no `#rubros`.** Es lo único con
+trampa de este punto. El pie es el mismo en las cuatro páginas, y desde
+`producto.html` un `#rubros` a secas no lleva a ningún lado, porque esa ancla no
+existe ahí. Con la barra, la portada lo resuelve sin recargar y las otras tres
+navegan a la portada y bajan hasta la sección. Probado desde las cuatro: las
+cuatro caen en `/#rubros` con la sección a 89 px del techo, que es el
+desplazamiento del punto 29, así que no queda debajo de la barra.
+
+**Tres columnas recién arriba de 920 px, y dos entre 720 y 920.** Las tres
+juntas piden unos 910 px de ancho. Forzadas antes de eso, la del medio se
+estruja y «Cómo llegar» y «La página» parten en dos renglones —se vio a 760 px—.
+En el paso intermedio la marca se lleva el renglón entero y abajo van las dos
+columnas de texto. Las columnas son `auto` y no `1fr` a propósito: así cada una
+mide lo que mide su texto y ninguna puede quedar más angosta que su palabra más
+larga.
+
+**El contacto es WhatsApp**, primero y con más peso, porque por ahora es el
+único canal. Si más adelante se suma el correo, entra como un renglón más de esa
+lista y no hay que tocar nada más.
+
+Comprobado a 1350, 960, 760, 480, 390 y 320 px: sin desborde en ninguno, y el
+botón flotante de WhatsApp no tapa ningún enlace del pie en ningún ancho.

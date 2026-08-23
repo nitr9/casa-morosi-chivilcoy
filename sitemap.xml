@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Una sola dirección: la portada. `producto.html` y `rubro.html` no entran
+     porque no existen por sí solas, se arman con lo que viene después del ?
+     y sin ese parámetro no muestran nada. __SITIO__ lo reemplaza Netlify al
+     publicar; está explicado en netlify.toml. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>__SITIO__/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

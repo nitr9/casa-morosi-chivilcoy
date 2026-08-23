@@ -30,6 +30,14 @@
   --sombra:      0 1px 2px rgba(22, 32, 58, .08), 0 8px 24px rgba(22, 32, 58, .08);
   --sombra-alta: 0 2px 4px rgba(22, 32, 58, .10), 0 18px 40px rgba(22, 32, 58, .18);
 
+  /* El botón flotante de WhatsApp. Están acá y no sueltos en su regla porque
+     hay otra cosa que necesita saber cuánto mide: el botón es fijo y se apoya
+     en el borde de abajo a la derecha, así que se reserva un pasillo por donde
+     no puede pasar nada en lo que haya que hacer clic. */
+  --wa-lado:     54px;
+  --wa-margen:   1.1rem;
+  --wa-pasillo:  calc(var(--wa-lado) + var(--wa-margen) + .75rem);
+
   --ancho:       1180px;
   /* El aire de los costados. Es variable porque abajo de 340 px se achica:
      ahí el encabezado no cierra con 2,5rem. */
@@ -1051,7 +1059,16 @@ h1, h2, h3 {
   justify-content: flex-end;
   gap: .6rem;
   margin-top: 1.5rem;
-  padding-right: max(1.25rem, calc((100vw - var(--ancho)) / 2));
+  /* El tercer término es el que evita que el botón de WhatsApp tape la flecha
+     derecha. Las dos quedan abajo a la derecha: la flecha se mueve con la
+     página y el botón está clavado en la esquina, así que en cuanto el riel
+     pasa por ahí se superponen. Con la ventana ancha ya no pasaba, porque el
+     margen de la columna (la cuenta del medio) empujaba la flecha bastante
+     más adentro que el botón; abajo de unos 1320 px ese margen se achica a
+     1,25rem y la flecha quedaba justo debajo. Medido: se pisaban a 1200, 1024,
+     768, 600 y 390 px de ancho, siempre con mouse. En pantalla táctil no
+     pasaba nunca, porque ahí las flechas directamente no se muestran. */
+  padding-right: max(1.25rem, calc((100vw - var(--ancho)) / 2), var(--wa-pasillo));
 }
 
 /* --- 3 · productos ------------------------------------------------------- */
@@ -1908,8 +1925,14 @@ h1, h2, h3 {
   box-shadow: var(--sombra);
   transform: translateY(-50%);
 }
-.tira .flecha--izq { left: max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem)); }
-.tira .flecha--der { right: max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem)); }
+/* El mismo pasillo del botón de WhatsApp que en el riel, y en las dos flechas
+   aunque sólo estorbe la derecha: son un par enfrentado y si una se corre y la
+   otra no, se lee como un error de maquetado. Acá el choque es menos frecuente
+   que en el riel —estas van a media altura de la tira, así que hay que dejar
+   la tira casi toda arriba de la pantalla para que coincidan—, pero cuando
+   pasa el botón se lleva el clic igual, porque va muy por encima. */
+.tira .flecha--izq { left:  max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem), var(--wa-pasillo)); }
+.tira .flecha--der { right: max(.75rem, calc((100vw - var(--ancho)) / 2 - 1.5rem), var(--wa-pasillo)); }
 
 /* En el riel de rubros van abajo a la derecha y son redondas, como allá. */
 .riel .flecha {
@@ -2291,12 +2314,33 @@ h1, h2, h3 {
   background: var(--navy-hondo);
   color: #b9c2d4;
 }
+/* Tres columnas: la marca, las secciones y el contacto. Abajo de 720 px se
+   apilan, que es como ya se comportaba el pie en los teléfonos angostos
+   (punto 23). Arriba, `auto 1fr auto` deja la columna del medio quedándose con
+   lo que sobra, así la marca queda pegada a la izquierda y el contacto a la
+   derecha, igual que cuando eran dos bloques con `space-between`. */
 .pie__interior {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 2rem;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.25rem;
+  align-items: start;
+}
+/* Paso intermedio: la marca ocupa el renglón entero y abajo van las dos
+   columnas de texto. Las tres juntas piden unos 910 px; forzadas antes de eso,
+   la del medio se estruja y «Cómo llegar» y «La página» parten en dos renglones.
+   Las columnas son `auto` y no `1fr` justamente para eso: cada una mide lo que
+   mide su texto y ninguna puede quedar más angosta que su palabra más larga. */
+@media (min-width: 720px) {
+  .pie__interior {
+    grid-template-columns: repeat(2, auto);
+    justify-content: space-between;
+    gap: 2.25rem 3rem;
+  }
+  .pie__marca { grid-column: 1 / -1; }
+}
+@media (min-width: 920px) {
+  .pie__interior { grid-template-columns: repeat(3, auto); }
+  .pie__marca { grid-column: auto; }
 }
 .pie__marca { display: flex; align-items: center; gap: 1rem; }
 /* El min-width es lo que evita el único desborde que tenía la página. El logo
@@ -2316,21 +2360,38 @@ h1, h2, h3 {
   text-transform: uppercase;
   color: var(--blanco);
 }
-.pie__datos p { margin: 0 0 .35rem; font-size: .93rem; }
-.pie__datos a { color: var(--blanco); text-decoration: none; border-bottom: 1px solid var(--navy-humo); }
-.pie__datos a:hover { border-color: var(--rojo); }
+/* El rótulo de cada columna, con la misma voz condensada que los de la página. */
+.pie__titulo {
+  margin: 0 0 .85rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: var(--rotulo-chico);
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--blanco);
+}
+.pie__lista { margin: 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+.pie__lista, .pie__datos p { font-size: .93rem; }
+.pie__datos p { margin: 0 0 .35rem; }
+/* WhatsApp va primero y con un poco más de peso: por ahora es el único canal
+   de contacto. Cuando se sume el correo entra como otro renglón de esta misma
+   lista, sin tocar nada más. */
+.pie__wa { margin-bottom: .6rem; }
+.pie__wa a { font-weight: 600; }
+.pie__bloque a { color: var(--blanco); text-decoration: none; border-bottom: 1px solid var(--navy-humo); }
+.pie__bloque a:hover { border-color: var(--rojo); }
 
 /* --- botón flotante de WhatsApp ------------------------------------------ */
 
 .flotante {
   position: fixed;
-  right: 1.1rem;
-  bottom: 1.1rem;
+  right: var(--wa-margen);
+  bottom: var(--wa-margen);
   z-index: 90;
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
+  width: var(--wa-lado);
+  height: var(--wa-lado);
   border-radius: 50%;
   background: #25d366;
   color: #fff;
@@ -2593,4 +2654,26 @@ h1, h2, h3 {
 @media (max-width: 360px) {
   :root { --margen: 1.5rem; }
   .barra__interior { gap: .75rem; }
+}
+
+/* --- la página de error --------------------------------------------------
+   404.html usa las mismas clases que el resto del sitio; lo único suyo son
+   estas dos cosas. La primera, que el navy llegue hasta abajo: el contenido
+   de un 404 es corto y sin esto queda una franja blanca bajo el pie, que se
+   lee como si la página estuviera rota justo cuando hay que dar confianza.
+   La segunda, separar los dos botones, que sueltos en un párrafo se pegan. */
+.error {
+  min-height: 100vh;
+  min-height: 100svh;   /* en el celular, sin contar la barra del navegador */
+  display: flex;
+  flex-direction: column;
+  background: var(--navy-hondo);
+}
+.error > main { flex: 1; }
+
+.error__botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+  margin-top: 2.2rem;
 }
