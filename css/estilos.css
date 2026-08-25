@@ -1834,6 +1834,13 @@ h1, h2, h3 {
 
 .album__pila {
   position: relative;
+  /* En pantalla chica las cuatro se solapan y el tamaño va atado a la ventana.
+     De 760 px para arriba se separan, y ahí el ancho lo manda el REPARTO: las
+     cuatro derechas con su aire ocupan 4,24 anchos de hoja (ver el bloque de
+     "abierto"), así que con 22 % el conjunto llena el 93 % del contenedor y
+     queda un margen parejo a los costados. Antes frenaba en 250 px y en un
+     monitor de 1920 el mazo ocupaba la mitad de la página —952 px de 1920— con
+     el resto de navy vacío: las cuatro tarjetas se veían chicas y perdidas. */
   width: clamp(170px, 30vw, 250px);
   aspect-ratio: 5 / 7;
   perspective: 2000px;
@@ -1844,10 +1851,14 @@ h1, h2, h3 {
      La perspectiva sigue funcionando porque está en el padre. */
   transform-style: flat;
 }
+@media (min-width: 760px) { .album__pila { width: 22%; } }
 
-/* Cada hoja es una tarjeta: hoja blanca con la foto adentro y una franja
-   diagonal roja arriba y abajo. Ese filo en diagonal es lo que le da el aire
-   de página diseñada; con la foto a sangre las hojas se pegaban entre sí. */
+/* Cada hoja es una tarjeta blanca. Hasta el 25/8/2026 llevaba dos franjas rojas
+   en diagonal, arriba y abajo, que venían de cuando esto era un álbum de fotos:
+   servían para despegar una hoja de la otra cuando se pisaban. Con las cuatro
+   separadas ya no despegan nada y pesaban tanto como lo que hubiera adentro
+   —se ve en la captura de 1920—, así que las sacó Nico. La tarjeta quedó
+   blanca y lisa, y lo único que la separa del fondo es su sombra. */
 .album__hoja, .album__tapa {
   position: absolute;
   inset: 0;
@@ -1870,34 +1881,27 @@ h1, h2, h3 {
   background: var(--cemento);
 }
 
-/* las dos franjas en diagonal, arriba y abajo */
-.album__hoja::before, .album__tapa::before,
-.album__hoja::after,  .album__tapa::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 6.5%;
-  background: var(--rojo);
-}
-/* las dos con la misma inclinación, para que se lean paralelas */
-.album__hoja::before, .album__tapa::before {
-  top: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 22%, 0 100%);
-}
-.album__hoja::after, .album__tapa::after {
-  bottom: 0;
-  clip-path: polygon(0 0, 100% 78%, 100% 100%, 0 100%);
-}
-
 /* Las hojas de atrás van apagándose: es lo que las manda al fondo y despega
-   la tapa. Con filtro y no con un velo encima, para no ensuciar el blanco. */
+   la tapa. Con filtro y no con un velo encima, para no ensuciar el blanco.
+
+   Sólo vale mientras se tapan entre sí, o sea abajo de 760 px. Separadas, el
+   apagado no manda nada al fondo —no hay fondo— y lo único que hace es dejar
+   dos de las cuatro fotos más oscuras que las otras dos, que con las tarjetas
+   una al lado de la otra se lee como un error, no como profundidad. */
 .hoja-1 { filter: brightness(.9); }
 .hoja-2 { filter: brightness(.76); }
+@media (min-width: 760px) { .hoja-1, .hoja-2 { filter: none; } }
 
 .album__tapa { box-shadow: 0 18px 45px rgba(4, 8, 18, .65); }
 .hoja-1 { box-shadow: 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
 .hoja-2 { box-shadow: 12px 0 22px -14px rgba(4, 8, 18, .85), -12px 0 22px -14px rgba(4, 8, 18, .85); }
+/* Igual que el apagado de arriba: las dos sombras eran distintas para escalonar
+   hojas que se pisan. Separadas, las cuatro son la misma tarjeta y llevan la
+   misma sombra; la del conjunto la sigue poniendo el «drop-shadow» de la pila,
+   que dibuja la silueta real hoja por hoja. */
+@media (min-width: 760px) {
+  .hoja-1, .hoja-2 { box-shadow: 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
+}
 .album__tapa img { object-position: 50% 22%; }   /* que se lea el cartel */
 
 /* La hoja del depósito lleva una foto apaisada (1400x900) en una caja vertical
@@ -1914,9 +1918,14 @@ h1, h2, h3 {
 .hoja-1      { z-index: 2; }
 .album__tapa { z-index: 3; }
 
-/* Cerrado: las cinco apiladas en el mismo lugar. */
-.hoja-2      { transform: translate3d(0, 0, 0px); }
-.hoja-1      { transform: translate3d(0, 0, 2px); }
+/* Cerrado: las cuatro apiladas en el mismo lugar y en el mismo plano. Los 2 y
+   4 px de profundidad que tenían acá se fueron con la rotación: bajo la
+   perspectiva, cualquier z distinto agranda la hoja, y con las cuatro derechas
+   y separadas eso se ve —dos tarjetas un poco más grandes que las otras dos—.
+   La tapa conserva el suyo porque nunca convive con las hojas: sale sola y
+   centrada, cuando la vidriera tiene un solo producto. */
+.hoja-2      { transform: translate3d(0, 0, 0); }
+.hoja-1      { transform: translate3d(0, 0, 0); }
 .album__tapa { transform: translate3d(0, 0, 4px); }
 
 /* Abierto: las cuatro hojas salen en abanico, dos para cada lado.
@@ -1954,14 +1963,19 @@ h1, h2, h3 {
   --abre-1: 24%;
   --abre-2: 72%;
 }
-@media (min-width:  700px) { .album { --abre-1: 34%; --abre-2: 102%; } }
-@media (min-width: 1000px) { .album { --abre-1: 44%; --abre-2: 132%; } }
-@media (min-width: 1400px) { .album { --abre-1: 50%; --abre-2: 150%; } }
+@media (min-width: 700px) { .album { --abre-1: 34%; --abre-2: 102%; } }
+/* Separadas: 54 % es el número que deja 8 % de aire entre hoja y hoja. Sale de
+   que la distancia entre centros vecinos es 2 x --abre-1 y la hoja mide 100 %:
+   el hueco es (2 x 54) - 100 = 8. De ahí también el ancho del conjunto
+   —6 x 54 % + 100 % = 4,24 anchos de hoja— que es lo que fija el 22 % de
+   arriba. Un solo número manda las dos cosas: si se cambia el aire, hay que
+   rehacer el 22 %. */
+@media (min-width: 760px) { .album { --abre-1: 54%; --abre-2: 162%; } }
 
-.album--abierto .izq.hoja-1 { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
-.album--abierto .der.hoja-1 { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
-.album--abierto .izq.hoja-2 { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
-.album--abierto .der.hoja-2 { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+.album--abierto .izq.hoja-1 { transform: translate3d(calc(var(--abre-1) * -1), 0, 0); }
+.album--abierto .der.hoja-1 { transform: translate3d(var(--abre-1),            0, 0); }
+.album--abierto .izq.hoja-2 { transform: translate3d(calc(var(--abre-2) * -1), 0, 0); }
+.album--abierto .der.hoja-2 { transform: translate3d(var(--abre-2),            0, 0); }
 
 /* La tapa ya no está en el mazo de fotos: la clase queda para la vidriera, que
    la usa cuando hay un solo producto y necesita una tarjeta sola y centrada. */
@@ -2011,15 +2025,26 @@ h1, h2, h3 {
   transform: scaleY(-1);
   pointer-events: none;
 
-  /* El clon mide lo mismo que la pila —350 px— pero de eso sólo se ve el 34 %
-     que deja pasar la máscara. Sin recortarlo, los otros 230 px seguían
-     ocupando lugar en el flujo y dejaban un pozo de piso vacío abajo. Se lo
-     recorta a lo que de verdad se ve.
+  /* CUÁNTO REFLEJO SE VE. El clon mide lo mismo que la tarjeta y hay que
+     recortarlo: sin eso, el resto sigue ocupando lugar en el flujo y deja un
+     pozo de piso vacío abajo.
 
      El recorte es en el espacio del elemento, ANTES del volteo: los primeros
-     píxeles del clon son, ya volteado, los que quedan pegados a la pila. O sea
-     que recortar "por arriba" conserva justo la parte que hace de reflejo. */
-  height: clamp(52px, 9vw, 122px);
+     píxeles del clon son, ya volteado, los que quedan pegados a la tarjeta. O
+     sea que recortar "por arriba" conserva justo la parte que hace de reflejo.
+
+     Hasta el 25/8/2026 este alto y la máscara se multiplicaban —34 % de 34 %—
+     y lo que se veía de verdad era el 11 % de la tarjeta: 53 px de 480. Nico
+     lo pidió más largo. Ahora la máscara se apaga recién al 100 % y este alto
+     ES lo que se ve, que es más fácil de calibrar: un solo número.
+
+     El número es el 30 % del alto de la tarjeta. Se probó también con 20 % y
+     con 45 %: con 45 el reflejo llena todo el bajo de la sección y se pierde
+     dónde termina —las tarjetas dejan de estar apoyadas y quedan flotando—.
+     Con 30 el reflejo entra entero en el encuadre y todavía se apaga contra el
+     navy. La cuenta: la tarjeta es 1,4 anchos (es 5/7) y el ancho es 22 % del
+     contenedor, así que el 30 % del alto son 0,0924 contenedores. */
+  height: clamp(71px, 12.6vw, 105px);
   overflow: hidden;
 
   /* Sin la sombra del original: una sombra reflejada se dibujaría sobre el
@@ -2039,9 +2064,29 @@ h1, h2, h3 {
      como una segunda pila dada vuelta y pierde fuerza. En el sitio de Lüsqtoff
      el reflejo ocupa como un tercio del alto de la tapa y justamente por eso
      se lee nítido —el reflejo de «BLACK SERIES» se lee invertido— en vez de
-     desvanecerse en una mancha. Corto y contrastado gana a largo y suave. */
-  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 14%, transparent 34%);
-          mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 14%, transparent 34%);
+     desvanecerse en una mancha.
+
+     Los porcentajes se estiraron el 25/8/2026 al alargar el reflejo: iban de 0
+     a 34 % y ahora recorren el elemento entero, 0 a 100 %, con el paso del
+     medio movido de 14 a 41 % —la misma proporción— para que el desvanecido
+     conserve la forma que tenía. Quién decide el largo ahora es el «height» de
+     arriba, y sólo él. */
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 41%, transparent 100%);
+          mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 41%, transparent 100%);
+}
+
+/* El alto de arriba está atado a la pila de pantalla chica, que frena en
+   250 px. De 760 px para arriba la pila crece con el contenedor y el reflejo
+   tiene que crecer con ella: con un alto fijo se cortaba antes de terminar de
+   apagarse, que se ve como una línea recta en el piso.
+
+   El número: la hoja es 5/7, así que el alto es 1,4 anchos y el 30 % de eso,
+   0,42 anchos. El ancho es 22 % del contenedor y el contenedor es
+   «min(1560px, 100vw - 40px)», de donde sale «min(144px, 9,24vw - 4px)». Es la
+   misma cuenta que el 22 %, escrita en píxeles porque una altura no puede ir
+   en porcentaje del ancho. */
+@media (min-width: 760px) {
+  .album__reflejo { height: min(144px, calc(9.24vw - 4px)); }
 }
 
 .album__pie {
@@ -2057,10 +2102,10 @@ h1, h2, h3 {
    que se entiende. */
 @media (prefers-reduced-motion: reduce) {
   .album__hoja, .album__tapa, .album__pila { transition: none; }
-  .album .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
-  .album .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
-  .album .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
-  .album .der.hoja-2  { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+  .album .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 0); }
+  .album .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 0); }
+  .album .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0); }
+  .album .der.hoja-2  { transform: translate3d(var(--abre-2),            0, 0); }
   .album .album__tapa { transform: translate3d(0, 0, 150px) scale(1.05); }
 }
 
@@ -2154,7 +2199,7 @@ h1, h2, h3 {
    Lo que sí cambia con el ancho es CUÁNTAS se muestran, porque abrir tanto
    necesita lugar. Las que no entran no se pierden: son productos y están en su
    rubro, a un toque del riel de arriba. */
-.album.album--vidriera { --abre-1: 50%; --abre-2: 150%; }
+.album.album--vidriera { --abre-1: 54%; --abre-2: 162%; }
 
 /* Con tres productos hay dos hojas de un lado y una del otro, así que el
    conjunto queda 114 px corrido a la izquierda. Se compensa moviendo la pila

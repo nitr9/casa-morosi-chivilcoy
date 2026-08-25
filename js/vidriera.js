@@ -77,11 +77,11 @@ function ordenDeCarga(cantidad) {
   return orden.map((i) => lugares[i]);
 }
 
-/* La hoja de la vidriera es la misma tarjeta del mazo —hoja blanca, franjas
-   rojas en diagonal, la foto adentro— pero es un enlace y lleva un pie con la
-   marca y el nombre. El `<a>` es toda la hoja: en el abanico abierto no hay
-   lugar para un botón aparte, y una tarjeta entera clickeable es lo que ya hace
-   el catálogo. */
+/* La hoja de la vidriera es la misma tarjeta del mazo —blanca y lisa desde el
+   25/8/2026, cuando salieron las franjas rojas en diagonal— con la foto
+   adentro, pero es un enlace y lleva un pie con la marca y el nombre. El `<a>`
+   es toda la hoja: entre cuatro tarjetas no hay lugar para un botón aparte, y
+   una tarjeta entera clickeable es lo que ya hace el catálogo. */
 function hoja(producto, lugar) {
   const tarjeta = document.createElement('a');
   tarjeta.className = `${lugar} vidriera__hoja`;

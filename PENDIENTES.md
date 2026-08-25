@@ -1,6 +1,6 @@
 # Pendientes
 
-Al 24/8/2026. **El sitio está listo para publicarse en Netlify**: la
+Al 25/8/2026. **El sitio está listo para publicarse en Netlify**: la
 configuración, las cabeceras y la guía están en `DESPLIEGUE.md` (punto 8). La
 base quedó limpia y se comprobó que con cero productos la portada se ve bien,
 que es el estado con el que va a arrancar (punto 3).
@@ -13,10 +13,16 @@ se fueron a una sección propia con la vitrina que se turna y el logo de fondo
 (40 y 41), y el mazo de fotos salió a una sección propia con reflejo, sombra y
 un fondo con profundidad (39 y 42).
 
-**El mazo de fotos quedó en cuatro tarjetas, dos y dos, sin tapa en el medio
-(punto 44)**, que es como se ven las tapas de catálogo en el sitio de Lüsqtoff. **No
-está cerrado**: a Nico no lo termina de convencer y se sigue el 25/8. Al final
-del punto 44 está lo que ya se descartó y por dónde seguiría.
+**El 25/8 el mazo dejó de ser un mazo.** Se retomó el punto 44, que había
+quedado abierto, y en tres pasos de Nico —«las 4 separadas y derechas», «sacale
+las fotos y el marco ese rojo, que ahora sean tarjetas blancas», «el espejado
+puede extenderse más»— quedó otra cosa: **cuatro tarjetas blancas, lisas,
+derechas y separadas, con el reflejo largo** (puntos 45, 46 y 47). Ya no hay
+abanico, ni fotos, ni franjas rojas.
+
+**Están vacías, y eso no es el estado final** (punto 48). Es la sección de la
+vidriera: el día que Santiago cargue productos se llenan solas. Mientras tanto
+son cuatro rectángulos blancos, y eso hay que resolverlo antes de publicar.
 
 **La vidriera del punto 33 quedó armada y esperando (punto 43).** El día que
 Santiago cargue productos, esa sección se llena sola con la mejor máquina de
@@ -178,13 +184,41 @@ escrito `+54 9 2346 51-0888` como corrección probable. **Nico confirmó que el
 bueno es el que está en el sitio: 2345 510888.** No cambiarlo por esa nota.
 
 **9. Instagram propio de la sede**, si tiene. Es el único dato de contacto que
-quedó sin confirmar.
+queda sin confirmar. **El correo ya entró** (25/8/2026): lo pasó Nico y está en
+la sección de contacto, en el pie de las cuatro páginas y en el dato
+estructurado — ver el punto 49.
 
 **18. La foto de la tarjeta: ¿4/5 o cuadrada?**
 Queda decidir. Hoy es 4/5. En cuadrado la grilla baja un 11 % más (614 → 544 px
 con 4 tarjetas) y es la proporción de Mercado Libre y Amazon, pero un producto
 vertical como la motosierra se ve más chico. Es una línea en `.producto__foto`.
 
+
+**48. Las cuatro tarjetas están vacías, y así no se publica.**
+Al sacarles las fotos (punto 46) la sección quedó con cuatro rectángulos
+blancos. No está roto —es lo que se pidió y se ve limpio— pero es lo único de
+la página que no dice nada, y **es lo que ve cualquiera que entre hoy**, porque
+la base está vacía y la vidriera todavía no tiene con qué llenarlas.
+
+Las salidas, sin decidir:
+
+- **Cargar productos.** Es la buena: la sección existe para eso (punto 43) y
+  con productos se llena sola, sin tocar una línea. Depende de Santiago.
+- **Devolverles alguna foto**, ahora que la tarjeta es blanca y lisa. No es
+  volver atrás: lo que se sacó fueron las franjas rojas y el abanico girado, y
+  eso ya no vuelve. Las cuatro fotos siguen en `img/local/` y además se ven en
+  la tira de «Nosotros», así que repetirlas tiene un costo.
+- **Ponerles algo que no sea foto** —los rubros, los años, las marcas—, que es
+  la única opción que no depende de nadie más.
+- **Esconder la sección mientras no haya productos.** Una línea en
+  `vidriera.js`. Deja la página más corta pero no deja un hueco.
+
+**Y el escalón de 760 a 1176 px** (sale del punto 45): en esa franja, separar
+las cuatro las achica. A 760 quedan de 158 px y a 700 —donde todavía se
+solapan— son de 210, así que **agrandando la ventana las tarjetas se hacen más
+chicas**. Se arregla moviendo el corte de «separadas» a 1180 px, que es donde
+las dos cuentas se cruzan; abajo de eso quedarían solapadas, pero derechas. No
+se tocó porque depende de qué termine adentro de las tarjetas.
 
 **33. La vidriera: una sección para lo que entra al local.**
 **Al 24/8/2026 ya no está en debate: se armó, y está esperando productos — ver el
@@ -1976,8 +2010,17 @@ secciones salen vacías o a medio pintar. Se armó una discusión sobre una secc
 «rota» que en el navegador estaba bien. Para mirar hay que **capturar la sección
 con el scroll puesto encima**, que es lo que hace todo lo demás de este archivo.
 
-**QUEDA ABIERTO (cerrado al final del 24/8/2026).** A Nico no lo termina de
-convencer cómo se ve el abanico y se retoma mañana. Está funcionando y medido
+**CERRADO EL 25/8/2026, Y NO COMO SEGUÍA.** Lo que está abajo era el plan para
+retomarlo; lo que pasó fue que el abanico se terminó. Todo este punto es
+historia: **el estado de verdad son los puntos 45, 46 y 47**. Lo único que
+sobrevivió es que son cuatro y que ninguna va adelante.
+
+Se deja entero porque explica de dónde salen los números que sí siguen vivos
+—la regla de que `--abre-2` es el triple de `--abre-1`, y la advertencia sobre
+las capturas de página completa, que sigue valiendo—.
+
+**Lo de abajo es del 24/8.** A Nico no lo terminaba de convencer cómo se veía el
+abanico y se retomó al día siguiente. Está funcionando y medido
 —nada roto—, pero es una decisión de diseño sin cerrar. Lo que ya se descartó,
 para no volver a probarlo:
 
@@ -1991,3 +2034,117 @@ pierden la mitad del ancho (punto 28)—, **el marco blanco con las franjas roja
 en diagonal**, que es de cuando las tarjetas eran hojas de álbum, y **el tamaño
 de la pila**, que frena en 250 px y en un monitor de 1920 deja las cuatro
 tarjetas chicas en una sección de 983 px de alto.
+
+
+**45. ~~Las cuatro derechas, separadas, y del tamaño de la pantalla.~~ HECHO (25/8/2026).**
+Lo pidió Nico así: «quiero que estén las 4 separadas y derechas». Salió el
+abanico entero —las rotaciones de 15° y 25°, la profundidad, el solape— y quedó
+una fila de cuatro tarjetas rectas.
+
+**Lo que se midió primero, que es de donde salió todo.** Mirando la sección a
+distintos anchos apareció que **el mazo se veía peor cuanto más grande era la
+pantalla**, que es justo el monitor donde Nico trabaja:
+
+| ventana | ocupaba el mazo | aire entre hojas |
+|---|---|---|
+| 390 | 77 % | −77 / −84 / −77 (solapadas) |
+| 1000 | 86 % | −10 / −22 / −10 (solapadas) |
+| 1400 | 68 % | +21 / +9 / +22 |
+| **1920** | **50 %** | +21 / +9 / +22 |
+
+La causa: **la pila frenaba en 250 px**, así que de 1400 para arriba el abanico
+medía siempre 952 px y lo único que crecía era el navy vacío alrededor —484 px
+a cada lado a 1920—. Y el solape que lo hacía leer como un mazo de catálogos
+existía sólo abajo de 1400, o sea que desaparecía justo en la pantalla de 1920.
+
+**Cómo quedó.** El ancho de la tarjeta ya no es un número fijo: lo manda el
+reparto. Cuatro tarjetas derechas con su aire ocupan **4,24 anchos de tarjeta**
+—6 × `--abre-1` + 1, con `--abre-1` en 54 %—, así que con la pila en **22 % del
+contenedor** el conjunto llena el 93 % y queda un margen parejo a los costados.
+Un solo número manda las dos cosas: **si se cambia el aire hay que rehacer el
+22 %**.
+
+De paso salieron tres cosas que estaban para escalonar hojas que se pisan y con
+las tarjetas separadas se leían como errores:
+
+- **el apagado de las de atrás** (`brightness` .9 y .76): dejaba dos de las
+  cuatro fotos más oscuras que las otras dos sin ningún fondo al que mandarlas;
+- **las dos sombras laterales distintas**, que se igualaron;
+- **los 2 y 4 px de profundidad del estado cerrado**: bajo `perspective`
+  cualquier z distinto agranda la tarjeta, y con las cuatro a la vista eso se
+  ve como dos tarjetas más grandes que las otras dos.
+
+Las tres siguen vigentes abajo de 760 px, donde las cuatro sí se pisan.
+
+**Medido** a 1920, 1600, 1400, 1280, 1000, 900, 760, 700, 560 y 390: las cuatro
+del mismo ancho, aire parejo (28 px a 1920), conjunto al 93 % del contenedor con
+margen 232/233, sin desborde horizontal y sin errores de consola. A 1920 la
+tarjeta pasó de 250×350 a **343×480** y el conjunto de 952 a **1455 px**.
+
+**Lo que quedó mal y no se tocó: el escalón de 760 a 1176 px.** Está en el
+punto 48.
+
+**46. ~~Tarjetas blancas: fuera las fotos y las franjas rojas.~~ HECHO (25/8/2026).**
+«Sacale las fotos y el marco ese rojo, que ahora sean tarjetas blancas», mirando
+la captura de 1920 del punto 45.
+
+Las **franjas rojas en diagonal** venían de cuando esto era un álbum de fotos:
+estaban para despegar una hoja de la otra cuando se pisaban. Con las cuatro
+separadas no despegan nada, y en la captura pesaban tanto como lo que hubiera
+adentro. Salieron del CSS, no del HTML, así que **la vidriera también las
+perdió** — es la misma tarjeta y era lo coherente.
+
+Las **cuatro fotos** salieron del HTML. No se perdió ninguna: `deposito`,
+`bremen`, `pasillo` y `mostrador` siguen en `img/local/` y las cuatro se ven en
+la tira de «Nosotros».
+
+Lo que queda de la tarjeta es blanco y liso, y lo único que la separa del navy
+es su sombra. **Y quedan vacías: eso es el punto 48.**
+
+**47. ~~El reflejo, más largo.~~ HECHO (25/8/2026).**
+«El espejado puede extenderse más, no.» Sí podía, y bastante: **se veía el 11 %
+del alto de la tarjeta —53 px de 480— y ahora se ve el 30 %, 144 px.**
+
+**Por qué estaba tan corto, que no era lo que decía la nota.** Había **dos
+números del 34 % multiplicándose sin querer**: el `height` recortaba el clon al
+34 % y la máscara lo apagaba al 34 % *de ese recorte*. 0,34 × 0,34 = 11,6 %, que
+es exactamente lo que se medía. La nota del punto 42 —«el reflejo se apaga al
+34 %»— describía uno solo de los dos.
+
+**Cómo quedó:** la máscara se apaga recién al 100 % y **el largo lo decide el
+`height` y sólo él**, que es lo que se puede calibrar mirando. Los pasos
+intermedios del degradado se estiraron en la misma proporción (14 % → 41 %) para
+que el desvanecido conserve la forma.
+
+**Se probó con 20 %, 30 % y 45 %.** Con 45 el reflejo llena todo el bajo de la
+sección y **se pierde dónde termina**: las tarjetas dejan de estar apoyadas y
+quedan flotando sobre un charco. Con 30 entra entero en el encuadre y todavía se
+apaga contra el navy. Quedó en 30.
+
+El alto también se ató al tamaño de la tarjeta, que ahora crece (punto 45): la
+tarjeta es 1,4 anchos y el ancho es 22 % del contenedor, de donde sale
+`min(144px, 9,24vw - 4px)`. Con el alto fijo de antes el reflejo se cortaba
+antes de terminar de apagarse, que se ve como una línea recta en el piso.
+
+**Medido** a los diez anchos: 144 px a 1920, 125 a 1400, 88 a 1000, 66 a 760.
+Sin desborde ni errores de consola. Con «reducir movimiento» no se arma, igual
+que antes.
+
+**49. ~~El correo de la sucursal.~~ HECHO (25/8/2026).**
+Lo pasó Nico: `cmchivilcoy@gmail.com`. Entró en cuatro lugares:
+
+- la **sección de contacto**, como un bloque más entre el teléfono y los
+  horarios;
+- el **pie de las cuatro páginas** (index, 404, producto, rubro), abajo del
+  teléfono. Ahí no hubo que inventar nada: el comentario del pie ya decía «si
+  más adelante se suma el correo, entra como un renglón más de esta lista y no
+  hay que tocar nada más», y fue exactamente así;
+- el **dato estructurado** JSON-LD, como `"email"` al lado de `"telephone"`.
+
+**Va en minúsculas** aunque llegó con la C mayúscula: Gmail no distingue
+mayúsculas en la parte de adelante del arroba, y en minúscula nadie lo lee como
+un error de tipeo.
+
+**Medido** a 1920, 1000 y 390 en las cuatro páginas: el `mailto:` está en todas,
+**no desborda en el celular** —era el riesgo, son 21 caracteres—, el JSON-LD
+sigue parseando y no hay errores de consola.
