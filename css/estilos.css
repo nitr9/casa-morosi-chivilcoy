@@ -38,7 +38,21 @@
   --wa-margen:   1.1rem;
   --wa-pasillo:  calc(var(--wa-lado) + var(--wa-margen) + .75rem);
 
-  --ancho:       1180px;
+  /* Dónde frena el contenido. Estaba en 1180 px, que es lo que llenaba el
+     monitor donde se hizo la página; en uno de 1920 dejaba 740 px de vereda
+     vacía —el 39 % de la pantalla— y todo se leía como una columna angosta
+     en el medio.
+
+     Se subió a 1560: usa el 81 % de 1920 y deja 180 px por lado, que es aire
+     suficiente para que el logo y el botón de WhatsApp no queden pegados al
+     borde (a 1760 sí quedaban, se probó). Abajo de 1600 px de ventana no
+     cambia nada: ahí manda el `100% - var(--margen)` del `min()`.
+
+     Ensanchar no rompió la lectura porque cada párrafo ya traía su propio
+     tope: se midieron los seis textos largos y ninguno pasa de 64-69
+     caracteres por renglón ni a 1180 ni a 1560. Lo único que se estiraba era
+     el cartel de "no hay ofertas", que ahora tiene el suyo. */
+  --ancho:       1560px;
   /* El aire de los costados. Es variable porque abajo de 340 px se achica:
      ahí el encabezado no cierra con 2,5rem. */
   --margen:      2.5rem;
@@ -200,6 +214,52 @@ h1, h2, h3 {
 .seccion { padding-block: var(--aire); }
 .seccion--cemento { background: var(--cemento); }
 .seccion--navy { background: var(--navy-hondo); color: var(--blanco); }
+
+/* La sección del mazo de fotos, que hasta el 24/8/2026 vivía dentro de
+   "Nosotros". Va en navy como aquélla, y no por inercia: las hojas del mazo
+   son blancas y con marco claro, así que necesitan fondo oscuro para tener
+   borde; sobre el cemento de "Cómo llegar" se despintarían.
+
+   Queda pegada a "Nosotros", que también es navy, así que lleva un filete
+   arriba: sin él las dos se leen como una sola sección larguísima y el mazo
+   parece que sigue perteneciendo a la anterior, que es justo lo que se quiso
+   sacar. El mazo trae un margen de arriba propio de cuando colgaba de otra
+   sección; acá lo pone el `padding-block`, así que se anula. */
+/* El fondo no es un color plano: es un piso de estudio, que es de donde sale
+   la sensación de profundidad de la referencia de Lüsqtoff. Un navy liso deja
+   las fotos flotando sobre una pared; acá hay un lugar donde están apoyadas.
+
+   Son tres capas, de adelante hacia atrás:
+
+   1. **La luz cenital.** Una elipse clara arriba y al centro, justo donde está
+      el mazo. Es la que explica la sombra: si el objeto proyecta sombra hacia
+      abajo, tiene que haber una luz arriba, y sin ella la sombra se lee como
+      una mancha puesta a mano.
+   2. **El viñeteado.** Oscurece las cuatro esquinas. Hace que la mirada caiga
+      al centro y, sobre todo, mata los bordes: una sección que se va poniendo
+      oscura hacia afuera no tiene dónde terminar, y eso es profundidad.
+   3. **El horizonte.** El degradado vertical con el quiebre en el 65 %, que es
+      —medido, no a ojo— la altura exacta donde apoya la pila. Arriba del quiebre aclara —es el fondo que
+      se aleja—, abajo oscurece —es el piso que viene hacia el que mira—. Ese
+      quiebre es todo el truco: sin él son dos colores, con él son dos planos.
+
+   Los porcentajes están atados a dónde cae el mazo, así que si la sección
+   cambia de contenido hay que volver a mirarlos: un horizonte a la altura
+   equivocada se ve peor que no tener horizonte. */
+.seccion--album {
+  background:
+    radial-gradient(ellipse 52% 46% at 50% 34%, rgba(178, 202, 255, .20), transparent 72%),
+    radial-gradient(ellipse 88% 78% at 50% 52%, transparent 38%, rgba(4, 8, 18, .58) 100%),
+    linear-gradient(180deg,
+      #121a2e 0%,
+      #1a2540 40%,
+      #203056 65%,
+      #0e1526 90%,
+      #080e1a 100%);
+  color: var(--blanco);
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+.seccion--album .album { margin-top: 0; }
 
 /* --- el tablero iluminado ------------------------------------------------
    La sección de ofertas es la única de la página cuyo trabajo es EXHIBIR
@@ -594,12 +654,25 @@ h1, h2, h3 {
 .barra--fija .barra__logo-oscuro { opacity: 1; }
 .barra--fija .barra__nav a { color: var(--navy); }
 
+/* El área de toque va a 44 px aunque el dibujo siga midiendo lo mismo.
+   Medido en un iPhone 13 emulado: el botón daba 28 × 18 px de blanco tocable
+   —las tres rayitas y nada más, porque la palabra "Menú" se esconde en
+   pantalla angosta—. Es el único acceso al menú en el teléfono y 18 px de alto
+   es menos de la mitad de lo que necesita un dedo. Los enlaces de adentro sí
+   estaban bien (61 px), así que el problema era sólo la puerta de entrada.
+
+   Crece por `min-height`/`min-width` y no por padding para que las rayitas
+   queden donde estaban: lo que se agranda es la zona que escucha el toque, no
+   el dibujo. */
 .hamburguesa {
   display: none;
   align-items: center;
+  justify-content: flex-end;
   gap: .55rem;
   margin-left: auto;
   padding: .5rem .2rem;
+  min-height: 44px;
+  min-width: 44px;
   background: none;
   border: 0;
   color: var(--blanco);
@@ -707,10 +780,21 @@ h1, h2, h3 {
     linear-gradient(90deg, rgba(11, 18, 34, .8) 0%, rgba(11, 18, 34, .58) 42%, rgba(11, 18, 34, .06) 80%);
 }
 
+/* El bloque de texto del hero va al ancho del contenedor, no a 44rem.
+   Tenía un tope propio de 44rem (704 px) que no dependía de `--ancho`: pasara
+   lo que pasara con la ventana, el texto quedaba en una columna de 704 px
+   arrancando siempre en el mismo x. En 1920 eso lo dejaba con 608 px de foto
+   vacía a la izquierda y era lo que más se notaba de "todo centrado" — el
+   único bloque de la página que no acompañaba la pantalla.
+
+   El tope se saca y no hace falta reemplazarlo porque cada hijo ya trae el
+   suyo: el cartel 34rem y la bajada 40rem, que son los que se leen de
+   corrido. El único que queda suelto es el titular, y es a propósito: en
+   1920 "MÁS DE 100 AÑOS" entra en un solo renglón, que es como está escrito
+   en el frente del local. Abajo de ~1200 px vuelve solo a dos renglones. */
 .hero__contenido {
   width: min(100% - var(--margen), var(--ancho));
   margin-inline: auto;
-  max-width: min(100% - var(--margen), 44rem);
   margin-top: auto;
 }
 
@@ -982,9 +1066,22 @@ h1, h2, h3 {
   padding: 0 1.25rem 0 max(1.25rem, calc((100vw - var(--ancho)) / 2));
   list-style: none;
 }
+/* El tope de la ficha era 13rem (208 px) y en un monitor ancho dejaba el riel
+   sin nada que correr: nueve fichas de 214 px con el hueco entran casi enteras
+   en 1920, así que sobraban 180 px de scroll —menos de una ficha— y el
+   carrusel quedaba de adorno. Se tocaba la flecha, el riel se movía un pelín
+   y la flecha se apagaba: se leía como que estaba roto.
+
+   Con 17rem (272 px) el recorrido pasa de 180 a 776 px, se ven 6 fichas de las
+   9 y las otras asoman, que es lo que hace entender que la tira sigue. De paso
+   las fotos se ven: son verticales y a 208 px eran una tirita.
+
+   El 16vw del medio no es decorativo: tiene que quedar por arriba del tope
+   para que en 1920 mande el tope y no el vw (14vw daban 268 px y se comían los
+   últimos 4). */
 .riel__lista li {
   flex: none;
-  width: clamp(10.5rem, 14vw, 13rem);
+  width: clamp(10.5rem, 16vw, 17rem);
   scroll-snap-align: start;
 }
 
@@ -1247,13 +1344,22 @@ h1, h2, h3 {
 .producto:hover .producto__ver { text-decoration: underline; }
 .producto__precio--consultar { font-size: 1.1rem; color: var(--navy-humo); }
 
+/* El renglón de adentro se limita aunque la placa ocupe las dos columnas.
+   Sin esto el texto se estiraba a lo que midiera la grilla: 137 caracteres
+   por renglón con el contenedor en 1180 y 186 al pasarlo a 1560, cuando lo
+   cómodo de leer termina cerca de 70. La placa sigue yendo de punta a punta,
+   lo que se achica es el texto de adentro. */
 .cargando, .vacio {
   grid-column: 1 / -1;
   margin: 0;
   padding: 3rem 1.5rem;
   background: var(--cemento);
   border-radius: var(--radio);
+  /* 46rem son unos 68 caracteres con el cuerpo de acá. El `max()` deja el
+     padding de 1,5rem en pantalla angosta, donde no sobra nada que repartir. */
+  padding-inline: max(1.5rem, calc((100% - 46rem) / 2));
   text-align: center;
+  text-wrap: balance;
   color: #59637a;
 }
 .vacio strong {
@@ -1707,10 +1813,22 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* la tapa crece al adelantarse: el aire de abajo la deja despegada del pie */
-  gap: clamp(2.25rem, 3.5vw, 3rem);
+  /* Sin separación: el reflejo es el hermano de abajo y tiene que quedar
+     PEGADO a la pila, como en la referencia. El hueco de antes existía para
+     despegar el rótulo «El local por dentro», que ya no está. */
+  gap: 0;
   /* las hojas de afuera pueden pasarse de la caja; que se recorten limpio */
   overflow: hidden;
+  /* Arriba 2,5rem; abajo, lugar para el reflejo. El de abajo no es decorativo:
+     el reflejo se dibuja FUERA de la caja de la pila, y con `overflow: hidden`
+     acá se recortaba entero. No se veía nada, y no por estar mal calibrado
+     —eso se probó— sino porque no tenía dónde dibujarse.
+
+     Cuánto: el reflejo se apaga al 34 % del alto de la pila, que mide hasta
+     350 px, o sea unos 120 px. Estuvo en 13,5rem de cuando el reflejo era
+     largo y quedaba un pozo de piso vacío abajo; se recortó al acortarlo. El
+     `clamp` lo ata al ancho de la ventana igual que el tamaño de la pila, así
+     que en pantalla chica tampoco sobra aire. */
   padding-block: 2.5rem;
 }
 
@@ -1801,41 +1919,130 @@ h1, h2, h3 {
 .hoja-1      { transform: translate3d(0, 0, 2px); }
 .album__tapa { transform: translate3d(0, 0, 4px); }
 
-/* Abierto: las hojas salen al costado girando sobre su lomo, y la tapa
-   avanza hacia el que mira. Ese avance de la tapa es lo que hace que se
-   lea como un libro que se abre y no como cuatro fotos separándose. */
-/* Cuánto se corre cada hoja al abrirse. Está en dos variables porque cambia
-   con el ancho de la pantalla y porque las mismas medidas las usa el bloque de
-   «reducir movimiento» de más abajo: si se tocan en dos lugares se
-   desincronizan, y ya pasó con otras cosas de este archivo.
+/* Abierto: las cuatro hojas salen en abanico, dos para cada lado.
+   -------------------------------------------------------------------------
+   CÓMO LLEGÓ A SER ASÍ. Primero fueron cinco hojas con la tapa adelante, como
+   un libro que se abre. El 24/8/2026 pasó a cuatro con la tapa en el medio, y
+   la única hoja de la derecha se abría hasta el punto medio para compensar el
+   peso: eso la despegaba del grupo —«hay una que está separada», lo vio Nico— y
+   el abanico se leía como tres fotos y una cuarta al costado.
 
-   POR QUÉ SE ABRE MÁS QUE ANTES. Con la apertura vieja —52 y 105— cada hoja
-   asomaba apenas la mitad: medido, 46 % las de adentro y 53 % las de afuera. Y
-   como dos de las fotos son apaisadas metidas en una caja vertical, que ya se
-   comen el 54 % del ancho, de la foto original quedaba a la vista un 24 %. Por
-   eso se veían como pedazos rotos: los carteles del local salían cortados al
-   medio —«SQTOFF» en vez de «LÜSQTOFF», «MEN» en vez de «BREMEN»—. Lo marcó
-   Nico. Con 85 y 170 cada hoja muestra entre el 81 y el 92 % de sí misma y las
-   cinco fotos se leen enteras.
+   Como quedó, y lo pidió Nico mirando la página de catálogos de Lüsqtoff:
+   **cuatro tarjetas, dos y dos, sin tapa en el medio**. Las cuatro son iguales
+   —ninguna adelante tapando al resto—, se solapan como un mazo de catálogos
+   apoyado en el estante, y el conjunto es simétrico solo, sin corrimientos ni
+   compensaciones.
 
-   Y POR QUÉ NO SIEMPRE. El abanico abierto necesita ancho: con 170 % ocupa 4,4
-   veces la hoja, o sea 1100 px. Medido, a 1000 px de pantalla las hojas de
-   afuera ya se salen 44 px de la caja y se cortan contra el borde. Así que la
-   apertura sube en dos escalones, y cada escalón se verificó con el aire que
-   queda hasta el borde: a 1200 sobran 56 px y a 1000, con la apertura del
-   medio, sobran 29. */
+   LAS DOS VARIABLES. `--abre-1` es cuánto se corren las dos del medio y
+   `--abre-2` las dos de afuera. **`--abre-2` es siempre el triple de
+   `--abre-1`**: así los cuatro centros quedan equiespaciados —a −3, −1, +1 y +3
+   veces `--abre-1`— y el aire entre hoja y hoja es el mismo en todo el abanico.
+   Si se toca una hay que tocar la otra.
+
+   CUÁNTO ABREN, Y POR QUÉ NO MENOS. Con 50 % los centros quedan a una hoja de
+   distancia y las cuatro fotos se ven ENTERAS: entre hoja y hoja sobran 21, 8 y
+   21 px, medido a 1920. El primer intento fue la mitad —38 %/114 %, buscando el
+   solape de la referencia de Lüsqtoff— y se veía como una tira continua: cada
+   foto mostraba dos tercios y las dos del medio no se distinguían entre sí.
+   Cuatro fotos que se leen como una no son cuatro fotos.
+
+   Están en variables porque cambian con el ancho de la pantalla y porque las
+   mismas medidas las usa el bloque de «reducir movimiento» de más abajo: si se
+   escriben en dos lugares se desincronizan, y ya pasó con otras cosas de este
+   archivo. */
 .album {
-  --abre-1: 52%;
-  --abre-2: 105%;
+  --abre-1: 24%;
+  --abre-2: 72%;
 }
-@media (min-width: 1000px) { .album { --abre-1: 70%; --abre-2: 140%; } }
-@media (min-width: 1200px) { .album { --abre-1: 85%; --abre-2: 170%; } }
+@media (min-width:  700px) { .album { --abre-1: 34%; --abre-2: 102%; } }
+@media (min-width: 1000px) { .album { --abre-1: 44%; --abre-2: 132%; } }
+@media (min-width: 1400px) { .album { --abre-1: 50%; --abre-2: 150%; } }
 
 .album--abierto .izq.hoja-1 { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
 .album--abierto .der.hoja-1 { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
 .album--abierto .izq.hoja-2 { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
 .album--abierto .der.hoja-2 { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
+
+/* La tapa ya no está en el mazo de fotos: la clase queda para la vidriera, que
+   la usa cuando hay un solo producto y necesita una tarjeta sola y centrada. */
 .album--abierto .album__tapa { transform: translate3d(0, 0, 150px) scale(1.05); }
+
+/* El reflejo en el piso: la pila se espeja hacia abajo, desvanecida, como las
+   tapas de catálogo del sitio de Lüsqtoff que trajo Nico de referencia.
+
+   El reflejo NO se hace acá: lo arma `main.js` clonando la pila (ver
+   `.album__pila--reflejo`). Se intentó primero con `-webkit-box-reflect`, que
+   hubiera sido una línea, y no sirve: esa propiedad refleja **la caja del
+   elemento**, y esta caja mide 250 px mientras el abanico abierto ocupa unos
+   850. Reflejaba sólo la hoja del centro. Queda anotado para que no se vuelva
+   a intentar.
+
+   Lo que sí vive acá es la sombra, que es lo que separa un reflejo de un objeto apoyado.
+   Va con `drop-shadow` y no con `box-shadow`: la pila son cinco hojas giradas
+   en 3D, y `box-shadow` dibujaría la sombra de la caja rectangular del
+   contenedor —una sombra recta detrás de un abanico torcido—. `drop-shadow`
+   sigue la silueta real de lo que se dibujó, hoja por hoja, así que al abrirse
+   el mazo la sombra se abre con él.
+
+   Son DOS sombras y no una, que es como se arma una sombra que parece real:
+   una corta y oscura pegada al objeto —el contacto con el piso— y otra larga
+   y difusa —la sombra proyectada—. Con una sola, o queda dura como calcomanía
+   o queda una nube gris sin punto de apoyo.
+
+   La copia del reflejo se anula el `filter`: una sombra reflejada iría hacia
+   abajo sobre el piso, alejándose de la luz, y eso delata la copia. */
+.album__pila {
+  filter: drop-shadow(0 6px 8px rgba(6, 11, 24, .45))
+          drop-shadow(0 22px 28px rgba(6, 11, 24, .35));
+
+}
+
+.album__reflejo .album__pila { filter: none; flex: none; }
+
+.album__reflejo {
+  /* Dado vuelta y pegado. El `scaleY(-1)` espeja de verdad: lo que estaba
+     arriba queda abajo, que es como se comporta un reflejo en un piso.
+
+     Va a lo ancho de la sección para que la máscara alcance a las cinco hojas
+     abiertas y no sólo a la tapa del centro. */
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  transform: scaleY(-1);
+  pointer-events: none;
+
+  /* El clon mide lo mismo que la pila —350 px— pero de eso sólo se ve el 34 %
+     que deja pasar la máscara. Sin recortarlo, los otros 230 px seguían
+     ocupando lugar en el flujo y dejaban un pozo de piso vacío abajo. Se lo
+     recorta a lo que de verdad se ve.
+
+     El recorte es en el espacio del elemento, ANTES del volteo: los primeros
+     píxeles del clon son, ya volteado, los que quedan pegados a la pila. O sea
+     que recortar "por arriba" conserva justo la parte que hace de reflejo. */
+  height: clamp(52px, 9vw, 122px);
+  overflow: hidden;
+
+  /* Sin la sombra del original: una sombra reflejada se dibujaría sobre el
+     piso yendo hacia abajo, o sea alejándose de donde está la luz, y eso
+     delata que es una copia y no un reflejo. */
+  /* El desvanecido. La máscara se aplica ANTES del `scaleY(-1)`, así que está
+     escrita al revés de como se ve: `to top` pone el primer color en el borde
+     de ABAJO del elemento, y al voltearlo ese borde es el que queda arriba,
+     pegado a la pila. O sea que el 60 % de opacidad —el primer color— es el
+     que toca al mazo, y el `transparent` del final se pierde en el piso.
+
+     Se escribió al revés la primera vez y el reflejo desapareció del todo: la
+     parte opaca quedaba abajo, donde la máscara ya no tenía nada que mostrar.
+
+     El 34 % es dónde termina de apagarse, y es corto a propósito. Estuvo en
+     52 % y comparado con la referencia se veía lavado: un reflejo largo se lee
+     como una segunda pila dada vuelta y pierde fuerza. En el sitio de Lüsqtoff
+     el reflejo ocupa como un tercio del alto de la tapa y justamente por eso
+     se lee nítido —el reflejo de «BLACK SERIES» se lee invertido— en vez de
+     desvanecerse en una mancha. Corto y contrastado gana a largo y suave. */
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 14%, transparent 34%);
+          mask-image: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .3) 14%, transparent 34%);
+}
 
 .album__pie {
   font-variation-settings: var(--ancho-rotulo);
@@ -1849,12 +2056,144 @@ h1, h2, h3 {
 /* Sin animación: las hojas quedan abiertas de entrada, que es el estado
    que se entiende. */
 @media (prefers-reduced-motion: reduce) {
-  .album__hoja, .album__tapa { transition: none; }
+  .album__hoja, .album__tapa, .album__pila { transition: none; }
   .album .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 50px) rotateY(-15deg); }
   .album .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 50px) rotateY(15deg); }
   .album .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
   .album .der.hoja-2  { transform: translate3d(var(--abre-2),            0, 0)    rotateY(25deg); }
   .album .album__tapa { transform: translate3d(0, 0, 150px) scale(1.05); }
+}
+
+/* --- la vidriera ---------------------------------------------------------
+   Las mismas hojas del mazo, pero cargadas con producto: la máquina más cara
+   de cada rubro, que trae `js/vidriera.js` cuando Firestore tiene algo. Si el
+   catálogo está vacío no se agrega ninguna de estas clases y la sección queda
+   siendo el mazo de fotos del local.
+
+   Acá sólo está lo que cambia. Todo lo que hace al abanico —el giro, la
+   profundidad, el reflejo, la sombra— es el mismo CSS de arriba, y eso es
+   justamente lo que se quería: que la vidriera se abra con el gesto que la
+   página ya sabe hacer. */
+
+.vidriera__hoja {
+  text-decoration: none;
+  color: var(--tinta);
+}
+
+/* La foto va ENTERA y no recortada, al revés que en el mazo. Una foto del
+   local es una escena: se puede cortar por cualquier lado y sigue diciendo lo
+   mismo. Una máquina es un objeto, y una máquina cortada al medio deja de
+   leerse. Además las fotos que sube Santiago vienen de todas las formas —hay
+   apaisadas de 900x315— y con `cover` en una caja vertical se veía un pedazo. */
+.vidriera__hoja img {
+  object-fit: contain;
+  background: var(--blanco);
+}
+
+/* En el mazo las hojas de atrás se apagan para mandar la tapa adelante. Acá
+   las cuatro son producto y las cuatro tienen que leerse, así que el apagado
+   se suaviza: alcanza para que haya profundidad, no para que la de atrás se
+   vea sucia. */
+.album--vidriera .hoja-1 { filter: brightness(.97); }
+.album--vidriera .hoja-2 { filter: brightness(.9); }
+
+.vidriera__pie {
+  margin-top: .55rem;
+  /* Que el pie no crezca a costa de la foto: es el nombre, no la ficha. */
+  flex: none;
+}
+.vidriera__rubro {
+  margin: 0 0 .2rem;
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 700;
+  font-size: clamp(.58rem, 1.1vw, var(--rotulo-chico));
+  letter-spacing: var(--track-rotulo);
+  text-transform: uppercase;
+  color: var(--acero);
+}
+.vidriera__nombre {
+  margin: 0;
+  font-variation-settings: var(--ancho-texto);
+  font-weight: 700;
+  font-size: clamp(.72rem, 1.3vw, .95rem);
+  line-height: 1.2;
+  /* Dos renglones y corta: un nombre largo empujaría la foto hasta dejarla en
+     una tirita, y en el abanico no hay lugar para más que eso. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* El aviso de que se puede tocar. No se toca el `transform` —ahí vive el
+   abanico y se pisarían— ni el `box-shadow`, que es lo que separa una hoja de
+   la otra: queda el subrayado del nombre, que es lo que se mira. */
+.vidriera__hoja:hover .vidriera__nombre,
+.vidriera__hoja:focus-visible .vidriera__nombre { text-decoration: underline; }
+
+/* El foco va hacia adentro: la hoja tiene `overflow: hidden` y un contorno por
+   fuera se recortaría contra su propio borde. */
+.vidriera__hoja:focus-visible {
+  outline: 3px solid var(--rojo);
+  outline-offset: -3px;
+}
+
+/* Cuántas hojas se ven
+   -------------------------------------------------------------------------
+   La vidriera usa el mismo abanico que el mazo —cuatro tarjetas, dos y dos, sin
+   tapa en el medio— pero con la apertura clavada en 50 % y 150 %, que es la del
+   escalón más ancho del mazo. El mazo puede darse el lujo de cerrarse en
+   pantallas medianas porque son fotos y da igual que se solapen; acá cada hoja
+   lleva el nombre de la máquina abajo a la izquierda, y ahí el solapado corta
+   palabras: medido a 1280 con la apertura del mazo, la hoja de la derecha se
+   comía el final de «Motosierra 45 cc espada 18"».
+
+   Con 50 % los centros quedan a 250 px y las hojas miden 244: entre una y otra
+   sobran 6 px y todos los nombres se leen enteros.
+
+   Lo que sí cambia con el ancho es CUÁNTAS se muestran, porque abrir tanto
+   necesita lugar. Las que no entran no se pierden: son productos y están en su
+   rubro, a un toque del riel de arriba. */
+.album.album--vidriera { --abre-1: 50%; --abre-2: 150%; }
+
+/* Con tres productos hay dos hojas de un lado y una del otro, así que el
+   conjunto queda 114 px corrido a la izquierda. Se compensa moviendo la pila
+   entera la mitad de lo que sobra —`(--abre-2 - --abre-1) / 2`, o sea 125 px—,
+   que es lo mismo que correr la vidriera en el estante. La transición es porque
+   la pila nunca se había movido: sin ella el conjunto salta mientras las hojas
+   se abren. */
+.album--de-3 .album__pila { transition: transform .8s cubic-bezier(.215, .61, .355, 1); }
+.album--de-3.album--abierto .album__pila {
+  transform: translateX(calc((var(--abre-2) - var(--abre-1)) / 2));
+}
+
+/* Abajo de 1280 px se caen las dos de afuera y quedan dos, que es lo que entra
+   con esta apertura: las cuatro necesitan 958 px de punta a punta y a 1200 de
+   ventana el contenedor da 1120. */
+@media (max-width: 1279px) {
+  .album--vidriera .hoja-2 { display: none; }
+  .album--de-3.album--abierto .album__pila { transform: none; }
+}
+
+/* Y abajo de 560 px queda una sola, agrandada y al centro. Es la decisión de
+   fondo de esta sección en el teléfono: a 390 px las tarjetas miden 150 y con
+   cuatro apiladas quedaban tres nombres cortados —«Soldado A», «Taladro
+   inalámb…»— y sólo se leía la del medio. Una máquina bien exhibida es
+   exactamente lo que la sección promete; cuatro mal exhibidas, no. Por eso el
+   reparto de `vidriera.js` carga desde el centro hacia afuera: la primera hoja
+   que llena es `izq.hoja-1`, que es la que sobrevive acá.
+
+   La pila pasa de 150 a 300 px de ancho, y el reflejo se agranda con ella: su
+   alto está clavado en píxeles —122 como máximo— y contra una pila de 420 px el
+   desvanecido quedaba cortado a la mitad. El 34 % de la altura de la pila es lo
+   que la máscara deja ver, y esos son los 143 px del tope. */
+@media (max-width: 559px) {
+  .album--vidriera .album__hoja:not(.izq.hoja-1) { display: none; }
+  .album--vidriera.album--abierto .izq.hoja-1 {
+    transform: translate3d(0, 0, 50px) scale(1.04);
+  }
+  .album--vidriera .album__pila { width: min(76vw, 300px); }
+  .album--vidriera .album__reflejo { height: min(34vw, 143px); }
 }
 
 /* tira de fotos del local */
@@ -1960,45 +2299,222 @@ h1, h2, h3 {
 /* La góndola: las marcas desfilan sobre un estante.
    Sin JavaScript queda una sola fila que se arrastra con el dedo; el JS
    duplica la fila y recién ahí arranca el movimiento continuo. */
-.gondola {
-  margin-top: 1.75rem;
-  padding-bottom: 1.75rem;
-  overflow-x: auto;
-  scrollbar-width: none;
+/* --- la vitrina de marcas -------------------------------------------------
+   Diez marcas en menos huecos que marcas: cada hueco muestra una por vez y
+   se van turnando, entrando desde abajo y saliendo por arriba. Reemplazó al
+   desfile horizontal el 24/8/2026.
+
+   Por qué se turnan en vez de desfilar: el desfile obliga a leer al ritmo de
+   la animación y las diez pasan siempre en el mismo orden. Con los huecos, en
+   cualquier momento hay cinco logos QUIETOS que se pueden mirar, y el cambio
+   pasa de a uno, escalonado, así que nunca se mueve todo junto.
+
+   Este estado —grilla de diez, sin turnos— es el que se ve SIN JavaScript, y
+   se ve bien: la lista completa a la vista. El JS le agrega `vitrina--anima`
+   y arma las columnas. */
+.vitrina {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0 0;
+  padding: 0 0 1.75rem;
+  list-style: none;
   border-bottom: 1px solid var(--navy-humo);   /* el filo del estante */
 }
-.gondola::-webkit-scrollbar { display: none; }
 
-.gondola--anima {
-  display: flex;
+/* Con JS: los `li` pasan a ser huecos y las chapas se apilan adentro. El alto
+   lo fija el hueco porque las chapas van absolutas y no lo pueden sostener. */
+/* --- la sección de marcas, en blanco ---------------------------------------
+   Sale del navy de "Nosotros" y va en blanco. El cambio de color es lo que
+   permite lo demás: sobre blanco los logos **no necesitan la placa** que los
+   sostenía sobre el navy —son a color y oscuros, se leen solos—, y sin placa
+   opaca el espejismo del fondo se ve a través.
+
+   `overflow: hidden` porque el espejismo es una imagen enorme y desenfocada:
+   sin recorte se derrama sobre las secciones de arriba y abajo. Acá el
+   recorte no delata nada, porque lo que se corta no tiene forma reconocible.
+
+   `isolation` crea un contexto de apilado propio, así el `z-index` del
+   espejismo y del contenido no compite con el de la barra fija ni con el del
+   botón de WhatsApp. */
+.seccion--marcas {
+  position: relative;
+  isolation: isolate;
   overflow: hidden;
-  /* los logos aparecen y desaparecen en vez de cortarse contra el borde */
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  background: var(--blanco);
+  color: var(--tinta);
+}
+.seccion--marcas > .contenedor { position: relative; z-index: 1; }
+
+/* El espejismo: el logo que se está mostrando, gigante y desenfocado, de
+   fondo. Son DOS imágenes que se turnan —mientras una se apaga la otra se
+   prende— porque con una sola habría que cambiarle el `src` en el medio del
+   fundido y se ve el parpadeo del salto.
+
+   El primer intento tenía 72 px de desenfoque y ocupaba el 58 % del ancho: se
+   veía "un colorcito nomás" y nada más, porque con ese desenfoque el logo deja
+   de tener forma y queda sólo la mancha. La idea era teñir la sección; lo que
+   Nico quiere es **ver el logo**, grande y fuera de foco. Así que pasó a ocupar
+   casi todo el ancho y el desenfoque bajó a 22 px: lo suficiente para que esté
+   claramente fuera de foco, poco para que se siga reconociendo de qué marca es.
+
+   Los logos son chicos —el más ancho mide 260 px— y acá se estiran hasta cerca
+   de 1.700: por eso el JS le pasa la versión `@2x`. Igual va desenfocada, pero
+   sin eso el escalado le mete un pixelado que el desenfoque no llega a tapar.
+
+   `saturate` sube el color porque desenfocar lava: al promediar los píxeles
+   con el blanco de alrededor, el rojo de Milwaukee tira a rosa. */
+.marcas__eco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.marcas__eco img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(96%, 1500px);
+  height: auto;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  /* El desenfoque acompaña al ancho en vez de ser fijo. Con 22 px fijos se veía
+     bien en 1920 —donde el logo mide 1500— y en el teléfono desaparecía: ahí el
+     logo mide 375 px, así que los mismos 22 px borran cuatro veces más y no
+     quedaba nada para reconocer, sólo un halo de color. Con `vw` la proporción
+     entre lo que mide el logo y cuánto se lo desenfoca es la misma en las dos
+     pantallas. Los topes son para que no se vuelva nítido en una ventana
+     angosta ni una mancha en un monitor grande. */
+  filter: blur(clamp(7px, 1.15vw, 22px)) saturate(1.6);
+  transition: opacity 1.15s ease;
+}
+.marcas__eco img.se-ve { opacity: .42; }
+
+/* Sin placa: el fondo blanco ya es la placa. Además, una placa opaca taparía
+   el espejismo justo en el centro, que es donde está. */
+.seccion--marcas .chapa {
+  background: none;
+  border-radius: 0;
 }
 
-.gondola__fila {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0;
-  padding: 0 1.25rem;
-  list-style: none;
-}
-.gondola--anima .gondola__fila {
-  flex: none;
-  padding: 0;
-  padding-right: 1rem;
-  animation: desfile 46s linear infinite;
-}
-.gondola--anima:hover .gondola__fila,
-.gondola--anima:focus-within .gondola__fila { animation-play-state: paused; }
+.seccion--marcas .marcas-mas { color: #5c6577; }
 
-@keyframes desfile { to { transform: translateX(-100%); } }
+/* El filo del estante se va con el navy. Era una línea `--navy-humo` que sobre
+   el fondo oscuro leía como el borde de una repisa; sobre blanco quedaba una
+   raya azul cruzando la sección, sin nada que la explicara. */
+.seccion--marcas .vitrina { border-bottom: 0; }
 
+/* Nada de espejismo si pidieron no moverse: queda el blanco liso. */
 @media (prefers-reduced-motion: reduce) {
-  .gondola--anima { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
-  .gondola--anima .gondola__fila { animation: none; }
+  .marcas__eco { display: none; }
+}
+
+/* El bloque de marcas va centrado y no alineado a la izquierda como el resto
+   de la página. Es la única sección así, a pedido de Nico y sobre la referencia
+   de cult-ui: son tres piezas sueltas sin texto corrido al lado, y centradas se
+   leen como un conjunto — alineadas a la izquierda quedaban colgando del
+   título con un vacío grande a la derecha. */
+.marcas { text-align: center; }
+.marcas .subtitulo { margin-bottom: 0; }
+.marcas .marcas-mas { margin-inline: auto; }
+
+/* No se estira a los 1560 del contenedor: con tres placas de 260 repartidas en
+   todo ese ancho quedaban tres islas separadas por 250 px de navy y dejaban de
+   leerse como un grupo. Frenada en 56rem y centrada bajo el título. */
+.vitrina--anima {
+  grid-template-columns: repeat(var(--huecos, 3), minmax(0, 1fr));
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.vitrina__hueco {
+  position: relative;
+  height: 96px;
+  border-radius: var(--radio);
+}
+
+/* SIN `overflow: hidden`, y es a propósito. Recortar contra el borde del hueco
+   deja un corte a filo sobre una placa que justo se está desenfocando, y ese
+   filo nítido delata el truco. Sin recorte la placa se va apagando y no hace
+   falta cortarla: para cuando llegaría a molestar ya es invisible.
+
+   Lo que sí hace falta es que la que se va pase por DEBAJO de la que llega, si
+   no se cruzan y por un instante se ve la de arriba encima de la nueva. */
+.vitrina--anima .chapa          { z-index: 1; }
+.vitrina--anima .chapa.se-va    { z-index: 0; }
+.vitrina--anima .chapa.es-actual { z-index: 2; }
+
+/* La placa se queda en 260 px y se centra en su columna, no se estira a lo que
+   mida el tercio. Con el contenedor en 1560, un tercio son 520 px: la placa
+   quedaba como una barra blanca enorme con el logo perdido en el medio. Los
+   logos están recortados al ras y calibrados para una placa de este tamaño
+   —la del desfile anterior medía 190—, así que agrandarla no agranda el logo,
+   sólo agranda el blanco alrededor. */
+.vitrina--anima .vitrina__hueco {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+/* El cambio de marca: la que se va sube DESENFOCÁNDOSE y la que entra llega
+   desde abajo enfocándose. El desenfoque es lo que da el efecto —es lo que
+   hace cult-ui y es lo que Nico quería—: sin él, dos placas que se cruzan se
+   leen como un cambio de diapositiva; con él se lee como que una se aleja y la
+   otra se acerca.
+
+   Las tres cosas se mueven juntas y con tiempos distintos a propósito:
+
+   · `transform` es el más largo (.85s) y lleva la curva con un pelín de
+     rebote —el 1.12 del tercer número—, que es lo que imita el resorte de
+     Framer Motion del original. Sin ese exceso la placa "llega y frena", con
+     él "se asienta".
+   · `opacity` y `filter` son más cortos (.5s): la placa termina de aparecer
+     antes de terminar de acomodarse. Si duran lo mismo, el movimiento se ve
+     recién cuando ya está todo nítido y se pierde.
+   · La escala es apenas 4 %. Más que eso y la placa "salta" en vez de
+     acercarse.
+
+   `will-change` está puesto porque el desenfoque se recalcula en cada cuadro
+   y sin avisar al navegador se ve escalonado en pantallas grandes. */
+.vitrina--anima .chapa {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  opacity: 0;
+  transform: translateY(62%) scale(.96);
+  filter: blur(10px);
+  transition: transform .85s cubic-bezier(.22, 1.12, .36, 1),
+              opacity .5s ease-out,
+              filter .5s ease-out;
+  will-change: transform, opacity, filter;
+}
+
+/* la que se está mirando: quieta, nítida, entera */
+.vitrina--anima .chapa.es-actual {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* la que se va: sigue subiendo, se desenfoca y se apaga */
+.vitrina--anima .chapa.se-va {
+  opacity: 0;
+  transform: translateY(-62%) scale(.96);
+  filter: blur(10px);
+}
+
+/* Nada se mueve si pidieron no moverse: quedan las diez en grilla, que es el
+   mismo estado que sin JavaScript. El JS también lo consulta y ni arranca. */
+@media (prefers-reduced-motion: reduce) {
+  .vitrina--anima { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .vitrina--anima .vitrina__hueco { height: auto; overflow: visible; }
+  .vitrina--anima .chapa {
+    position: static;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* cada logo en su placa */
@@ -2606,7 +3122,9 @@ h1, h2, h3 {
   /* En pantalla angosta la pila se achica y el abanico abre menos, para que
      las hojas de afuera entren enteras en vez de cortarse contra el borde. */
   .album__pila { width: clamp(132px, 37vw, 168px); }
-  .album { --abre-1: 38%; --abre-2: 74%; }
+  /* Mismo triple que arriba, sólo que más corto: con la pila en 150 px las
+     cuatro hojas ocupan 330 y a 390 de pantalla el contenedor da 350. */
+  .album { --abre-1: 20%; --abre-2: 60%; }
   .album--abierto .izq.hoja-1  { transform: translate3d(calc(var(--abre-1) * -1), 0, 34px) rotateY(-15deg); }
   .album--abierto .der.hoja-1  { transform: translate3d(var(--abre-1),            0, 34px) rotateY(15deg); }
   .album--abierto .izq.hoja-2  { transform: translate3d(calc(var(--abre-2) * -1), 0, 0)    rotateY(-25deg); }
@@ -2614,7 +3132,8 @@ h1, h2, h3 {
   .album--abierto .album__tapa { transform: translate3d(0, 0, 100px) scale(1.03); }
   .chapa { width: 152px; height: 82px; padding: .85rem; }
   .chapa img { max-height: 42px; }
-  .gondola__fila { gap: .7rem; }
+  /* el hueco acompaña a la chapa achicada, si no le sobra alto por abajo */
+  .vitrina__hueco { height: 82px; }
 }
 
 /* El botón de menú, en pantalla angosta: se va la palabra y queda el ícono.

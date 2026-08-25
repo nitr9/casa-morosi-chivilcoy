@@ -149,7 +149,12 @@
       </div>
     </div>
 
-    <div class="riel" data-riel data-paso="pagina">
+    <!-- Sin data-paso: las flechas avanzan de a una ficha. Iba de a una
+         pantalla, y con el riel apenas más largo que la ventana eso era
+         siempre un solo salto hasta el final —la flecha se apagaba al primer
+         clic y parecía rota—. De a una son tres pasos en 1920, que es lo que
+         se espera de un carrusel. -->
+    <div class="riel" data-riel>
       <div class="riel__pista" data-pista>
         <ul class="riel__lista" data-rubros>
           <li>
@@ -160,25 +165,25 @@
           </li>
           <li>
             <a class="ficha-rubro" href="rubro.html?r=amoladoras" data-rubro="Amoladoras">
-              <img src="img/rubros/amoladoras.webp" width="900" height="700" loading="lazy" alt="">
+              <img src="img/rubros/panel-amoladoras.webp" width="680" height="451" loading="lazy" alt="">
               <span class="ficha-rubro__nombre">Amoladoras</span>
             </a>
           </li>
           <li>
             <a class="ficha-rubro" href="rubro.html?r=motosierras" data-rubro="Motosierras">
-              <img src="img/rubros/motosierras.webp" width="900" height="700" loading="lazy" alt="">
+              <img src="img/rubros/panel-motosierras.webp" width="900" height="600" loading="lazy" alt="">
               <span class="ficha-rubro__nombre">Motosierras</span>
             </a>
           </li>
           <li>
             <a class="ficha-rubro" href="rubro.html?r=compresores-de-aire" data-rubro="Compresores de aire">
-              <img src="img/rubros/compresores.webp" width="900" height="1100" loading="lazy" alt="">
+              <img src="img/rubros/panel-compresores-de-aire.webp" width="900" height="315" loading="lazy" alt="">
               <span class="ficha-rubro__nombre">Compresores de aire</span>
             </a>
           </li>
           <li>
             <a class="ficha-rubro" href="rubro.html?r=hidrolavadoras" data-rubro="Hidrolavadoras">
-              <img src="img/rubros/hidrolavadoras.webp" width="900" height="1100" loading="lazy" alt="">
+              <img src="img/rubros/panel-hidrolavadoras.webp" width="900" height="604" loading="lazy" alt="">
               <span class="ficha-rubro__nombre">Hidrolavadoras</span>
             </a>
           </li>
@@ -190,7 +195,7 @@
           </li>
           <li>
             <a class="ficha-rubro" href="rubro.html?r=herramientas-de-mano" data-rubro="Herramientas de mano">
-              <img src="img/rubros/mano.webp" width="900" height="700" loading="lazy" alt="">
+              <img src="img/rubros/panel-herramientas-de-mano.webp" width="408" height="728" loading="lazy" alt="">
               <span class="ficha-rubro__nombre">Herramientas de mano</span>
             </a>
           </li>
@@ -272,29 +277,6 @@
                alt="El frente de Casa Morosi sobre Av. Mitre, con las máquinas y las hormigoneras en la vereda.">
         </figure>
       </div>
-
-      <figure class="album" data-album>
-          <div class="album__pila">
-            <div class="album__hoja izq hoja-2">
-              <img src="img/local/deposito.webp" width="1400" height="900" loading="lazy" alt="Depósito con mercadería en estanterías.">
-            </div>
-            <div class="album__hoja der hoja-2">
-              <img src="img/local/bremen.webp" width="900" height="1200" loading="lazy" alt="Estantería con herramientas Bremen.">
-            </div>
-            <div class="album__hoja izq hoja-1">
-              <img src="img/local/pasillo.webp" width="900" height="1200" loading="lazy" alt="Pasillo del salón de ventas.">
-            </div>
-            <div class="album__hoja der hoja-1">
-              <img src="img/local/mostrador.webp" width="1200" height="800" loading="lazy" alt="Mostrador de atención.">
-            </div>
-
-            <div class="album__tapa">
-              <img src="img/local/cartel-100.webp" width="900" height="1600" loading="lazy"
-                   alt="Cartel del frente: Casa Morosi, ferretería industrial. Más de 100 años de experiencia y responsabilidad nos avalan.">
-            </div>
-          </div>
-        <figcaption class="album__pie">El local por dentro</figcaption>
-      </figure>
     </div>
 
     <div class="tira" data-tira>
@@ -333,12 +315,32 @@
       </div>
     </div>
 
-    <div class="contenedor">
-      <h3 class="subtitulo">Las marcas que trabajamos</h3>
+  </section>
+
+  <!-- 5 · LAS MARCAS .......................................... -->
+  <!-- Salió de adentro de "Nosotros" a una sección propia con fondo blanco
+       (24/8/2026). El fondo blanco no es sólo un cambio de color: sobre blanco
+       los logos NO necesitan la placa que los sostenía sobre el navy, así que
+       van sueltos, que es como se ven en la referencia de cult-ui.
+
+       Detrás va el eco: el logo que se está mostrando, gigante y desenfocado,
+       como fondo de la sección. Cuando el hueco del medio cambia de marca, el
+       eco cambia con él. Son dos capas que se turnan para que el cambio sea un
+       fundido cruzado y no un parpadeo.
+
+       Los diez logos siguen escritos acá y no los pone el JS: sin JavaScript
+       queda la grilla con las diez a la vista, que es una caída mejor que un
+       hueco vacío. -->
+  <section class="seccion seccion--marcas" id="marcas">
+    <div class="marcas__eco" data-eco aria-hidden="true">
+      <img alt="" src="" width="260" height="96">
+      <img alt="" src="" width="260" height="96">
     </div>
 
-    <div class="gondola" data-gondola>
-      <ul class="gondola__fila" data-fila>
+    <div class="contenedor marcas">
+      <h3 class="subtitulo">Las mejores marcas ya están acá</h3>
+
+      <ul class="vitrina" data-vitrina>
         <li class="chapa"><img src="img/marcas/husqvarna.webp" srcset="img/marcas/husqvarna.webp 260w, img/marcas/husqvarna@2x.webp 520w" sizes="220px" width="260" height="49" loading="lazy" alt="Husqvarna"></li>
         <li class="chapa"><img src="img/marcas/milwaukee.webp" srcset="img/marcas/milwaukee.webp 213w, img/marcas/milwaukee@2x.webp 426w" sizes="200px" width="213" height="96" loading="lazy" alt="Milwaukee"></li>
         <li class="chapa"><img src="img/marcas/dewalt.webp" srcset="img/marcas/dewalt.webp 260w, img/marcas/dewalt@2x.webp 520w" sizes="220px" width="260" height="78" loading="lazy" alt="DeWalt"></li>
@@ -350,9 +352,7 @@
         <li class="chapa"><img src="img/marcas/niwa.webp" srcset="img/marcas/niwa.webp 260w, img/marcas/niwa@2x.webp 520w" sizes="220px" width="260" height="78" loading="lazy" alt="Niwa"></li>
         <li class="chapa"><img src="img/marcas/bta-tools.webp" srcset="img/marcas/bta-tools.webp 203w, img/marcas/bta-tools@2x.webp 406w" sizes="140px" width="203" height="96" loading="lazy" alt="BTA Tools"></li>
       </ul>
-    </div>
 
-    <div class="contenedor">
       <p class="marcas-mas">
         Y también Bosch, Makita, Bahco, Gardena, Einhell, Bremen y Gherardi.
         Si buscás una marca que no ves acá, preguntanos igual.
@@ -360,7 +360,61 @@
     </div>
   </section>
 
-  <!-- 5 · CONTACTO ............................................ -->
+  <!-- 6 · LA VIDRIERA ......................................... -->
+  <!-- La sección tiene DOS contenidos posibles y el mazo de fotos del local es
+       el de reserva, no el definitivo.
+
+       Si Firestore tiene productos cargados, `js/vidriera.js` reemplaza las
+       hojas por la máquina más cara de cada rubro —la vidriera del punto 33 de
+       PENDIENTES.md— y muestra el encabezado de acá abajo. Si el catálogo está
+       vacío, que es el estado del 24/8/2026, no se toca nada: quedan las cuatro
+       fotos del local y la sección sigue sin título.
+
+       Por eso el encabezado viene `hidden` desde el HTML y no lo escribe el JS:
+       el texto se lee y se corrige acá, con el resto de la página, y no
+       enterrado adentro de un template en un módulo.
+
+       El mazo salió de "Nosotros" y quedó acá, entre las marcas y el contacto
+       (24/8/2026). Adentro de Nosotros competía con la foto del frente y con la
+       tira: tres bloques de fotos en la misma sección y ninguno se miraba. -->
+  <section class="seccion seccion--album" id="album">
+    <div class="contenedor">
+
+      <header class="encabezado encabezado--claro" data-vidriera-encabezado hidden>
+        <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>En la vidriera</p>
+        <h2 class="titulo">Lo mejor de cada rubro, exhibido en serio</h2>
+        <p class="entrada">
+          Las máquinas que tenemos para mostrar, una por rubro. Tocá cualquiera
+          para ver la ficha con las características y consultar por WhatsApp.
+        </p>
+      </header>
+
+      <figure class="album" data-album>
+        <!-- Cuatro hojas, dos y dos, sin tapa en el medio. Lo pidió Nico el
+             24/8/2026 mirando la página de catálogos de Lüsqtoff: las tapas
+             abiertas en abanico, sin una adelante tapando al resto. La que
+             salió es `cartel-100`, la foto del frente, que además ya está en el
+             hero. El orden del HTML es el de atrás hacia adelante: las hoja-2
+             quedan al fondo y las hoja-1 adelante. -->
+        <div class="album__pila" data-pila>
+          <div class="album__hoja izq hoja-2">
+            <img src="img/local/deposito.webp" width="1400" height="900" loading="lazy" alt="Depósito con mercadería en estanterías.">
+          </div>
+          <div class="album__hoja der hoja-2">
+            <img src="img/local/bremen.webp" width="900" height="1200" loading="lazy" alt="Estantería con herramientas Bremen.">
+          </div>
+          <div class="album__hoja izq hoja-1">
+            <img src="img/local/pasillo.webp" width="900" height="1200" loading="lazy" alt="Pasillo del salón de ventas.">
+          </div>
+          <div class="album__hoja der hoja-1">
+            <img src="img/local/mostrador.webp" width="1200" height="800" loading="lazy" alt="Mostrador de atención.">
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 7 · CONTACTO ............................................ -->
   <section class="seccion seccion--cemento" id="contacto">
 
     <!-- El camino del tesoro. Es decoración de fondo y se dibuja en bucle: va
@@ -503,6 +557,7 @@
 <script type="module" src="js/main.js"></script>
 <script type="module" src="js/rubros.js"></script>
 <script type="module" src="js/productos.js"></script>
+<script type="module" src="js/vidriera.js"></script>
 
 <script type="application/ld+json">
 {

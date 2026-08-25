@@ -57,6 +57,22 @@ El `createRequire` apuntando al `package.json` es lo que hace que resuelva; un
 import normal con la ruta **no** funciona, por los espacios del nombre de la
 carpeta.
 
+### La segunda máquina (24/8/2026)
+
+El repositorio se clonó en la computadora de Nico y ahí **no está nada de lo de
+arriba**: ni las cuatro carpetas del Escritorio ni la landing de Astro. Se armó
+una caja propia, fuera del repositorio para no meterle dependencias:
+
+    C:\Users\nico_\Proyectos-Claude2026\.herramientas   (sharp + playwright)
+
+Se usa igual, con `createRequire` apuntando a su `package.json`. Un guion que
+tenga que andar en las dos máquinas conviene que pruebe las dos rutas en orden;
+`hornear-rubros.mjs` lo hace así, en su lista `CAJAS`.
+
+Lo que sigue faltando en esa máquina son **las fotos originales**: se puede medir,
+capturar y reprocesar lo que ya está en `img/`, pero no elegir una foto nueva de
+la carpeta del local.
+
 Esa landing de Astro cubre las tres sucursales y **no se reutiliza como base**
 —acá se quiso otra cosa: sólo Chivilcoy, pocas secciones, HTML puro y más
 fotográfica—, pero sirve para robarle contenido ya resuelto.

@@ -250,6 +250,64 @@ function alFrenar(hacer) {
 const album = document.querySelector('[data-album]');
 
 if (album) {
+  /* El reflejo en el piso es una COPIA de la pila, dada vuelta.
+     ---------------------------------------------------------------------
+     Se probó antes con `-webkit-box-reflect`, que sería una línea de CSS, y
+     no sirve acá. Esa propiedad refleja **la caja del elemento**, y la caja de
+     la pila mide 250 px mientras que el abanico abierto ocupa unos 850: se
+     reflejaba sólo la hoja del centro y las otras cuatro no aparecían. Lo vio
+     Nico enseguida — «me estás espejeando la primera nomás».
+
+     La copia sí refleja todo porque es todo. Y va DENTRO de `.album`, que es
+     donde vive la clase `album--abierto`: así el reflejo se abre solo, junto
+     con el original, sin una línea de sincronización.
+
+     Las fotos de la copia van sin `alt` y con `aria-hidden`: es la misma
+     imagen dos veces y un lector de pantalla no tiene por qué leerla dos
+     veces. Tampoco lleva `loading="lazy"` — son las mismas fotos que ya
+     bajó el original, así que salen de la caché. */
+  const armarReflejo = () => {
+    const pila = album.querySelector('.album__pila');
+    if (!pila || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    /* Si ya había uno, se tira: esto se vuelve a llamar cuando la vidriera
+       reemplaza las hojas, y dos reflejos apilados se ven como una mancha. */
+    album.querySelector('.album__reflejo')?.remove();
+
+    const copia = pila.cloneNode(true);
+    for (const foto of copia.querySelectorAll('img')) {
+      foto.alt = '';
+      foto.removeAttribute('loading');
+    }
+
+    /* Las hojas de la vidriera son enlaces, y el reflejo es la misma tarjeta
+       otra vez: sin sacarles el `href` habría dos enlaces al mismo producto,
+       uno de ellos cabeza abajo y dentro de algo marcado `aria-hidden`. Sin
+       href un `<a>` deja de recibir foco, y el `inert` corta también el
+       puntero. */
+    for (const enlace of copia.querySelectorAll('a')) enlace.removeAttribute('href');
+
+    /* La copia va DENTRO de una caja ancha, y esa caja es la que lleva el
+       volteo y el desvanecido. No se le puede poner la máscara a la copia
+       directamente: una máscara recorta al elemento, y la caja de la pila mide
+       250 px mientras las hojas abiertas se van hasta unos 850. Enmascarando
+       la pila se reflejaba sólo la tapa del centro —se vio— y las otras cuatro
+       desaparecían. La caja ancha abarca el abanico entero. */
+    const caja = document.createElement('div');
+    caja.className = 'album__reflejo';
+    caja.setAttribute('aria-hidden', 'true');
+    caja.inert = true;
+    caja.append(copia);
+    pila.after(caja);
+  };
+
+  armarReflejo();
+
+  /* La vidriera cambia las hojas después, cuando Firestore contesta (ver
+     `js/vidriera.js`). Avisa por acá para que el reflejo se rehaga con lo que
+     quedó puesto; si no, arriba habría máquinas y abajo, el depósito. */
+  document.addEventListener('album:renovado', armarReflejo);
+
   const ojo = new IntersectionObserver(([entrada]) => {
     album.classList.toggle('album--abierto', entrada.isIntersecting);
   }, { rootMargin: '0px 0px -25% 0px', threshold: 0 });
@@ -318,21 +376,43 @@ function flechasDeArrastre(marco, { anterior, siguiente }) {
 
   /* Dónde puede quedar frenada cada pieza. Se lee del propio CSS: si la
      pieza se centra, la parada es su centro; si no, su borde izquierdo. Así
-     el salto cae siempre donde el scroll-snap la iba a dejar igual. */
+     el salto cae siempre donde el scroll-snap la iba a dejar igual.
+
+     El `scroll-padding-left` hay que restarlo y es lo que faltaba (24/8/2026).
+     La posición de la pieza dentro del contenido no es el scroll que hay que
+     pedir para dejarla alineada: el snap ajusta contra el borde corrido por
+     `scroll-padding-left`, así que el scroll bueno es esa posición MENOS ese
+     padding. Sin restarlo, las paradas quedaban todas corridas: en un monitor
+     de 1920 el riel lleva 180 px de `scroll-padding-left`, o sea que las nueve
+     erraban por 180.
+
+     Se notaba yendo para atrás. Desde el final (756) la parada elegida daba
+     736, y 736 cae dentro de lo que el snap devuelve a 756: se pedía el
+     scroll, el navegador lo deshacía y el riel no se movía nunca. La flecha
+     izquierda parecía muerta. Para adelante zafaba de casualidad: errar de más
+     cae en la parada siguiente, así que algo se movía igual.
+
+     En las piezas centradas no se resta: ahí la cuenta ya sale del centro de
+     la pista y el padding no entra. */
   const paradas = () => {
+    const corrido = parseFloat(getComputedStyle(pista).scrollPaddingLeft) || 0;
     const cero = pista.getBoundingClientRect().left - pista.scrollLeft;
     return [...pista.querySelectorAll('li')].map((pieza) => {
       const caja = pieza.getBoundingClientRect();
       const centrada = getComputedStyle(pieza).scrollSnapAlign.startsWith('center');
       const desde = caja.left - cero;
-      return Math.round(centrada ? desde + caja.width / 2 - pista.clientWidth / 2 : desde);
+      return Math.round(centrada ? desde + caja.width / 2 - pista.clientWidth / 2 : desde - corrido);
     });
   };
 
   /* Con [data-paso="pagina"] avanza una pantalla completa; por defecto, de a
-     una pieza. Las fotos del local son grandes y de a una alcanza: con salto
-     fijo se pasaban tres de golpe. Las fichas de rubro son chicas y de a una
-     se hace eterno. En los dos casos frena en una parada de verdad. */
+     una pieza. En los dos casos frena en una parada de verdad.
+
+     Hoy no lo usa nadie: el riel de rubros lo tenía y se lo sacó el 24/8/2026.
+     Una "pantalla" son 1632 px en un monitor de 1920, y el riel entero sólo
+     tiene 776 px para correr, así que el primer clic se iba siempre al final
+     y apagaba la flecha. La opción queda porque sigue teniendo sentido para
+     una tira mucho más larga que la ventana; el riel no es ese caso. */
   const dePagina = marco.dataset.paso === 'pagina';
 
   const correr = (signo) => {
@@ -455,21 +535,214 @@ async function ponerRubrosDelPanel() {
   listaRubros.closest('[data-pista]')?.dispatchEvent(new Event('scroll'));
 }
 
-/* ------------------------------------------------------- góndola de marcas */
+/* -------------------------------------------------------- vitrina de marcas */
 
-/* Para que el desfile no tenga saltos hace falta una segunda fila idéntica:
-   cuando la primera termina de salir, la copia ya está en su lugar. La copia
-   se marca como decorativa para que no se lea dos veces. */
-const gondola = document.querySelector('[data-gondola]');
-const fila = gondola?.querySelector('[data-fila]');
+/* Las diez marcas entran en tres huecos y se turnan: cada hueco muestra una
+   por vez, la que sale se va por arriba y la que entra viene de abajo.
 
-if (fila && fila.children.length) {
-  const copia = fila.cloneNode(true);
-  copia.removeAttribute('data-fila');
-  copia.setAttribute('aria-hidden', 'true');
-  for (const enlace of copia.querySelectorAll('img')) enlace.alt = '';
-  gondola.append(copia);
-  gondola.classList.add('gondola--anima');
+   El HTML trae las diez sueltas en una grilla y eso es lo que se ve si este
+   guion no corre: la lista completa, que es una caída perfectamente buena. Lo
+   que agrega el JS es el reparto en columnas y el turno.
+
+   Tres decisiones que valen más que el efecto:
+
+   · Cambia UN hueco por vez, nunca los tres juntos. Un solo reloj va rotando
+     de hueco en hueco, así que siempre hay dos marcas quietas para mirar
+     mientras la tercera se está cambiando. Con los tres cambiando a la vez la
+     sección parpadea y no se lee ninguna.
+   · Las chapas que no se ven siguen en el DOM y sin `aria-hidden`. Con lector
+     de pantalla se anuncian las diez marcas, no tres: la información es la
+     lista completa, el turno es sólo la manera de mostrarla.
+   · No corre si no se ve. Mientras la sección está fuera de pantalla o la
+     pestaña está en segundo plano, el reloj se para. */
+
+const vitrina = document.querySelector('[data-vitrina]');
+
+if (vitrina && vitrina.children.length && !suave.matches) {
+  /* Cuánto queda quieta cada marca antes de que le toque el turno al hueco
+     siguiente. Con tres huecos, cada uno cambia cada 4,2 s: alcanza para leer
+     el logo y no llega a aburrir. */
+  const PASO = 1400;
+
+  /* Las fotos salen del HTML una sola vez; después se reparten y se mueven. */
+  const marcas = [...vitrina.querySelectorAll('.chapa')].map((li) => li.innerHTML);
+
+  /* La lista de los diez archivos, en orden, para el espejismo del fondo. Se
+     lee acá, antes de que `armar()` vacíe la vitrina y reparta las chapas. */
+  const fuentes = [...vitrina.querySelectorAll('.chapa img')]
+    .map((img) => img.getAttribute('src'));
+
+  let huecos = [];
+  let reloj = null;
+  let turno = 0;
+
+  const cuantos = () => (window.innerWidth < 560 ? 2 : 3);
+
+  function armar() {
+    const cantidad = cuantos();
+    vitrina.style.setProperty('--huecos', cantidad);
+    vitrina.textContent = '';
+    huecos = [];
+
+    for (let i = 0; i < cantidad; i++) {
+      const hueco = document.createElement('li');
+      hueco.className = 'vitrina__hueco';
+
+      /* Reparto salteado y no por bloques: el hueco 0 se queda con la 1ª, la
+         4ª, la 7ª… Repartiendo de a tramos, las tres primeras marcas —que son
+         las que más se ven— caerían todas en el mismo hueco y las otras dos
+         columnas empezarían con las de más abajo de la lista. */
+      const suyas = [];
+      for (let j = i; j < marcas.length; j += cantidad) suyas.push(marcas[j]);
+
+      for (const [orden, contenido] of suyas.entries()) {
+        const chapa = document.createElement('span');
+        chapa.className = 'chapa' + (orden === 0 ? ' es-actual' : '');
+        chapa.innerHTML = contenido;
+        hueco.append(chapa);
+      }
+
+      vitrina.append(hueco);
+      huecos.push({ nodo: hueco, cual: 0 });
+    }
+
+    vitrina.classList.add('vitrina--anima');
+
+    /* Que el fondo arranque teñido desde el principio. Sin esto la sección se
+       ve blanca y pelada los primeros segundos, hasta que al hueco del medio
+       le toca su primer turno, y el espejismo parece un efecto que aparece de
+       la nada en vez del fondo de la sección. */
+    latirEco();
+  }
+
+  /* El espejismo del fondo: el logo que acaba de aparecer, gigante y
+     desenfocado, detrás de todo.
+
+     Espeja **cada** cambio, venga del hueco que venga. Al principio seguía sólo
+     al hueco del medio, y el problema es que ese hueco tiene tres marcas de las
+     diez: las otras siete no salían nunca de fondo. Siguiendo todos los huecos
+     pasan las diez, porque entre los tres se reparten la lista entera.
+
+     Las dos capas se turnan: la que estaba se apaga mientras la nueva se
+     prende. Con una sola imagen habría que cambiarle el `src` en la mitad del
+     fundido, y ahí se ve el salto. */
+  const eco = document.querySelector('[data-eco]');
+  const capas = eco ? [...eco.querySelectorAll('img')] : [];
+  let capaActiva = 0;
+
+  /* Cada cuánto cambia el fondo. Tiene reloj propio y no sigue a los huecos:
+     así el fondo va a su ritmo, parejo, y no queda atado a cuál de los tres
+     huecos tocó cambiar. Antes espejaba lo que acababa de entrar y por eso
+     cambiaba cada 1,4 s —mucho para una imagen de ese tamaño— y cuando se
+     intentó espaciarlo siguiendo a un hueco por vez el ritmo quedaba
+     desparejo: 4,2 s mientras seguía a un hueco y 1,5 s justo al saltar al
+     siguiente. Con reloj propio son 5 s siempre, y da la vuelta a las diez
+     marcas en 50 s. */
+  const ECO_PASO = 5000;
+  let ecoCual = 0;
+  let relojEco = null;
+
+  function espejar(fuente) {
+    if (capas.length < 2 || !fuente) return;
+
+    const proxima = capas[(capaActiva + 1) % capas.length];
+
+    /* El logo se estira de 260 px a cerca de 1.700, así que se pide la versión
+       `@2x`, que es la que hay. Si algún día falta para alguna marca, cae en la
+       normal en vez de quedarse sin fondo. */
+    proxima.onerror = () => { proxima.onerror = null; proxima.src = fuente; };
+    proxima.src = fuente.replace(/\.webp$/, '@2x.webp');
+
+    capas[capaActiva].classList.remove('se-ve');
+    proxima.classList.add('se-ve');
+    capaActiva = (capaActiva + 1) % capas.length;
+  }
+
+  /* Las diez en orden, una tras otra, para siempre. */
+  function latirEco() {
+    espejar(fuentes[ecoCual % fuentes.length]);
+    ecoCual++;
+  }
+
+  function avanzar(hueco) {
+    const chapas = hueco.nodo.children;
+    if (chapas.length < 2) return;
+
+    const sale = chapas[hueco.cual];
+    hueco.cual = (hueco.cual + 1) % chapas.length;
+    const entra = chapas[hueco.cual];
+
+
+    sale.classList.remove('es-actual');
+    sale.classList.add('se-va');
+    entra.classList.add('es-actual');
+
+    /* La que se fue vuelve a su lugar de espera —abajo, desenfocada— recién
+       cuando terminó de irse. Si se le saca `se-va` antes, la placa desanda el
+       camino cruzando el hueco de arriba abajo a la vista de todos.
+
+       Los 900 ms son los 850 de la transición más aire: la de `transform` es
+       la más larga de las tres y es la que manda. */
+    setTimeout(() => sale.classList.remove('se-va'), 900);
+  }
+
+  function latir() {
+    /* Gira siempre, sin fin y sin pausas. Llegó a tener una pausa al pasar el
+       mouse por encima —la costumbre en los carruseles— y se sacó a pedido de
+       Nico el 24/8/2026: acá no hay nada que leer con calma ni ningún enlace
+       adentro, son logos que se turnan, así que frenar sólo se siente como que
+       se trabó.
+
+       El `%` es lo que hace que no termine nunca: después de la última chapa
+       del hueco vuelve a la primera y sigue, sin ningún caso especial para el
+       final de la vuelta. */
+    avanzar(huecos[turno % huecos.length]);
+    turno++;
+  }
+
+  const arrancar = () => {
+    reloj ??= setInterval(latir, PASO);
+    relojEco ??= setInterval(latirEco, ECO_PASO);
+  };
+  const frenar = () => {
+    clearInterval(reloj); reloj = null;
+    clearInterval(relojEco); relojEco = null;
+  };
+
+  armar();
+
+  /* Late sólo si se dan las dos cosas: la sección está en pantalla Y la pestaña
+     está adelante. Por eso hay que acordarse de la primera —`aLaVista`— en vez
+     de preguntarla cuando hace falta.
+
+     Sin esa memoria quedaba un agujero que encontró Nico: al minimizar y
+     volver, la vitrina no arrancaba nunca más. `visibilitychange` frenaba al
+     irse pero no arrancaba al volver, y el IntersectionObserver tampoco la
+     rescataba, porque la sección no se había movido de la pantalla: no había
+     ningún cambio de intersección que disparara. Volvías y estaba muerta. */
+  let aLaVista = false;
+
+  const revisar = () => (aLaVista && !document.hidden ? arrancar() : frenar());
+
+  new IntersectionObserver(([entrada]) => {
+    aLaVista = entrada.isIntersecting;
+    revisar();
+  }, { threshold: .2 }).observe(vitrina);
+
+  document.addEventListener('visibilitychange', revisar);
+
+  /* Al cruzar los 560 px cambia la cantidad de huecos y hay que repartir de
+     nuevo. Sólo se rehace si el número cambió: un resize no puede estar
+     desarmando la sección en cada píxel. */
+  let ultimos = cuantos();
+  addEventListener('resize', () => {
+    if (cuantos() === ultimos) return;
+    ultimos = cuantos();
+    frenar();
+    turno = 0;
+    armar();
+    arrancar();
+  });
 }
 
 /* -------------------------------------------------- video del frente (hero) */

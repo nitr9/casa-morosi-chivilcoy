@@ -1,20 +1,32 @@
 # Pendientes
 
-Al 22/8/2026, cerrado al final del día. **El sitio está listo para publicarse en
-Netlify**: la configuración, las cabeceras y la guía están en `DESPLIEGUE.md`
-(punto 8). La base quedó limpia —se borraron los dos productos de prueba— y se
-comprobó que con cero productos la portada se ve bien, que es el estado con el
-que va a arrancar (punto 3). La tira de fotos del local se rehízo entera con las
-catorce que mandó Santiago (puntos 31 y 32), el pie pasó a tener las secciones y
-el contacto (punto 32), y el botón de WhatsApp dejó de tapar las flechas de los
-carruseles (punto 30).
+Al 24/8/2026. **El sitio está listo para publicarse en Netlify**: la
+configuración, las cabeceras y la guía están en `DESPLIEGUE.md` (punto 8). La
+base quedó limpia y se comprobó que con cero productos la portada se ve bien,
+que es el estado con el que va a arrancar (punto 3).
 
-**Lo que se está pensando ahora es el punto 33**, una vidriera para las máquinas
-que entran al local. Está en debate, sin nada decidido ni tocado.
+**El 24/8 se trabajó todo en la computadora nueva de Nico**, que es de 1920 px:
+la página se ensanchó de 1180 a 1560 (punto 34), el hero dejó de ser una columna
+en el medio (35), se arregló la flecha del riel de rubros que no volvía (36), el
+botón del menú del celular pasó a tener zona táctil de verdad (38), las marcas
+se fueron a una sección propia con la vitrina que se turna y el logo de fondo
+(40 y 41), y el mazo de fotos salió a una sección propia con reflejo, sombra y
+un fondo con profundidad (39 y 42).
+
+**El mazo de fotos quedó en cuatro tarjetas, dos y dos, sin tapa en el medio
+(punto 44)**, que es como se ven las tapas de catálogo en el sitio de Lüsqtoff. **No
+está cerrado**: a Nico no lo termina de convencer y se sigue el 25/8. Al final
+del punto 44 está lo que ya se descartó y por dónde seguiría.
+
+**La vidriera del punto 33 quedó armada y esperando (punto 43).** El día que
+Santiago cargue productos, esa sección se llena sola con la mejor máquina de
+cada rubro; mientras la base esté vacía sigue mostrando el mazo de fotos del
+local, sin título, igual que hoy.
 
 **Lo que frena la publicación** son dos cosas de fotos: la fachada aparece dos
 veces seguidas en «Nosotros» (punto 27) y falta elegir las hojas del álbum
-(punto 28).
+(punto 28). Y quedó pendiente rehacer `img/marcas/dewalt.webp`, el único logo
+sin transparencia, que necesita el original de la máquina de Chivilcoy.
 
 Abajo hay dos listas: **lo que falta** y **lo que ya está hecho**. La segunda no es
 un registro de méritos: casi cada punto salió de algo que se midió y guarda el
@@ -174,7 +186,11 @@ con 4 tarjetas) y es la proporción de Mercado Libre y Amazon, pero un producto
 vertical como la motosierra se ve más chico. Es una línea en `.producto__foto`.
 
 
-**33. La vidriera: una sección para lo que entra al local. EN DEBATE — no decidido.**
+**33. La vidriera: una sección para lo que entra al local.**
+**Al 24/8/2026 ya no está en debate: se armó, y está esperando productos — ver el
+punto 43.** Lo que sigue acá abajo es la charla del 22/8, que es de donde salió
+todo lo que se hizo después.
+
 Charlado el 22/8/2026 a la tarde, sin tocar código a pedido de Nico. Se deja
 entero porque la idea se movió tres veces y lo que se descartó explica lo que
 quedó.
@@ -1293,3 +1309,685 @@ lista y no hay que tocar nada más.
 
 Comprobado a 1350, 960, 760, 480, 390 y 320 px: sin desborde en ninguno, y el
 botón flotante de WhatsApp no tapa ningún enlace del pie en ningún ancho.
+
+---
+
+**34. ~~La página se veía como una columna angosta en el medio.~~ HECHO (24/8/2026).**
+Nico cambió de computadora y lo primero que notó es que en el monitor nuevo
+—1920×1080— estaba todo apretado en el centro. No era impresión: el sitio entero
+sale de `--ancho`, que estaba en **1180 px**. En 1920 eso deja **740 px de vereda
+vacía, el 39 % de la pantalla**. Llenaba bien el monitor donde se hizo la página,
+que era más chico.
+
+**Se subió a 1560**: usa el 81 % de 1920 y deja 180 px por lado. Se probó 1760 y
+se descartó — el logo y el botón de WhatsApp quedan pegados a los bordes, sin
+respiro. Abajo de 1600 px de ventana no cambia nada: ahí manda el
+`100% - var(--margen)` del `min()`.
+
+**Lo que permitió subirlo tanto fue medir antes de tocar.** Se listaron los seis
+textos largos de la portada a 1180 y a 1560: **ninguno se estira**, todos traen
+tope propio y se quedan entre 64 y 69 caracteres por renglón. El sistema
+tipográfico ya estaba resuelto. El único que se estiraba era el cartel de «no hay
+ofertas» —137 caracteres a 1180, 186 a 1560, contra los ~70 que se leen cómodos—
+y se le puso `padding-inline: max(1.5rem, (100% - 46rem) / 2)`.
+
+Comprobado a 2560, 1920, 1600, 1440, 1280, 1024, 900, 768, 600, 480, 390 y 340:
+**sin desborde horizontal en ninguno**.
+
+A 2560 usa sólo el 61 %. No se tocó: el monitor de Nico es de 1920 y estirar más
+volvería a pelear con la legibilidad. Si algún día hay una pantalla más grande,
+el lugar es éste.
+
+**35. ~~El hero no acompañaba la pantalla: era el peor caso de todos.~~ HECHO (24/8/2026).**
+`.hero__contenido` tenía `max-width: 44rem` **además** del ancho del contenedor.
+Los 44rem ganaban siempre, así que el texto quedaba clavado en **704 px
+arrancando en x=608**, pasara lo que pasara con la ventana: el único bloque de la
+página que no dependía de `--ancho`. Con la foto de la fachada a lo ancho detrás,
+el texto se leía como una columnita en el medio.
+
+Se sacó el tope y **no hizo falta reemplazarlo**, porque cada hijo ya traía el
+suyo: el cartel 34rem y la bajada 40rem, que son los que se leen de corrido. El
+titular queda suelto a propósito: en 1920 «MÁS DE 100 AÑOS» entra **en un solo
+renglón**, que es como está pintado en el frente del local. Abajo de ~1200 px
+vuelve solo a dos (medido: 90 px de alto en escritorio, 143 a 768).
+
+**36. ~~La flecha izquierda del riel de rubros no volvía nunca.~~ HECHO (24/8/2026).**
+Lo reportó Nico: «tocás una vez para pasar a la derecha y no te deja volver a la
+izquierda». Era un bug de verdad y tenía **una causa de fondo y dos cosas que la
+tapaban**.
+
+**La causa.** `paradas()` en `main.js` calculaba la posición de cada ficha dentro
+del contenido, pero **no restaba el `scroll-padding-left`**. Ese padding es contra
+lo que ajusta el `scroll-snap`, así que el scroll bueno es la posición **menos**
+ese padding. Sin restarlo las nueve paradas quedaban corridas: en 1920 el riel
+lleva 180 px de `scroll-padding-left`, o sea que **todas erraban por 180**.
+
+Se notaba yendo para atrás y no para adelante. Desde el final (756) la parada
+elegida daba 736, y 736 cae dentro de lo que el snap devuelve a 756: se pedía el
+scroll, el navegador lo deshacía y **el riel no se movía nunca**. Para adelante
+zafaba de casualidad — errar de más cae en la parada siguiente, así que algo se
+movía igual.
+
+**Lo que lo tapaba.**
+
+- Las fichas topaban en `13rem` (208 px). Nueve fichas de 214 con el hueco entran
+  casi enteras en 1920: sobraban **180 px de scroll, menos de una ficha**. Se
+  subió el tope a `17rem` (272 px): el recorrido pasa de 180 a **756 px**, se ven
+  6 de las 9 y las otras asoman. De paso las fotos se ven: son verticales y a
+  208 px eran una tirita.
+- El riel llevaba `data-paso="pagina"`, que avanza el 85 % del ancho visible
+  —**1632 px en 1920**, más que todo el recorrido—, así que el primer clic se iba
+  siempre al final y apagaba la flecha. Se lo sacó: ahora va de a una ficha. La
+  opción sigue existiendo en `main.js` para una tira mucho más larga que la
+  ventana; el riel no es ese caso.
+
+**Verificado** a 1920, 1440 y 1100, ida y vuelta completas:
+`278 → 556 → 756 → fin` y `556 → 278 → 0 → fin`.
+
+**37. Las fotos de rubros en base64: se llegó al límite que anticipaba el punto 6. A MEDIO HACER (24/8/2026).**
+El punto 6 lo dejó escrito cuando había **una sola** foto propia: «Si algún día
+las nueve son propias, la portada estaría bajando cerca de medio megabyte de
+Firestore en cada carga. Si se llega a eso, el arreglo es sacarlas del documento
+— a Storage, o de vuelta a archivos.»
+
+**Se llegó.** Nico lo notó como «al recargar aparecen fotos viejas hasta que carga
+la página». Medido: **cinco fotos propias, 562 KB de base64**, la portada baja
+**1.416 KB de Firestore por visita** —el triple del umbral— y las fotos del HTML
+se ven **1.700 ms** antes de que las reemplacen. Y eso es en localhost.
+
+Storage sigue descartado (exige Blaze, y el proyecto no tiene facturación), así
+que se tomó el otro camino: **volver a archivos**, con un guion nuevo,
+`hornear-rubros.mjs`. Baja la colección por REST, convierte cada foto base64 a
+`.webp`, y reescribe la tira de `index.html` con el orden, los nombres y las
+fotos del panel.
+
+Los archivos horneados van con **`panel-` adelante** y no con el slug pelado: el
+slug de Amoladoras es «amoladoras» y en `img/rubros/` ya había un
+`amoladoras.webp` elegido a mano de la carpeta del local. Sin el prefijo la
+primera corrida lo pisaba.
+
+**Lo que falta y por qué queda a medio hacer.** El paso que de verdad saca el peso
+es dejar el campo `foto` de Firestore apuntando al archivo, y para eso hay que
+**escribir** en Firestore, o sea entrar con el usuario del panel. El guion lo hace
+con `--panel`, tomando las credenciales del entorno:
+
+    MOROSI_USUARIO=... MOROSI_CLAVE=... node hornear-rubros.mjs --escribir --panel
+
+Hasta que se corra eso, la portada sigue bajando el 1,4 MB. **El parpadeo visual
+ya no se ve**, porque la foto del HTML ahora es la misma imagen que la del panel,
+pero el peso sigue estando.
+
+**Y hay algo para mirar con ojo de diseño, no de peso:** varias de las fotos que
+subió Santiago son apaisadas —«Compresores de aire» es 900×315— y la ficha de
+rubro es vertical (2:3). El `object-fit: cover` las recorta muchísimo. Esto ya
+pasaba antes del guion, no lo trajo el cambio, pero ahora se ve más porque las
+fichas son más grandes.
+
+**38. ~~En el celular el botón del menú era de 28 × 18 px.~~ HECHO (24/8/2026).**
+Medido en un iPhone 13 emulado. Es el **único** acceso a la navegación en el
+teléfono, y 18 px de alto es menos de la mitad de lo que necesita un dedo (44).
+Quedaba así porque la palabra «Menú» se esconde en pantalla angosta y sólo
+quedaban las tres rayitas. Los enlaces de adentro del menú estaban bien (61 px):
+el problema era sólo la puerta de entrada.
+
+Se arregló con `min-height`/`min-width: 44px` y no con padding, para que las
+rayitas queden dibujadas donde estaban: lo que crece es la zona que escucha el
+toque, no el dibujo.
+
+**Comprobado de paso, y sigue sano:** en táctil de verdad las flechas de los
+carruseles no aparecen (0 visibles en iPhone 13 y Pixel 5), que es lo que dice el
+punto 30. Una captura a 390 px en un navegador de escritorio las muestra igual y
+engaña — el propio punto 30 avisa de esa trampa.
+
+**39. ~~El mazo de fotos se fue a una sección propia.~~ HECHO (24/8/2026), y queda a la espera de contenido.**
+«Nosotros» medía **2027 px de alto y 828 eran aire**. El mazo estaba suelto abajo
+de la grilla, o sea centrado contra la página entera: una pila de 250 px sola en
+el medio, con el hueco que dejaba el texto —780 × 600 px— vacío al lado.
+
+Se probó primero meterlo **dentro** de la grilla, en la columna del texto. Cerraba
+bien y la sección bajaba a 1961, pero Nico lo cortó por una razón mejor: en esa
+sección quedaban **tres bloques de fotos** —la del frente, el mazo y la tira— y
+ninguno se miraba. Así que el mazo salió a **una sección propia entre las marcas
+y el contacto**.
+
+«Nosotros» quedó en **1457 px** (570 menos) y sin huecos: texto y foto arriba,
+tira, marcas.
+
+La sección nueva **está a propósito a medio hacer**: existe y el mazo ya vive ahí,
+pero no lleva encabezado, para no inventar un texto que después haya que sacar.
+Falta decidir qué la acompaña. **Mirar el punto 33 antes de decidir**: la vidriera
+que se charló el 22/8 es exactamente una sección de este tipo y en este lugar, y
+ahí está anotado lo que se descartó y por qué.
+
+Va en navy y no en cemento porque las hojas del mazo son blancas y con marco
+claro: sobre el cemento de «Cómo llegar» se despintarían. Como queda pegada a
+«Nosotros», que también es navy, lleva un filete arriba; sin él las dos se leen
+como una sola sección larguísima y el mazo parece seguir perteneciendo a la
+anterior, que es justo lo que se quiso sacar.
+
+**40. ~~Las marcas: del desfile de costado a la vitrina que se turna.~~ HECHO (24/8/2026).**
+Nico trajo como referencia el «logo carousel» de cult-ui —un componente de
+React con Framer Motion— y pidió ese efecto. **No se instaló nada**: la landing
+sigue sin dependencias. Se replicó con CSS y unas noventa líneas de JS.
+
+**Qué cambió.** Antes las diez marcas desfilaban de costado en bucle
+(`@keyframes desfile`, 46 s, con la fila clonada por JS para que no se viera el
+corte). Ahora hay **tres huecos** —dos abajo de 560 px— y las diez se reparten
+entre ellos y se van turnando.
+
+**Por qué es mejor que el desfile**, más allá del gusto: el desfile obliga a
+leer al ritmo de la animación y las diez pasan siempre en el mismo orden. Con
+los huecos, en cualquier momento hay **dos marcas quietas** para mirar mientras
+la tercera cambia.
+
+**El efecto es desenfoque, y ahí estaba la clave.** La primera versión cruzaba
+dos placas con opacidad y Nico dijo que no era eso. Lo que faltaba: la que se va
+**se desenfoca mientras sube** y la que entra **llega desde abajo enfocándose**.
+Sin el desenfoque se lee como un cambio de diapositiva; con él, como que una se
+aleja y la otra se acerca.
+
+Medido en la transición real (los tres valores computados, cuadro a cuadro):
+
+| | la que se va | la que entra |
+|---|---|---|
+| t+80 ms | opacidad .79 · blur 2,1 px · y −21 | opacidad .21 · blur 7,9 px · y +38 |
+| t+200 ms | opacidad .35 · blur 6,5 px · y −51 | opacidad .65 · blur 3,5 px · y +9 |
+| t+340 ms | opacidad .03 · blur 9,7 px · y −59 | opacidad .97 · blur 0,3 px · y +0,6 |
+| t+500 ms | 0 · blur 10 px | 1 · blur 0 · y −0,2 |
+
+**Los tres tiempos son distintos a propósito.** `transform` dura .85 s y lleva la
+curva con un poco de exceso —`cubic-bezier(.22, 1.12, .36, 1)`—, que es lo que
+imita el resorte de Framer Motion: se ve en la tabla, la placa que entra llega a
++0,56, se pasa a −0,21 y recién ahí se asienta. `opacity` y `filter` duran .5 s,
+o sea que la placa **termina de aparecer antes de terminar de acomodarse**; si
+duran lo mismo, el movimiento sucede cuando ya está todo nítido y no se ve.
+
+**Dos decisiones que no se ven pero sostienen el efecto:**
+
+- **El hueco NO lleva `overflow: hidden`.** Recortar deja un corte a filo sobre
+  una placa que justo se está desenfocando, y ese filo nítido delata el truco.
+  Sin recorte no hace falta cortar nada: para cuando la placa llegaría a
+  molestar, ya es invisible. Lo que sí hizo falta es el `z-index`, para que la
+  que se va pase por debajo de la que llega.
+- **Las chapas ocultas siguen en el DOM y sin `aria-hidden`.** Con lector de
+  pantalla se anuncian las diez marcas, no tres: la información es la lista
+  completa, el turno es sólo la manera de mostrarla. Y **sin JavaScript** el
+  HTML queda como una grilla con las diez a la vista, que es una caída mejor
+  que un hueco vacío.
+
+**Gira sin parar y sin pausa al pasar el mouse.** Llegó a tener la pausa de
+costumbre y se sacó a pedido de Nico: acá no hay nada que leer con calma ni
+ningún enlace adentro, así que frenar sólo se siente como que se trabó.
+Verificado con el mouse apoyado encima 30 s: 20 cambios, las diez marcas, sin
+errores. Sí se frena cuando la sección está **fuera de pantalla** o la pestaña
+en segundo plano, que es ahorro puro y no se ve.
+
+**Y ese ahorro trajo un bug que encontró Nico el mismo día: al minimizar y
+volver, la vitrina no arrancaba nunca más.** El `visibilitychange` frenaba al
+irse pero no arrancaba al volver, y el IntersectionObserver tampoco la
+rescataba, porque la sección no se había movido de la pantalla: no había ningún
+cambio de intersección que disparara. Volvías y estaba muerta.
+
+El arreglo es acordarse de si está en pantalla —`aLaVista`— en vez de
+preguntarlo cuando hace falta, y que los dos avisos (intersección y visibilidad)
+pasen por la misma función, que late sólo si se dan **las dos** condiciones.
+
+Verificado forzando `document.hidden` en los tres estados: girando 3 cambios/5 s
+→ oculta **0 cambios**/5 s → al volver 4 cambios/6 s.
+
+Vale como aviso general: cada pausa que se agrega por rendimiento necesita su
+camino de vuelta, y el camino de vuelta es el que nunca se prueba. En headless
+esto no se reproduce solo — `bringToFront()` sobre otra pestaña no cambia
+`document.hidden`—, hay que forzar la propiedad y disparar el evento a mano.
+
+**El bloque va centrado**, y es la única sección de la página así. Con tres
+piezas sueltas y sin texto al lado, alineadas a la izquierda quedaban colgando
+del título con un vacío grande a la derecha. La vitrina frena en 56rem: estirada
+a los 1560 del contenedor, las tres placas quedaban separadas por 250 px de navy
+y dejaban de leerse como un grupo.
+
+**Se conservó la placa blanca, y no es decoración.** En cult-ui los logos van
+sueltos sobre el fondo porque son SVG monocromos; los de Morosi son a color y
+varios son oscuros. Sin la placa, sobre el navy, DeWalt y Milwaukee se leerían y
+Honda o Lusqtoff desaparecerían. **Queda pendiente decidir** si se prueba sin
+placa midiendo el contraste real de cada uno.
+
+**Hallazgo al pasar, y conviene arreglarlo:** `img/marcas/dewalt.webp` es **el
+único de los diez sin canal alfa** — 0 % de píxeles transparentes, fondo opaco
+pegado. Los otros nueve van del 25 % al 68 % de transparencia. Ya era así antes
+de este cambio, pero con las placas aisladas y grandes se nota más. **No se pudo
+rehacer acá**: el original está en `Desktop\logos marcas`, en la máquina de
+Chivilcoy. Cuando se rehaga, mirar las tres trampas de los logos en CLAUDE.md.
+
+**41. ~~Las marcas: sección propia en blanco, con el logo de fondo como espejismo.~~ HECHO (24/8/2026).**
+Continuación del punto 40, el mismo día. Salió de adentro de «Nosotros» a una
+sección propia, `#marcas`, entre «Nosotros» y el mazo. El orden de la página
+quedó: inicio · rubros · productos · local · **marcas** · album · contacto.
+
+**El fondo blanco no es un cambio de color, es lo que destraba todo lo demás.**
+El punto 40 había dejado anotado que la placa blanca detrás de cada logo no era
+decoración: sobre el navy, sin placa, Honda y Lusqtoff desaparecían. Sobre
+blanco el problema no existe —los logos son a color y oscuros, se leen solos—,
+así que **la placa se sacó** y los logos quedaron sueltos, que es como se ven en
+la referencia de cult-ui. Y sin placa opaca en el medio, el fondo se ve a través.
+
+**El espejismo.** Detrás va el logo que acaba de aparecer, gigante y
+desenfocado. Son dos capas que se turnan: mientras una se apaga la otra se
+prende. Con una sola imagen habría que cambiarle el `src` en la mitad del
+fundido y ahí se ve el salto.
+
+**Los números importan y se erraron en el primer intento.** Empezó con 72 px de
+desenfoque ocupando el 58 % del ancho, buscando teñir la sección del color de la
+marca. Nico lo vio y fue claro: «no se ve nada, y se ve un colorcito nomás». Con
+ese desenfoque el logo pierde la forma y queda sólo la mancha. Quedó en:
+
+| | primer intento | como quedó |
+|---|---|---|
+| ancho | 58 %, máx. 760 px | **92 %, máx. 1500 px** |
+| desenfoque | 72 px | **22 px** |
+| opacidad | .34 | **.42** |
+| saturación | 2.2 | 1.6 |
+
+Con 22 px está claramente fuera de foco y **se sigue reconociendo la marca**,
+que era el punto. La saturación bajó porque con menos desenfoque el color ya no
+se lava tanto; con 2.2 quedaba chillón.
+
+**Se pide la versión `@2x`.** El logo mide 260 px de ancho y acá se estira hasta
+cerca de 1.700: con la normal el escalado le mete un pixelado que ni 22 px de
+desenfoque tapan. Si algún día falta el `@2x` de alguna marca, hay un `onerror`
+que cae en la normal en vez de quedarse sin fondo.
+
+**El fondo tiene reloj propio, cada 5 segundos, y ahí hubo tres intentos.** Vale
+dejarlos porque lo que se descartó explica lo que quedó:
+
+1. **Seguía al hueco del medio.** Ese hueco tiene tres marcas de las diez, así
+   que las otras siete no salían nunca de fondo.
+2. **Seguía a todos los huecos**, espejando lo que acababa de entrar. Pasaban las
+   diez, pero cambiaba **cada 1,4 s**: para una imagen de ese tamaño es mucho, te
+   tira del ojo mientras estás mirando los logos de adelante.
+3. **Seguía a un hueco hasta que ese diera la vuelta**, y recién ahí pasaba al
+   siguiente. Espaciaba a 4,2 s, pero **el ritmo quedaba desparejo**: medido, 4,2
+   s mientras seguía a un hueco y 1,5 s justo en el salto al siguiente. Se
+   notaba el enganche.
+
+**Como quedó: reloj propio, desacoplado de los huecos.** Recorre los diez logos
+en orden, uno cada 5 s, y da la vuelta en 50 s. Medido: 5,0 s parejo entre
+cambios, las diez marcas, sin errores. Los dos relojes —el de los huecos y el
+del fondo— arrancan y frenan juntos con la visibilidad de la pestaña.
+
+**Dos detalles del CSS que sostienen el efecto:**
+
+- **`overflow: hidden` en la sección.** El espejismo es una imagen enorme y
+  desenfocada; sin recorte se derrama sobre las secciones de arriba y abajo.
+  Acá el recorte no delata nada, porque lo que se corta ya no tiene forma
+  reconocible — al revés de lo que pasaba en el hueco de la chapa (punto 40),
+  donde el recorte sí se notaba.
+- **`isolation: isolate`.** Crea un contexto de apilado propio, así el `z-index`
+  del espejismo no compite con el de la barra fija ni con el del botón de
+  WhatsApp.
+
+**El filo del estante se fue con el navy.** La `border-bottom` en `--navy-humo`
+leía como el borde de una repisa sobre el fondo oscuro; sobre blanco quedaba una
+raya azul cruzando la sección sin nada que la explicara.
+
+**Sigue pendiente `dewalt.webp`**, y en esta sección se nota más: es el único de
+los diez sin canal alfa, así que su recuadro de fondo se ve tanto en el logo
+chico como en el espejismo, donde aparece como un rectángulo con bordes duros
+arriba y abajo. Las otras nueve, al ser transparentes, se funden con el blanco.
+Hay que rehacerlo desde el original de `Desktop\logos marcas`, en la máquina de
+Chivilcoy, mirando las tres trampas de los logos en CLAUDE.md.
+
+**Nota sobre de dónde salió todo esto.** La referencia era el «logo carousel» de
+cult-ui, un componente de React con Framer Motion que se instala con
+`shadcn add`. **No se instaló nada y no se migró nada**: el comando falla por dos
+razones independientes —el registry de cult-ui está detrás de un checkpoint de
+Vercel y devuelve 429, y aparte `shadcn add` necesita React, Tailwind,
+`components.json` y paths en el `tsconfig`, y acá no hay ninguno de los cuatro—.
+Se replicó el efecto con CSS y unas 120 líneas de JS. Se charló migrar la landing
+a React y se decidió no hacerlo: son 5 páginas, 3.298 líneas de CSS artesanal y
+un panel de Firebase, y la migración no le compra nada al sitio. Queda anotado
+que **para aprender React conviene un proyecto nuevo**, no éste, que ya está
+publicado y documentado.
+
+**En el celular el espejismo se ve poco, y está bien así.** El desenfoque era
+fijo en 22 px y en el teléfono borraba el logo entero: ahí mide 375 px y no
+1500, así que los mismos píxeles de desenfoque tapan cuatro veces más y quedaba
+sólo un halo de color. Se pasó a `blur(clamp(7px, 1.15vw, 22px))`, que mantiene
+la proporción entre lo que mide el logo y cuánto se lo desenfoca — queda entre
+1:53 y 1:83 de 320 a 1920 px.
+
+Aun así en pantalla chica se ve poco, y Nico lo dio por bueno: **lo que importa
+en el teléfono es que no se rompa**, no que el efecto luzca. Comprobado en
+iPhone SE (320), iPhone 13 (390), Pixel 5 (393) y Galaxy S9+ (320): dos huecos,
+ningún elemento fuera de la sección, sin desborde de página y sin errores.
+
+**42. ~~El mazo: reflejo, sombra y un fondo con profundidad.~~ HECHO (24/8/2026).**
+Nico trajo de referencia una captura del sitio de Lüsqtoff —tapas de catálogo
+apoyadas sobre un piso oscuro, reflejadas— y pidió eso: «un espejismo hacia
+adelante», sombra y fondo «lo más profesional posible», con profundidad y no un
+bordecito. Es la misma referencia que ya había aparecido el 22/8 en el punto 33.
+
+**El reflejo es una COPIA de la pila dentro de una caja ancha, y llegar ahí
+llevó cuatro intentos.** Vale dejarlos escritos porque cada uno falló por un
+motivo distinto y ninguno se veía venir:
+
+1. **`-webkit-box-reflect` con el degradado al revés.** La máscara se aplica
+   sobre el reflejo, y ahí el 0 % es el borde que TOCA al objeto. Estaba escrito
+   `transparent 30%, blanco` — o sea transparente pegado al mazo y opaco lejos,
+   al revés de un reflejo real. No se veía nada.
+2. **Corregido el degradado, seguía sin verse.** `.album` tiene
+   `overflow: hidden` y el reflejo se dibuja FUERA de la caja de la pila: se
+   recortaba entero. Hizo falta `padding-bottom` para darle dónde dibujarse.
+3. **Con espacio, reflejaba sólo la hoja del centro.** Acá estaba el fondo del
+   asunto: `box-reflect` refleja **la caja del elemento**, y la caja de la pila
+   mide **250 px** mientras el abanico abierto ocupa **unos 850**. Medido. Lo
+   vio Nico antes que yo — «me estás espejeando la primera nomás». Con ese
+   número a la vista quedó claro que ningún ajuste de opacidad iba a alcanzar.
+4. **Copia volteada con máscara propia:** mismo problema, una máscara recorta al
+   elemento y la caja seguía siendo de 250 px.
+
+**Como quedó:** `main.js` clona la pila y la mete en un `div` de ancho completo
+que lleva el `scaleY(-1)` y el desvanecido. La caja ancha abarca el abanico
+entero, así que se reflejan las cinco hojas. Y como el clon va DENTRO de
+`.album`, que es donde vive la clase `album--abierto`, **el reflejo se abre solo
+junto con el original**, sin una línea de sincronización.
+
+Detalle que cuesta una hora si no se sabe: la máscara se aplica ANTES del
+`scaleY(-1)`, así que hay que escribirla al revés de como se ve. El primer
+color de `to top` es el borde de abajo del elemento, que al voltearlo es el que
+queda arriba, pegado a la pila.
+
+**El largo del reflejo se calibró contra la referencia.** Estuvo en 52 % y se
+veía lavado: un reflejo largo se lee como una segunda pila dada vuelta. En el
+sitio de Lüsqtoff ocupa como un tercio del alto de la tapa, y justamente por eso
+se lee nítido —el reflejo de «BLACK SERIES» se lee invertido—. Quedó en 34 %,
+con 72 % de opacidad contra el objeto. **Corto y contrastado gana a largo y
+suave.**
+
+**La sombra va con `drop-shadow` y no con `box-shadow`, y son dos.** `box-shadow`
+dibujaría la sombra de la caja rectangular del contenedor: una sombra recta
+detrás de un abanico torcido. `drop-shadow` sigue la silueta real, hoja por
+hoja, así que la sombra se abre con el mazo.
+
+Son dos capas porque así se arma una sombra que parece real: una corta y oscura
+pegada al objeto —el contacto con el piso— y otra larga y difusa —la proyectada—.
+Con una sola, o queda dura como calcomanía o queda una nube gris sin apoyo.
+
+**Se verificó que el `filter` no rompiera el 3D**, que era el riesgo real: un
+`filter` crea contexto de apilado y puede aplanar las transformaciones. Medidas
+las cinco hojas, siguen abriéndose en abanico (x = 436, 624, 818, 1056, 1280).
+
+**El fondo son tres capas y el número que importa se midió.** Un navy liso deja
+las fotos flotando sobre una pared; lo que da profundidad es que haya un lugar
+donde están apoyadas:
+
+1. **Luz cenital** — elipse clara arriba y al centro. Es la que *explica* la
+   sombra: si el objeto proyecta sombra hacia abajo tiene que haber una luz
+   arriba, y sin ella la sombra se lee como una mancha puesta a mano.
+2. **Viñeteado** — oscurece las cuatro esquinas. Mata los bordes: una sección
+   que se va poniendo oscura hacia afuera no tiene dónde terminar, y eso es
+   profundidad.
+3. **Horizonte** — el quiebre del degradado vertical. Arriba aclara (el fondo
+   que se aleja), abajo oscurece (el piso que viene hacia el que mira). **Ese
+   quiebre es todo el truco: sin él son dos colores, con él son dos planos.**
+
+El horizonte se puso primero en 62 % a ojo y estaba mal: medido, **la pila apoya
+en el 77 %** de la altura de la sección. Con el quiebre ahí, el reflejo cae en la
+zona de piso, que es donde tiene que estar. Los porcentajes están atados a dónde
+cae el mazo: **si esta sección cambia de contenido hay que volver a medirlos**,
+porque un horizonte a la altura equivocada se ve peor que no tener horizonte.
+
+**Se sacó el rótulo «El local por dentro»**, a pedido de Nico.
+
+Comprobado de 340 a 2560 px sin desborde, y en iPhone SE, iPhone 13, Pixel 5 y
+Galaxy S9+ sin errores ni elementos fuera de la sección.
+
+---
+
+**Sobre el punto 33 (la vidriera): hay un dato nuevo que lo bloquea.**
+
+Nico quiere llenar esta sección con «el mejor taladro, la mejor amoladora» —lo
+más caro y lo último en tecnología de cada rubro—, exhibido con nombre y con
+este mismo efecto. Es la vidriera del punto 33, ahora con una forma concreta.
+
+**El catálogo de Firestore está vacío.** Medido el 24/8/2026: la colección
+`productos` devuelve `{}` — **cero productos**. No es un problema de permisos:
+`rubros` contesta bien con la misma clave. Y tampoco hay fotos de producto en el
+repositorio: no existe `img/productos`; las 27 fotos del local, los 21 logos y
+las 14 de rubros están todas en uso.
+
+O sea que hoy no hay de dónde sacar «el mejor taladro». Nico lo sabe y va a
+hablar con Santiago para que cargue.
+
+**Decidido el 24/8:** dejar la vidriera **armada y esperando** —las tarjetas, el
+efecto y la lógica que las trae— de modo que el día que haya productos aparezca
+sola, y mientras tanto la sección siga mostrando el mazo. Y **no tocar el panel
+por ahora**: sin campo `destacado`, la vidriera tiene que elegir sola. Lo que
+mejor coincide con lo que Nico describió es **el más caro de cada rubro**, que
+además da variedad sin repetir categorías.
+
+Queda pendiente del punto 33, y sigue valiendo: **la portada sólo muestra
+ofertas**, así que un producto cargado sin tildar «oferta» no aparece nunca
+adelante, lo cual empuja a Santiago a inventar descuentos. Se decidió no tocarlo
+todavía, hasta ver cómo carga en la práctica.
+
+**El efecto de Lüsqtoff que se estaba copiando NO es un efecto: es una imagen.**
+Se miró el código del sitio el 24/8/2026, a pedido de Nico, después de varias
+vueltas tratando de igualarlo. Lo que hay en `lusqtoff.com.ar` es esto:
+
+    class="catalog" style="background-image:url('.../PORTADAS-DESTACADOS-WEB---CATALOGOS-LQ-jpg.jpg')"
+
+Se bajó el archivo: **1772 × 1593 px**. Las tres tapas en abanico, el fondo
+negro, el piso, la sombra y el reflejo **están todos dibujados adentro del
+JPG**. No hay una línea de CSS haciendo el efecto: es una composición de
+Photoshop puesta de fondo.
+
+**Vale escribirlo porque explica por qué no se llegaba.** Se estaba compitiendo
+contra un retoque a mano con un efecto en vivo, y ese techo no se rompe
+calibrando. Lo que quedó en Casa Morosi es más difícil de conseguir y bastante
+más flexible —el mazo se abre, las fotos son reales, salen del repositorio y se
+pueden cambiar—, pero **no va a ser idéntico**, y no tiene por qué serlo.
+
+Si alguna vez se quiere el efecto exacto, el camino es el de ellos: armar la
+imagen en un editor y ponerla de fondo. El costo es que queda fija —sin
+animación— y que cada cambio de foto obliga a rehacer la composición.
+
+**El mazo pasó de cinco tarjetas a cuatro** (lo pidió Nico). Salió la
+`der.hoja-2`, y para que el abanico no quedara caído para un lado —dos hojas a
+la izquierda y una a la derecha— la única de la derecha se abre hasta el punto
+medio entre las dos posiciones de la izquierda: `calc((var(--abre-1) +
+var(--abre-2)) / 2)`, con el ángulo subido de 15° a 19°. El peso vuelve al
+centro sin necesidad de una quinta tarjeta.
+
+---
+
+**43. La vidriera quedó armada y esperando.** HECHO (24/8/2026), y **no se ve
+todavía**: es lo que se decidió arriba, en la nota del punto 33. *(Los números
+de apertura de este punto y del 42 quedaron viejos el mismo día: los que valen
+están en el punto 44.)*
+
+La sección del mazo ahora tiene **dos contenidos posibles**. Si Firestore
+devuelve productos, `js/vidriera.js` reemplaza las hojas por máquinas y muestra
+el encabezado —«En la vidriera · Lo mejor de cada rubro, exhibido en serio»—.
+Si el catálogo está vacío, que es el estado de hoy, **no toca nada**: quedan las
+cuatro fotos del local y la sección sigue sin título, exactamente como estaba.
+Comprobado contra la base de verdad: encabezado oculto, las mismas cuatro fotos,
+un solo reflejo, cero enlaces, cero errores.
+
+**Elige sola, y elige el más caro de cada rubro.** No hay campo `destacado` en
+el panel y se decidió no agregarlo hasta ver cómo carga Santiago. De lo que ya
+está guardado, «el más caro de cada rubro» es lo más parecido a «el mejor
+taladro, la mejor amoladora» que pidió Nico, y de paso no repite categoría. Sin
+precio no compite —no hay con qué decir que es el mejor— y sin foto no entra:
+una hoja vacía en el abanico se ve peor que no tener la sección.
+
+**El precio ordena pero no se muestra**, y es a propósito. «Nosotros» dice «la
+misma atención para los cuatro»; una vidriera con los precios más altos adelante
+dice en silencio lo contrario. Es el reparo del punto 33, resuelto dejando el
+criterio adentro y no en la vitrina. La ficha tiene el precio a un toque.
+
+**Lo que costó no fue traer los productos: fue que se lean.** El mazo del local
+son fotos, y una foto tapada a medias sigue siendo una foto. Una hoja de la
+vidriera lleva el **nombre adentro**, así que el mismo solapado corta palabras.
+Medido a 1920 con la apertura del mazo: la tapa se comía **47 de los 241 px** de
+la hoja de al lado y el nombre quedaba en «Taladro percutor inalámbric…».
+
+De ahí salen los tres números de la sección:
+
+- **La vidriera se abre más que el mazo: 105 % y 195 %**, contra 85 % y 170 %.
+  105 % es lo que hace falta para que la tapa —284 px con su `scale`— y su
+  vecina —241— apenas se toquen: 262 px entre centros.
+- **La hoja derecha vuelve a `--abre-1`.** El punto medio del punto 42 se hizo
+  para el mazo, donde las hojas se tocan y las cuatro se leen como un bloque.
+  Con las hojas separadas dejaba el aire desparejo: 6 px entre las de la
+  izquierda y 127 entre la tapa y la derecha, que es lo que se ve como un
+  agujero.
+- **Y entonces la pila entera se corre el 40 %.** Con el aire parejo quedan tres
+  hojas de un lado y una del otro, o sea el conjunto 99 px a la izquierda del
+  centro. Corriendo la pila —99 px son el 40 % de una hoja— vuelve a quedar
+  centrado: medido, centro del conjunto en 961 contra 960 de la página.
+
+**Cuántas hojas se ven depende del ancho, y las que no entran no se pierden**
+—son productos y están en su rubro, a un toque del riel de arriba—:
+
+| ventana | hojas | por qué |
+|---|---|---|
+| 1400 y más | 4 | la de más afuera necesita 589 px del centro al borde |
+| 900 a 1399 | 3 | a 1200 el contenedor sólo da 560 |
+| menos de 900 | 1 | a 390 las cuatro miden 170 y se apilan una sobre otra |
+
+**En el teléfono queda una sola máquina, y es la decisión de fondo de la
+sección.** Con cuatro tarjetas de 170 px había tres nombres cortados —«Soldado
+A», «Taladro inalámb…»— y sólo se leía la del medio. Una máquina bien exhibida
+es exactamente lo que la sección promete; cuatro mal exhibidas, no. Por eso el
+reparto de `vidriera.js` pone **siempre** al más caro en la tapa: es la hoja que
+sobrevive ahí. Y la pila pasa de 170 a **300 px** de ancho, con el reflejo
+agrandado en la misma proporción: su alto estaba clavado en 122 px y contra una
+pila de 420 el desvanecido quedaba cortado al medio.
+
+**Dos detalles que se probaron y cambiaron:**
+
+- **Arriba del nombre va la marca, no el rubro.** Se probó con «rubro · marca»,
+  como en la tarjeta del catálogo, y en 250 px no entra: «HERRAMIENTAS
+  INALÁMBRICAS · MILWAUKEE» partía en dos renglones y dejaba el punto colgando.
+  Además el rubro repite lo que ya dice el nombre, y la marca es lo que se lee
+  primero en una vidriera de verdad.
+- **La foto va con `contain` y no con `cover`.** Una foto del local es una
+  escena y se puede cortar por cualquier lado; una máquina cortada al medio deja
+  de leerse. Esto además le baja el precio al problema que dejó anotado el punto
+  37: varias fotos que sube Santiago son apaisadas —«Compresores de aire» es
+  900×315— y con `cover` en una caja vertical se veía un pedazo.
+
+**El reflejo se rehace, y hubo que avisarle.** `main.js` lo arma clonando la
+pila apenas carga la página, o sea con las fotos del local; la vidriera llega
+después, cuando contesta Firestore. Sin aviso arriba habría máquinas y abajo, el
+depósito. Ahora `vidriera.js` dispara `album:renovado` y `main.js` lo vuelve a
+armar. En el clon las hojas pierden el `href` y la caja va con `inert`: es la
+misma tarjeta dos veces y no puede haber dos enlaces al mismo producto, uno de
+ellos cabeza abajo.
+
+**Verificado** a 1920, 1600, 1400, 1280, 1000, 900, 760 y 390 px, con 1, 2, 3 y
+4 productos cargados, más el caso de cero: **ningún nombre tapado en ninguna
+combinación**, sin desborde horizontal, sin errores de consola. Con «reducir
+movimiento» las hojas quedan abiertas en las mismas posiciones y no se arma el
+reflejo. Tocando una hoja se llega a la ficha
+(`producto.html?id=demo-motosierra-husqvarna`).
+
+**Lo que sigue faltando, y no lo arregla esta sección:**
+
+1. **Las fotos.** Sigue valiendo lo que dice el punto 33: una vidriera falla más
+   fuerte que una grilla, porque si la foto está mal, está mal en grande. El
+   punto 2 —la guía de fotos para Santiago— es requisito previo, no un extra.
+2. **La portada sigue mostrando sólo ofertas.** La vidriera es hoy el único
+   lugar de la página donde aparece un producto que no está marcado como oferta,
+   así que alivia el problema, pero no lo saca: un producto cargado sin tildar
+   «oferta» sigue sin entrar a la sección de ofertas, y eso empuja a inventar
+   descuentos. Se decidió no tocarlo hasta ver cómo carga en la práctica.
+
+**44. ~~El abanico: cuatro tarjetas, dos y dos, sin tapa en el medio.~~ HECHO (24/8/2026).**
+Este punto **reemplaza los números de apertura del punto 42 y del 43**, que
+quedaron viejos el mismo día. Lo que sigue es el estado de verdad.
+
+**Lo que lo disparó.** Nico miró el mazo en el navegador: «hay una que está
+separada». Tenía razón y era visible en cuanto se miraba: las tres hojas de la
+izquierda se tocaban y la de la derecha quedaba sola, con un hueco en el medio.
+La causa era el «punto medio» del punto 42 —la única hoja derecha se abría al
+127 % contra el 85 % de las otras— que estaba puesto para equilibrar el peso y
+lo que hacía era despegarla del grupo.
+
+**Primero se emparejó, y todavía no era eso.** Con la derecha a `--abre-1` y la
+pila corrida para recentrar, el aire quedaba parejo y el conjunto centrado
+(medido: centro en 961 contra 960 de la página). Pero seguía habiendo una tapa
+adelante tapando a las demás, y ahí Nico trajo otra vez la página de catálogos
+de Lüsqtoff y lo dijo directo: **«dos y dos», «la tapa del medio no la quiero»,
+«sólo van a ser 4 tarjetas»**.
+
+**Como quedó.** Cuatro tarjetas, dos a cada lado, ninguna adelante. Salió
+`cartel-100` —la foto del frente, que además ya está en el hero— y quedaron
+`deposito`, `pasillo`, `mostrador` y `bremen`. El abanico es simétrico solo: no
+hace falta ni punto medio ni corrimiento, y el CSS quedó más corto que antes.
+
+**La regla que hay que respetar si se tocan las aperturas: `--abre-2` es siempre
+el triple de `--abre-1`.** Así los cuatro centros quedan equiespaciados —a −3,
+−1, +1 y +3 veces `--abre-1`— y el aire es el mismo en todo el abanico. Si se
+cambia una hay que cambiar la otra.
+
+| ventana | `--abre-1` / `--abre-2` |
+|---|---|
+| 1400 y más | 50 % / 150 % |
+| 1000 a 1399 | 44 % / 132 % |
+| 700 a 999 | 34 % / 102 % |
+| 560 a 699 | 24 % / 72 % |
+| menos de 560 | 20 % / 60 % (con la pila achicada a 150 px) |
+
+**Los primeros valores fueron la mitad y estaban mal.** Se probó con 38 %/114 %,
+buscando el solape de la referencia, y las cuatro fotos se leían como una tira
+continua: cada una mostraba dos tercios y las dos del medio no se distinguían
+entre sí. Con 50 % los centros quedan a una hoja de distancia y **las cuatro se
+ven enteras**, que es lo que hace que se lean como cuatro fotos y no como una.
+Medido a 1920: aire de 21, 8 y 21 px entre hojas, conjunto centrado, 304 px de
+margen a cada lado.
+
+**La vidriera se alineó al mismo abanico** y por eso perdió las aperturas
+propias que tenía (105 %/195 %): con las cuatro hojas ya separadas, ninguna tapa
+el nombre de la de al lado. Lo único suyo es que **fija la apertura en 50 %/150 %
+en todos los anchos**, porque el mazo puede solaparse en pantalla mediana —son
+fotos, da igual dónde se corten— y acá eso corta palabras: medido a 1280 con la
+apertura del mazo, la hoja derecha se comía el final de «Motosierra 45 cc espada
+18"».
+
+Cuántas hojas muestra la vidriera, entonces, es lo único que cambia con el
+ancho: **cuatro** desde 1280, **dos** entre 560 y 1279, **una** abajo de 560. Y
+el reparto de `vidriera.js` carga desde el centro hacia afuera, así que la
+máquina más cara es siempre la que sobrevive en el teléfono. Con tres productos
+—dos hojas de un lado y una del otro— la pila se corre `(--abre-2 - --abre-1)/2`
+para volver al centro; es el único caso que lo necesita.
+
+**Verificado** a 1920, 1600, 1400, 1280, 1000, 900, 760 y 390 px, con 1, 2, 3 y
+4 productos y con la base vacía: **ningún nombre tapado en ninguna
+combinación**, abanico centrado en todas, sin desborde horizontal y sin errores
+de consola en las cinco páginas del sitio. Con «reducir movimiento» las hojas
+quedan abiertas en las mismas posiciones y no se arma el reflejo.
+
+**Una advertencia de método, que salió cara.** Las capturas de página completa
+—`fullPage` en Playwright— **no sirven para revisar esta página**: el navegador
+estira el viewport, las animaciones de aparición no llegan a terminar y las
+secciones salen vacías o a medio pintar. Se armó una discusión sobre una sección
+«rota» que en el navegador estaba bien. Para mirar hay que **capturar la sección
+con el scroll puesto encima**, que es lo que hace todo lo demás de este archivo.
+
+**QUEDA ABIERTO (cerrado al final del 24/8/2026).** A Nico no lo termina de
+convencer cómo se ve el abanico y se retoma mañana. Está funcionando y medido
+—nada roto—, pero es una decisión de diseño sin cerrar. Lo que ya se descartó,
+para no volver a probarlo:
+
+- **La tapa adelante en el medio**: la sacó él, no la quiere.
+- **El punto medio de la hoja derecha** (punto 42): despegaba una del grupo.
+- **Abrir poco, 38 %/114 %**: las cuatro fotos se leen como una tira continua.
+
+Lo que todavía no se probó y es por donde seguiría: **cuánto se ven las fotos
+adentro de la tarjeta** —hoy la hoja es 5/7 y el hueco 3/4, así que las apaisadas
+pierden la mitad del ancho (punto 28)—, **el marco blanco con las franjas rojas
+en diagonal**, que es de cuando las tarjetas eran hojas de álbum, y **el tamaño
+de la pila**, que frena en 250 px y en un monitor de 1920 deja las cuatro
+tarjetas chicas en una sección de 983 px de alto.
