@@ -2286,9 +2286,9 @@ h1, h2, h3 {
    franjas salían finas y apretadas. Nico lo bajó — "muy estirado, hacé que las
    franjas sean más espaciadas, como la que te pasé".
 
-   Ahora la cinta es blanca lisa y las franjas son piezas propias
-   (`.cinta__rayas`) intercaladas entre los nombres, con dos franjas cada una.
-   De paso el nombre dejó de necesitar fondo: la cinta ya es blanca abajo.
+   Ahora la cinta es blanca lisa y cada franja es una pieza propia
+   (`.cinta__franja`), de a dos, intercaladas entre los nombres. De paso el
+   nombre dejó de necesitar fondo: la cinta ya es blanca abajo.
 
    Las franjas van inclinadas **respecto de la cinta**, no de la pantalla: como
    la cinta ya está rotada 54,46°, en pantalla caen a unos 105°, que es lo que
@@ -2386,7 +2386,7 @@ h1, h2, h3 {
    Por eso el `padding-block` vive acá y no en `.cinta`: la cinta toma su alto
    de este bloque, así que el blanco llega por definición a los dos bordes y no
    hay ningún número que mantener igual entre las dos reglas. Y es también lo
-   que le da el alto a `.cinta__rayas`, que no tiene contenido propio.
+   que le da el alto a las franjas, que no tienen contenido propio.
 
    Ya no lleva fondo blanco: desde que las franjas son piezas aparte, la cinta
    es blanca lisa abajo del nombre y no hay nada que tapar. */
