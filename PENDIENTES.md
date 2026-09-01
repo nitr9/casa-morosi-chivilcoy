@@ -45,6 +45,85 @@ Para trabajar: `node servidor.mjs` y abrir <http://localhost:8123>. El panel es
 
 ## Lo que falta
 
+**50. Qué va adentro de la tarjeta: la forma, y cuánto se ve de la foto.**
+Abierto el 25/8/2026. Nico dijo «quiero pensar el diseño que le podemos dar a
+las tarjetas» y se probó, sin tocar una línea del repositorio: las tres
+variantes se inyectaron con Playwright sobre la página ya cargada.
+
+**Cómo se miró, que es lo que destrabó el punto 48.** Las tarjetas están vacías
+sólo porque la base está vacía, y vacías no se puede decidir nada. Con
+`?demo=1` la vidriera se llena con los productos de ejemplo de `datos.js` y
+aparece la tarjeta de verdad. **Para cualquier decisión sobre esta sección hay
+que mirarla en modo demo**; en la página tal cual no hay nada que juzgar.
+
+Nico trajo además una foto de producto propia —un taladro Lüsqtoff 18 V, 13 mm,
+45 Nm, 1408x768, apaisada de 1,83— que es mucho más parecida a lo que va a subir
+Santiago que las fotos de góndola del demo. **Esa foto no se puede publicar**:
+tiene el logo mal escrito en el chasis y en la batería. Era para probar.
+
+**Lo primero que apareció, y no se veía con las tarjetas vacías: las cuatro
+fotos no alinean entre sí.** Con `object-fit: contain` cada foto se acomoda a su
+propia proporción dentro de una caja de 316x351, así que las cuatro terminan a
+distinta altura. Medido a 1920 con el demo: cajas de 351, 369, 369 y 369.
+
+**Y el pie de largo variable empuja la foto.** El nombre del taladro parte en dos
+renglones y le come 18 px de foto a esa tarjeta sola. Se arregla dándole al pie
+el alto de dos renglones siempre, ocupe uno o dos. Es barato y es aparte de todo
+lo demás de este punto.
+
+**Las tres variantes, a 1920, con la foto del taladro:**
+
+| | qué pasa con la foto | alinean |
+|---|---|---|
+| `contain` (hoy) | entra entera: 316x172 en 316x351, **179 px de blanco** | no |
+| `cover` | llena la caja, **se come el 51 % del ancho** | sí |
+| caja fija 4/3 | todas de 237 px de alto | sí, pero deja 100 px muertos abajo |
+
+`cover` gana mirando, y por bastante. **Pero funciona porque en esa foto la
+máquina está centrada y con aire**: recorta la mitad del ancho, así que con una
+foto de catálogo donde la máquina llene el encuadre la decapita. Ése es
+exactamente el motivo por el que hoy está en `contain` —está escrito en el CSS:
+«una máquina cortada al medio deja de leerse»— y sigue siendo cierto.
+
+**El problema de fondo no es la tarjeta, es la forma:** la tarjeta es vertical
+(5/7) y las fotos de producto son apaisadas. Se probaron cuatro formas, todas
+con `cover` y con el reflejo recalculado al 30 % del alto:
+
+| forma | tarjeta a 1920 | se come de la foto | corta por | alto de la sección |
+|---|---|---|---|---|
+| **5/7 (hoy)** | 343x480 | **51 %** | los costados | 1135 px |
+| 4/5 | 343x429 | 43 % | los costados | 1069 px |
+| **1/1** | 343x343 | **19 %** | los costados | 957 px |
+| 5/4 | 343x275 | 16 % | arriba y abajo | 867 px |
+
+**El salto está entre 4/5 y 1/1**, no antes: 43 % contra 19 %. De 1/1 a 5/4 se
+ganan tres puntos y se pierde la tarjeta: las cuatro quedan chatas y la sección
+deja de leerse como una vidriera. **La cuadrada es la candidata**, y de paso
+acorta la sección 178 px, que en el monitor de 1920 se agradece.
+
+Cambiar la relación **no toca el abanico**: el ancho lo sigue mandando el 22 %
+de la pila y las cuatro siguen cayendo donde caían. Lo que sí hay que rehacer es
+el alto del reflejo, que está escrito como `clamp(71px, 12.6vw, 105px)` y sale
+de que la tarjeta es 1,4 anchos.
+
+**Lo que falta medir antes de escribir nada:**
+
+- **El teléfono.** A 390 px la tarjeta hoy es 128x205; cuadrada sería 128x128
+  más el pie, y no se midió si la máquina se sigue leyendo. Es la pantalla donde
+  más gente lo va a ver.
+- **El escalón de 760 a 1176** del punto 48, que sigue abierto y que depende
+  justamente de esto.
+
+**Y cruza con el punto 2.** La guía para Santiago dice hoy «foto vertical»,
+pensada para la tarjeta del catálogo. Si la vidriera pasa a cuadrada, o si se
+decide recortar al subir desde `admin.html` —que es la salida buena de verdad,
+porque la foto llegaría ya con la forma y el CSS dejaría de adivinar—, esa
+línea de la guía hay que reescribirla.
+
+**Las capturas están en `Escritorio\pruebas-tarjetas\`**, con un
+`comparar.html` que las muestra una debajo de otra. No están en el repositorio
+a propósito: la foto del taladro no se puede publicar.
+
 **2. Una guía de una hoja para Santiago.**
 Cómo entrar, cómo cargar, qué significa "oferta", cuántas fotos entran, y sobre
 todo **qué foto sacar**: vertical, fondo parejo, el producto entero y que se
