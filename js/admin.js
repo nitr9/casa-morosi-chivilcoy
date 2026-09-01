@@ -119,6 +119,7 @@ async function arrancar() {
   const cajaEspecificaciones = $('[data-especificaciones]');
   const botonAgregarFila = $('[data-agregar-fila]');
   const selectRubro = $('[data-select-rubro]');
+  const entradaRubroNuevo = $('[data-rubro-nuevo]');
   const selectMarca = $('[data-select-marca]');
   const entradaMarcaNueva = $('[data-marca-nueva]');
 
@@ -179,11 +180,26 @@ async function arrancar() {
     cajaEspecificaciones.lastElementChild.querySelector('.clave').focus();
   });
 
+  /* El valor que marca "no está en la lista, lo escribo al lado". Lo usan el
+     rubro y la marca, que resuelven el caso igual. */
+  const OTRA = '__otra';
+
   /* Al elegir el rubro se ponen los campos de siempre de ese rubro, pero solo
-     si todavía no hay nada escrito: nunca le pisamos lo que ya cargó. */
+     si todavía no hay nada escrito: nunca le pisamos lo que ya cargó.
+
+     Con "Otro rubro…" no hay plantilla que poner —un rubro que no existe no
+     tiene campos de siempre— así que la tabla se vacía y Santiago la arma con
+     "Agregar". Vaciarla y no dejarla como estaba es a propósito: si venía de
+     elegir Motosierras, quedarían las claves de motosierra en un rubro que no
+     tiene nada que ver. */
   selectRubro.addEventListener('change', () => {
+    const esNuevo = selectRubro.value === OTRA;
+    entradaRubroNuevo.hidden = !esNuevo;
+    if (esNuevo) entradaRubroNuevo.focus();
+    else entradaRubroNuevo.value = '';
+
     if (!especificacionesVacias()) return;
-    const rubro = rubros.find((r) => r.nombre === selectRubro.value);
+    const rubro = esNuevo ? null : rubros.find((r) => r.nombre === selectRubro.value);
     const plantilla = rubro?.plantilla ?? [];
     ponerEspecificaciones(plantilla.map((clave) => ({ clave, valor: '' })));
   });
@@ -195,17 +211,25 @@ async function arrancar() {
     for (const rubro of rubros) selectRubro.append(new Option(rubro.nombre, rubro.nombre));
     /* Si el producto que se está editando es de un rubro que ya no existe,
        igual hay que poder verlo y guardarlo. */
-    if (elegido && !rubros.some((r) => r.nombre === elegido)) {
+    if (elegido && elegido !== OTRA && !rubros.some((r) => r.nombre === elegido)) {
       selectRubro.append(new Option(`${elegido} (ya no está en la lista)`, elegido));
     }
+    selectRubro.append(new Option('Otro rubro…', OTRA));
     selectRubro.value = elegido;
   }
 
   llenarSelectRubros();
 
-  /* ---------------------------------------------------------------- marca */
+  /* Con "Otro rubro…" vale lo que escribió al lado. Se limpia de espacios pero
+     no se endereza contra ninguna lista —al revés que la marca, que tiene
+     `marcaCanonica`—: el rubro nuevo es justamente uno que no está en ninguna
+     lista. Lo que sí hace el resto del sitio es comparar rubros con
+     `comoDireccion`, así que "Bombas de agua" y "bombas de agua" caen en la
+     misma página igual. */
+  const leerRubro = () =>
+    (selectRubro.value === OTRA ? entradaRubroNuevo.value.trim() : selectRubro.value) || '';
 
-  const OTRA = '__otra';
+  /* ---------------------------------------------------------------- marca */
 
   function llenarSelectMarcas() {
     const elegido = selectMarca.value;
@@ -339,6 +363,8 @@ async function arrancar() {
     form.reset();
     entradaMarcaNueva.value = '';
     entradaMarcaNueva.hidden = true;
+    entradaRubroNuevo.value = '';
+    entradaRubroNuevo.hidden = true;
     ponerEspecificaciones([]);
     campoAnterior.hidden = true;
     fotos = [];
@@ -352,6 +378,17 @@ async function arrancar() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorForm.hidden = true;
+    /* El `required` del select no alcanza con "Otro rubro…" elegido: para el
+       navegador ese valor no está vacío, así que daría por válido un producto
+       sin rubro si el renglón de al lado quedó en blanco. Lo que importa es lo
+       que vaya a guardarse, y eso es `leerRubro()`. */
+    if (!leerRubro()) {
+      errorForm.textContent = 'Escribí el rubro nuevo, o elegí uno de la lista.';
+      errorForm.hidden = false;
+      entradaRubroNuevo.focus();
+      return;
+    }
+
     botonGuardar.disabled = true;
     botonGuardar.textContent = 'Guardando…';
 
@@ -359,7 +396,7 @@ async function arrancar() {
       const datos = Object.fromEntries(new FormData(form));
       const producto = {
         nombre: datos.nombre.trim(),
-        rubro: datos.rubro,
+        rubro: leerRubro(),
         marca: leerMarca(),
         codigo: datos.codigo.trim() || null,
         resumen: datos.resumen.trim() || null,
@@ -459,9 +496,14 @@ async function arrancar() {
   function cargarEnFormulario(p) {
     editando = p.id;
     form.nombre.value = p.nombre ?? '';
-    form.rubro.value = p.rubro ?? '';
+    selectRubro.value = p.rubro ?? '';
     llenarSelectRubros();               // por si el rubro ya no está en la lista
-    form.rubro.value = p.rubro ?? '';
+    selectRubro.value = p.rubro ?? '';
+    /* Al editar nunca queda en "Otro rubro…": el rubro del producto ya existe
+       como opción —`llenarSelectRubros` lo agrega si hace falta— así que el
+       renglón extra se esconde y se limpia. */
+    entradaRubroNuevo.value = '';
+    entradaRubroNuevo.hidden = true;
     elegirMarca(p.marca);
     form.codigo.value = p.codigo ?? '';
     form.resumen.value = p.resumen ?? '';

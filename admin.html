@@ -91,6 +91,16 @@
               <select name="rubro" required data-select-rubro>
                 <option value="">Elegir…</option>
               </select>
+              <!-- Igual que "Otra marca…": si el rubro no está en la lista se
+                   escribe acá y el producto se guarda igual. La diferencia con
+                   la marca es que el rubro además tiene su plantilla de
+                   especificaciones, y un rubro escrito a mano no tiene
+                   ninguna: la tabla queda vacía y se arma con "Agregar". Lo
+                   decidió Nico el 1/9/2026, y es lo más chico que resuelve el
+                   caso sin inventar campos que capaz no vienen al caso. -->
+              <input class="campo__extra" type="text" name="rubroNuevo" maxlength="60"
+                     placeholder="¿Qué rubro es?" aria-label="Nombre del rubro nuevo"
+                     data-rubro-nuevo hidden>
               <span class="campo__ayuda">Los rubros se administran más abajo.</span>
             </label>
 

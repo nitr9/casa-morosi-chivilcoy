@@ -47,9 +47,13 @@ rules_version = '2';
      UN86hUj8xlZUoivSOFiyzXmspuO2  Santiago, el dueño del negocio
      giEPlB7KotcAILBYS0YBzaIfrBJ3  Nico, el que desarrolla
 
-   La segunda hay que SACARLA el día que el proyecto quede entregado: el panel
-   es del negocio. Se borra la línea de acá y la cuenta en Authentication →
-   Users, y no hace falta tocar nada más.
+   La segunda es del desarrollador y **se queda mientras haya soporte**, que es
+   lo decidido: si Santiago tiene un problema, hace falta poder entrar a
+   arreglarlo sin pedirle a él que lo haga ni pedirle su contraseña.
+
+   Sacarla es una opción para el día que este proyecto deje de tocarse, no una
+   tarea pendiente. Si ese día llega: se borra la línea de acá y la cuenta en
+   Authentication → Users, y no hace falta nada más.
 
    Para sumar a alguien: crear el usuario desde la consola (Authentication →
    Users → Agregar usuario), copiar su UID y agregarlo a esta lista. NO hace

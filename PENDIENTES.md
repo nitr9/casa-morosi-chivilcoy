@@ -522,6 +522,56 @@ y si son los PDF públicos de la marca o algo que le pasa el proveedor.
 Se dejan con el número original porque hay notas que los referencian, y con el
 motivo de cada decisión: casi todos salieron de algo que se midió.
 
+**53. ~~El rubro sólo se puede elegir de la lista.~~ HECHO (1/9/2026): también
+se puede escribir uno nuevo.**
+Lo pidió Nico apenas Santiago empezó a usar el panel: *«falta que ponga el rubro
+que quiera si no aparece en el listado»*. Se resolvió **igual que la marca**
+—«Otro rubro…» al final del desplegable, y al elegirlo aparece un renglón para
+escribirlo— y a propósito: es el gesto que el panel ya tenía, y Santiago no
+tiene que aprender nada nuevo.
+
+**Lo que hacía distinto al rubro, y es la única decisión de fondo acá.** La
+marca es un texto suelto dentro del producto; el rubro no. Cada rubro tiene su
+**plantilla de especificaciones** —las claves que aparecen en la tabla de la
+ficha— y un rubro escrito a mano no tiene ninguna. Las tres salidas eran dejar
+la tabla vacía, inventarle campos genéricos, o no permitirlo. **Se eligió
+dejarla vacía** y que Santiago arme los renglones con «Agregar», que es lo más
+chico que resuelve el caso: unos campos genéricos inventados —potencia, peso,
+medidas— corren el riesgo de no venir al caso justamente en el rubro que nadie
+previó.
+
+Y al pasar a «Otro rubro…» la tabla **se vacía**, no se deja como estaba: si
+venía de elegir Motosierras, quedarían las claves de motosierra en un rubro que
+no tiene nada que ver.
+
+**La pieza del lado del sitio ya estaba escrita desde antes**, y eso fue lo que
+hizo que el cambio fuera chico: `traerRubro()` en `js/datos.js` ya devolvía los
+rubros que existen sólo como nombre adentro de un producto —«así una categoría
+nueva anda aunque todavía no tenga ficha propia»—. Verificado: con un producto
+de rubro «Bombas de agua», que no está en `RUBROS_BASE`,
+`rubro.html?r=bombas-de-agua` abre con ese título y el producto adentro.
+
+**El `required` del select no alcanzaba.** Con «Otro rubro…» elegido el valor
+deja de estar vacío, así que el navegador daba por válido un producto **sin
+rubro** si el renglón de al lado quedaba en blanco. Se valida contra lo que
+realmente se va a guardar, antes de tocar Firestore.
+
+**Medido en el panel:** el desplegable queda con los nueve rubros y «Otro
+rubro…» al final; el renglón extra aparece con el foco puesto; la tabla pasa de
+5 filas de plantilla a 0; intentar guardar vacío avisa *«Escribí el rubro nuevo,
+o elegí uno de la lista»*. **La marca no se rompió** —comparte ahora la
+constante `OTRA`, así que se probó explícitamente—: los dos renglones pueden
+estar abiertos a la vez. Cero errores de consola, cero desborde en la portada,
+la página de rubro y la ficha.
+
+**Lo que este punto NO hace:** el rubro escrito a mano **no se agrega a la lista
+de rubros**. No tiene ficha propia, ni foto, ni plantilla, ni aparece en el menú
+del sitio; existe porque hay un producto que lo nombra. Para que sea un rubro de
+verdad hay que darlo de alta en la sección de rubros del panel, que ya existe.
+Es a propósito: si cada rubro escrito al pasar se convirtiera en uno oficial, un
+error de tipeo quedaría en el menú de la página.
+
+
 **1. ~~La marca tiene que ser una lista, no un campo de texto libre.~~ HECHO.**
 Las 20 marcas viven en `MARCAS_BASE`, en `js/datos.js`. El panel las muestra en un
 desplegable, con **"Otra marca…"** al final: al elegirlo aparece un renglón para
