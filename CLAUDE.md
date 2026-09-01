@@ -73,6 +73,28 @@ Lo que sigue faltando en esa máquina son **las fotos originales**: se puede med
 capturar y reprocesar lo que ya está en `img/`, pero no elegir una foto nueva de
 la carpeta del local.
 
+**Y sí tiene Python (1/9/2026).** La lista de más arriba —«no hay Python, ni
+ImageMagick, ni ffmpeg, ni `gh`»— es de la máquina de Chivilcoy. En la de Nico
+hay **Python 3.12.10**, **pip 25.0.1** y **uv/uvx 0.12.6**. Sirve para guiones
+sueltos, pero **cuidado con el shell**: `python -c "…"` desde bash se come los
+backticks y las comillas del texto que uno inserta —ya pasó, y dejó ocho
+identificadores borrados en `PENDIENTES.md`—. Para texto largo con backticks
+conviene la herramienta de edición y no el shell.
+
+### `code-review-graph`, instalado el 1/9/2026
+
+Un servidor MCP que arma un grafo del código con Tree-sitter para no releer
+archivos enteros. Está registrado **a nivel usuario** en `~/.claude.json` y se
+lanza con `uvx code-review-graph serve`: no hay nada instalado en el sistema ni
+dentro del repositorio. Guarda el grafo en `.code-review-graph/graph.db`
+(1,4 MB), que trae su propio `.gitignore`, así que el repositorio no se entera.
+
+**Lo que hay que saber antes de confiar en él:** indexó **15 archivos y sólo
+JavaScript**. Los 4 HTML, los 2 CSS y todo el markdown quedaron afuera —y en
+este proyecto los dos archivos más pesados son justamente `estilos.css`
+(125 KB) y `PENDIENTES.md` (133 KB)—, así que el ahorro real acá es chico. Se
+reconstruye con `uvx code-review-graph build` y se actualiza con `update`.
+
 Esa landing de Astro cubre las tres sucursales y **no se reutiliza como base**
 —acá se quiso otra cosa: sólo Chivilcoy, pocas secciones, HTML puro y más
 fotográfica—, pero sirve para robarle contenido ya resuelto.
