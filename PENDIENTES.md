@@ -2289,3 +2289,8 @@ bien: lo que se ganó es que se entienda.
 
 La tarjeta vieja (`.tarjeta`) sigue viva para el aviso de configuración y la
 pantalla de entrar, que son una sola cosa cada una y no se confunden con nada.
+
+**Mirado y aprobado (1/9/2026).** Nico lo abrió y dijo: «me gustó y ahora se
+distingue más las secciones». Queda cerrado tal como está: no se saca ni el pie
+ni la guarda navy. Vale la pena anotarlo porque las cuatro separaciones eran
+decisiones de gusto, no medidas, y ya pasaron por el ojo.
