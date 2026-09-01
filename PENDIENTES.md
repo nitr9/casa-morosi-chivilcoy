@@ -27,6 +27,11 @@ diagonal, azul y blanca, con «Casa Morosi» repetido**, y arriba un título que
 dice «Próximamente» (punto 48). El día que Santiago cargue productos, las cintas
 desaparecen solas y entra la vidriera —está probado con `?demo=1`—.
 
+Y el mismo día, ya con la cinta puesta, **la tarjeta dejó de ser blanco puro y
+aprendió a brillar** (punto 52): un degradado suave que le da material, y un
+brillo en el borde al pasar el mouse que va en dos dosis —discreto mientras
+esté encintada, entero cuando la tarjeta sea de verdad un enlace a la ficha—.
+
 Eso dejó **en suspenso el punto 50**, que discutía la forma de la tarjeta: sin
 saber qué foto va adentro no hay nada que elegir.
 
@@ -358,6 +363,89 @@ tarjetas se hacen más chicas**. Se arregla moviendo el corte de «separadas» a
 1180 px, que es donde las dos cuentas se cruzan. Sigue sin tocarse, pero ahora
 por otro motivo: con las cintas puestas el estado vacío ya se lee bien en esa
 franja, así que el escalón sólo molesta de verdad cuando haya productos.
+
+
+**52. ~~Las tarjetas encintadas son cuatro manchas blancas planas.~~ HECHO
+(1/9/2026): papel, y brillo en el borde al pasar el mouse.**
+Con la cinta puesta (punto 48) apareció lo que la cinta no tapaba. Lo dijo Nico:
+«capaz que no sea todo blanco a la tarjeta» y «que cuando el mouse se ponga
+arriba de una tarjeta, la tarjeta como que brille en los bordes».
+
+**El número que explica por qué pesaban:** las cuatro ocupan el **42,2 % del
+área de la sección** y eran blanco puro, o sea **15,54:1** de contraste contra
+el fondo navy —prácticamente el máximo que se puede tener en una pantalla—. No
+estaban mal: eran lo más gritón de toda la página, y encima planas.
+
+**Se probaron cuatro colores y ganó el cambio más chico.** La lámina de
+comparación se armó inyectando cada variante con Playwright, sin tocar el CSS:
+
+| | qué era | por qué no |
+|---|---|---|
+| A | blanco puro, lo de antes | la referencia |
+| **B** | **blanco con un degradado en diagonal** | **es la que quedó** |
+| C | `--cemento`, el gris del sistema | dos motivos, abajo |
+| D | navy, «la vidriera apagada» | **1,27:1** contra el fondo |
+
+**C se descartó por algo que ya estaba escrito en el CSS:** ese gris está
+descartado desde antes para el día que haya fotos de producto, porque con
+`object-fit: contain` las máquinas dejan franjas al costado y sobre gris esas
+franjas se leen como un recuadro alrededor de cada una. Y acá encima **la cinta
+es blanca**: contra el cemento casi desaparece, o sea que se perdía justo lo
+que se acababa de hacer.
+
+**D era la idea más linda** —la vidriera apagada que se enciende en blanco
+cuando llega la mercadería, y como el color iba sólo en `album--proximamente` el
+estado con productos ni se enteraba— pero medida da **1,27:1 contra el fondo**:
+la tarjeta se sostendría *sólo* por su sombra y el filo del borde. El día que
+alguien toque el fondo de la sección, desaparecen las cuatro. Queda anotada por
+si algún día el fondo de esa sección se aclara.
+
+**Lo que quedó (B):** `linear-gradient(160deg, blanco 0%, blanco 42%, #e8edf5
+100%)`. El campo arranca blanco puro y recién cede en el último tercio, así que
+el nombre de la cinta y sus franjas siguen apoyados sobre el mismo blanco de
+antes. Medido sobre la página: **15,22:1 arriba y 13,68:1 abajo** contra el
+fondo. Riesgo cero para lo que viene, porque el degradado vive sólo en
+`album--proximamente` y el día que entren fotos el campo vuelve a ser blanco.
+
+**El brillo del borde, y por qué son DOS brillos y no uno.** El problema real
+es que **estas tarjetas no llevan a ningún lado**: son `div`, sin `href` y con
+el cursor de siempre. Un brillo al pasar el mouse es el gesto universal de
+«esto se toca», y acá prometería un clic que no existe. Así que hay dos dosis
+de la misma idea:
+
+- **encintadas → suave.** Un filo claro y un halo corto: se ve que la tarjeta
+  responde, no que lleva a algún lado.
+- **con productos → entero.** Ahí la hoja **sí** es un `<a>` con la ficha
+  adentro y el cursor de mano —verificado con `?demo=1`—, así que el brillo
+  promete un clic que existe. Va también en `:focus-visible`, que llega al
+  mismo lugar con el teclado.
+
+**La dosis del brillo suave hubo que subirla, y ese es el número que importa
+acá.** La primera versión —halo al 38 % y 18 px de radio— dejaba el fondo
+pegado al borde **0,2 niveles** de gris más claro: al 3× de zoom se veía, pero
+al tamaño en que se usa la página la captura con el mouse encima y la captura
+sin el mouse eran **la misma imagen**. Suave no puede querer decir invisible.
+Con lo que quedó sube **6,3 niveles**, y el brillo entero de la vidriera sube
+**16,7**, así que la distancia entre los dos gestos se sigue notando.
+
+**Cómo está armado, que es lo que conviene no romper.** El brillo NO reemplaza
+la sombra de la hoja: se suma. Esa sombra —las dos laterales de 12 px— es lo
+único que separa una tarjeta de la de al lado, y si el hover la pisara la
+tarjeta perdería el filo justo cuando se la está mirando. Se resolvió con una
+variable `--halo` declarada en `.album__hoja, .album__tapa` y apagada por
+defecto (`0 0 0 0 transparent`, que no es `none` porque una lista de sombras no
+se puede dejar vacía y la transición necesita de dónde salir); cada
+`box-shadow` la lleva adelante y las reglas de `:hover` sólo cambian esa
+variable. Así funciona igual para la tapa, que tiene otra sombra, y ninguna
+regla de hover repite números. **Verificado en los dos estados: la sombra de
+separación sigue presente con el mouse encima.** Va también un `z-index: 9`,
+porque entre tarjeta y tarjeta sobran pocos píxeles y sin eso el halo de una
+hoja de atrás queda cortado por la de al lado.
+
+**Medido al final:** cero desborde horizontal a 1920, 1280 y 390; cero errores
+de consola; el `prefers-reduced-motion` que ya estaba apaga también la
+transición del brillo, sin tocar nada.
+
 
 **33. La vidriera: una sección para lo que entra al local.**
 **Al 24/8/2026 ya no está en debate: se armó, y está esperando productos — ver el

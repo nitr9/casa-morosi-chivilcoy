@@ -1869,7 +1869,20 @@ h1, h2, h3 {
   border-radius: var(--radio);
   overflow: hidden;
   background: var(--blanco);
-  transition: transform .8s cubic-bezier(.215, .61, .355, 1);
+  transition: transform .8s cubic-bezier(.215, .61, .355, 1),
+              box-shadow .35s ease;
+
+  /* El brillo del borde al pasar el mouse, apagado por defecto. Existe acá y
+     no en cada regla de `:hover` porque la sombra de la hoja es lo único que
+     la separa de la de al lado: si el brillo la reemplazara, la tarjeta
+     perdería el filo justo cuando se la está mirando. Así el brillo se SUMA a
+     la sombra que cada hoja ya tiene —que no es la misma para la tapa que para
+     las hojas— y ninguna regla de hover necesita repetirla.
+
+     El valor apagado es una sombra de radio cero y transparente, no `none`:
+     una lista de sombras no se puede dejar vacía, y de paso es lo que hace
+     que la transición tenga desde dónde salir. */
+  --halo: 0 0 0 0 transparent;
 }
 .album__hoja img, .album__tapa img {
   flex: 1;
@@ -1892,15 +1905,15 @@ h1, h2, h3 {
 .hoja-2 { filter: brightness(.76); }
 @media (min-width: 760px) { .hoja-1, .hoja-2 { filter: none; } }
 
-.album__tapa { box-shadow: 0 18px 45px rgba(4, 8, 18, .65); }
-.hoja-1 { box-shadow: 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
-.hoja-2 { box-shadow: 12px 0 22px -14px rgba(4, 8, 18, .85), -12px 0 22px -14px rgba(4, 8, 18, .85); }
+.album__tapa { box-shadow: var(--halo), 0 18px 45px rgba(4, 8, 18, .65); }
+.hoja-1 { box-shadow: var(--halo), 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
+.hoja-2 { box-shadow: var(--halo), 12px 0 22px -14px rgba(4, 8, 18, .85), -12px 0 22px -14px rgba(4, 8, 18, .85); }
 /* Igual que el apagado de arriba: las dos sombras eran distintas para escalonar
    hojas que se pisan. Separadas, las cuatro son la misma tarjeta y llevan la
    misma sombra; la del conjunto la sigue poniendo el «drop-shadow» de la pila,
    que dibuja la silueta real hoja por hoja. */
 @media (min-width: 760px) {
-  .hoja-1, .hoja-2 { box-shadow: 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
+  .hoja-1, .hoja-2 { box-shadow: var(--halo), 12px 0 26px -14px rgba(4, 8, 18, .85), -12px 0 26px -14px rgba(4, 8, 18, .85); }
 }
 .album__tapa img { object-position: 50% 22%; }   /* que se lea el cartel */
 
@@ -2170,11 +2183,25 @@ h1, h2, h3 {
   overflow: hidden;
 }
 
-/* El aviso de que se puede tocar. No se toca el `transform` —ahí vive el
-   abanico y se pisarían— ni el `box-shadow`, que es lo que separa una hoja de
-   la otra: queda el subrayado del nombre, que es lo que se mira. */
+/* El aviso de que se puede tocar. No se toca el `transform`: ahí vive el
+   abanico y se pisarían. El `box-shadow` sí, pero SUMÁNDOSE y no
+   reemplazándolo —ver `--halo` allá arriba—, porque esa sombra es lo que
+   separa una hoja de la otra y no puede desaparecer justo en el hover. */
 .vidriera__hoja:hover .vidriera__nombre,
 .vidriera__hoja:focus-visible .vidriera__nombre { text-decoration: underline; }
+
+/* Acá el brillo va ENTERO, al revés que en las tarjetas encintadas: esta hoja
+   es un `<a>` con la ficha del producto adentro, así que el brillo promete un
+   clic que existe de verdad. Es la misma idea con dos intensidades — el gesto
+   fuerte donde hay destino, el suave donde sólo hay que mostrar que la tarjeta
+   está viva. Va también en el foco del teclado, que llega al mismo lugar. */
+.vidriera__hoja:hover,
+.vidriera__hoja:focus-visible {
+  --halo: 0 0 0 1px rgba(255, 255, 255, .95),
+          0 0 22px 2px rgba(150, 190, 255, .75),
+          0 0 60px 12px rgba(90, 140, 230, .45);
+  z-index: 9;
+}
 
 /* El foco va hacia adentro: la hoja tiene `overflow: hidden` y un contorno por
    fuera se recortaría contra su propio borde. */
@@ -2410,6 +2437,63 @@ h1, h2, h3 {
    letra de tarjeta chica sobre una tarjeta grande. */
 @media (max-width: 559px) {
   .cinta { font-size: .9rem; }
+}
+
+/* --- la tarjeta encintada: papel, no cartulina ---------------------------
+   Con la cinta puesta apareció lo que la cinta no tapaba: las cuatro tarjetas
+   ocupan el **42,2 % del área de la sección** y eran blanco puro, o sea
+   **15,54:1** contra el fondo navy. Ése es prácticamente el contraste máximo
+   que se puede tener en una pantalla: no estaban mal, eran lo más gritón de
+   toda la página, y encima planas. Lo pidió Nico el 1/9/2026 — "capaz que no
+   sea todo blanco a la tarjeta".
+
+   Se probaron cuatro (la lámina está en `PENDIENTES.md`) y ganó la más chica:
+   sigue siendo blanca, pero con un degradado que le da material. El campo
+   arranca blanco puro y recién cede en el último tercio, así que el nombre de
+   la cinta y sus franjas siguen apoyados sobre el mismo blanco de antes.
+
+   POR QUÉ NO EL GRIS NI EL NAVY, que era lo que uno pediría primero:
+
+   - `--cemento` es el gris del sistema y **ya está descartado** unos cientos
+     de líneas más arriba, para el día que entren fotos de producto: con
+     `object-fit: contain` las máquinas dejan franjas al costado, y sobre gris
+     esas franjas se leen como un recuadro alrededor de cada una. Y acá encima
+     la cinta es BLANCA: contra el cemento casi desaparece.
+   - El navy era la idea linda —la vidriera apagada que se enciende cuando
+     llega la mercadería— pero se midió y da **1,27:1 contra el fondo**: la
+     tarjeta se sostendría sólo por su sombra y el filo del borde. El día que
+     alguien toque el fondo de la sección, desaparecen las cuatro.
+
+   El degradado vive SÓLO en `album--proximamente`, así que el estado con
+   productos ni se entera y el problema de las fotos no llega a existir. */
+.album--proximamente .album__hoja {
+  background: linear-gradient(160deg, var(--blanco) 0%, var(--blanco) 42%, #e8edf5 100%);
+}
+
+/* El brillo del borde, en su versión SUAVE, y el motivo de que sea suave:
+   **estas tarjetas no llevan a ningún lado**. Son `div`, sin `href` y con el
+   cursor de siempre; el brillo completo es el gesto universal de "esto se
+   toca" y acá prometería un clic que no existe. Así que acá hace de realce
+   —un filo claro y un halo corto, se ve que la tarjeta responde— y el brillo
+   entero queda para la vidriera con productos, que sí son enlaces.
+
+   LA DOSIS ESTÁ MEDIDA, y la primera que se probó no servía: con el halo al
+   38 % y 18 px de radio, el fondo pegado al borde subía **0,2 niveles** de
+   gris. O sea nada: al 3× de zoom se veía, pero al tamaño en que se usa la
+   página la captura con el mouse encima y la captura sin el mouse eran la
+   misma imagen. Suave no puede querer decir invisible.
+
+   Con estos valores sube **6,3 niveles** —se lee el filo y un poco de aire
+   alrededor— y el brillo entero de la vidriera sube **16,7**, así que la
+   distancia entre los dos gestos se sigue notando. */
+.album--proximamente .album__hoja:hover {
+  --halo: 0 0 0 1px rgba(255, 255, 255, .95),
+          0 0 26px 3px rgba(150, 190, 255, .6);
+  /* Las hojas tienen un orden fijo —la 2 abajo de la 1— y entre tarjeta y
+     tarjeta sobran pocos píxeles: sin esto, el halo de una hoja de atrás se
+     dibujaría por debajo de la de al lado y quedaría cortado justo del lado
+     donde se lo mira. */
+  z-index: 9;
 }
 
 /* tira de fotos del local */
