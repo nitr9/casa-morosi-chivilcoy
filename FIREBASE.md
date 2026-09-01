@@ -32,25 +32,89 @@ dirección o la foto misma.
 
 ## 3. Pegar las reglas de seguridad
 
-Cualquiera puede leer los productos publicados; solo un usuario con sesión iniciada puede crear, editar o borrar.
+Cualquiera puede leer los productos publicados; escribir sólo las dos cuentas
+que están nombradas por UID.
 
 **Firestore** (pestaña Rules):
 
 ```
 rules_version = '2';
+
+/* Quién puede escribir. Son UID de Authentication → Users, no correos: el
+   correo se puede cambiar desde el panel y el UID no cambia nunca.
+
+   Al 1/9/2026:
+     UN86hUj8xlZUoivSOFiyzXmspuO2  Santiago, el dueño del negocio
+     giEPlB7KotcAILBYS0YBzaIfrBJ3  Nico, el que desarrolla
+
+   La segunda hay que SACARLA el día que el proyecto quede entregado: el panel
+   es del negocio. Se borra la línea de acá y la cuenta en Authentication →
+   Users, y no hace falta tocar nada más.
+
+   Para sumar a alguien: crear el usuario desde la consola (Authentication →
+   Users → Agregar usuario), copiar su UID y agregarlo a esta lista. NO hace
+   falta —ni conviene— volver a habilitar el registro público; ver más abajo. */
+function puedeEscribir() {
+  return request.auth != null && request.auth.uid in [
+    'UN86hUj8xlZUoivSOFiyzXmspuO2',
+    'giEPlB7KotcAILBYS0YBzaIfrBJ3'
+  ];
+}
+
 service cloud.firestore {
   match /databases/{database}/documents {
     match /productos/{producto} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow create, update, delete: if puedeEscribir();
     }
     match /rubros/{rubro} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null;
+      allow create, update, delete: if puedeEscribir();
     }
   }
 }
 ```
+
+### Por qué los UID y no `request.auth != null`
+
+Hasta el 1/9/2026 estas reglas decían `request.auth != null`, o sea **cualquier
+usuario autenticado**. Suena parecido a «el usuario del panel» y no lo es, y se
+comprobó que no lo era: con la `apiKey` —que está a la vista en el sitio, y eso
+está bien— **se creó una cuenta desde cero y con esa cuenta se escribió un
+producto en la base**. Todo por HTTP, sin tocar el panel:
+
+```
+registro con la clave pública ......... 200  cuenta creada
+escritura en productos con esa cuenta . 200  ← el agujero
+```
+
+El motivo es que Firebase deja el **alta de usuarios abierta al público** por
+defecto. Conseguir una cuenta era un pedido HTTP, y de ahí a escribir no había
+nada en el medio. El documento y la cuenta de la prueba se borraron en el acto.
+
+Se cerró de dos maneras, y las dos hacen falta:
+
+1. **El alta pública, apagada.** Authentication → Settings → Acciones del
+   usuario → **«Habilitar la creación (registro)» destildado**. Verificado
+   después: tanto el registro con correo como el **acceso anónimo** —que es el
+   otro camino a `request.auth != null`— devuelven `ADMIN_ONLY_OPERATION`.
+   Crear usuarios desde la consola sigue funcionando igual: es una acción de
+   administrador, no un registro.
+2. **Estas reglas, con los UID.** Lo de arriba es una casilla y alguien la
+   puede volver a tildar sin darse cuenta —o activar «Iniciar sesión con
+   Google», que abre el mismo agujero por otro lado—. La lista de UID no
+   depende de ninguna casilla.
+
+**Lo que se revisó de paso, y conviene volver a mirar si algo cambia:**
+
+- Sin cuenta no se escribe: escritura en `productos`, en `rubros` y en una
+  colección inventada dan las tres **403 PERMISSION_DENIED**. La lectura de
+  `productos` da 200, que es lo que se quiere.
+- **Dominios autorizados** (Authentication → Settings → Dominios): al 1/9/2026
+  están sólo `localhost`, `casa-morosi-chivilcoy.firebaseapp.com` y
+  `casa-morosi-chivilcoy.web.app`. **Falta el dominio de Netlify**, y sin él
+  `admin.html` no deja entrar en el sitio publicado.
+- **Sign-in method**: que esté habilitado sólo «Correo electrónico/contraseña».
 
 ## 4. Probar
 
