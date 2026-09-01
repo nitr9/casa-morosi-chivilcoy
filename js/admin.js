@@ -7,6 +7,18 @@ import { COLECCION_RUBROS, RUBROS_BASE, MARCAS_BASE, MAX_FOTOS, marcaCanonica, c
 
 const $ = (sel) => document.querySelector(sel);
 
+/* Los encabezados de sección se cuelgan justo abajo de la cabecera, que es
+   pegajosa. Su alto no es uno solo: 74 px normalmente, 69 en el celular, y 83
+   abajo de los 380 px, donde el título parte en dos renglones. Además crece al
+   iniciar sesión, porque recién ahí aparece el botón Salir —ése fue el error:
+   con el número medido en la pantalla de entrar, los encabezados quedaban 15 px
+   tapados—. Así que en vez de escribirlo en el CSS lo mide el navegador. */
+const cabecera = document.querySelector('.cabecera');
+new ResizeObserver(([entrada]) => {
+  const alto = Math.round(entrada.target.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--alto-cabecera', alto + 'px');
+}).observe(cabecera);
+
 const secciones = {
   sinConfigurar: $('[data-sin-configurar]'),
   login: $('[data-login]'),

@@ -481,3 +481,116 @@ img { display: block; max-width: 100%; height: auto; }
   cursor: pointer;
 }
 .enlace-suave:hover { color: var(--navy); }
+
+/* --- las secciones del panel ----------------------------------------------
+   El panel lo carga alguien que no trabaja con computadoras, así que cada
+   sección tiene que decir sola dónde empieza y dónde termina.
+
+   Antes de tocar nada se midió el panel viejo, y el número explica por qué se
+   confundían: el aire ENTRE dos tarjetas era de 20 px y el de ADENTRO de una,
+   28,8. Había más separación adentro de una sección que entre dos, así que las
+   tres se leían como una sola cosa larga. Peor todavía, en la tarjeta de
+   rubros el formulario terminaba y la lista arrancaba con 0 px en el medio:
+   el primer rubro cargado quedaba pegado abajo del botón "Guardar rubro",
+   como si fuera parte del formulario.
+
+   Y el borde blanco de la tarjeta contra el fondo cemento da 1,19:1 de
+   contraste, que es casi no estar.
+
+   Cuatro cosas las separan ahora, de la que más pesa a la que menos:
+
+     1. Un encabezado navy que se queda pegado arriba mientras dura la
+        sección. Es lo que más sirve: el formulario mide 1360 px en el
+        escritorio y 1541 en el celular, o sea que nunca entra entero en la
+        pantalla, y sin esto al llegar abajo ya no sabés en qué sección estás.
+     2. 44 px de aire entre secciones, que es más que los 28,8 de adentro.
+        Con eso la proximidad vuelve a decir la verdad.
+     3. Una guarda navy de 3 px que recorre la sección a lo largo: marca el
+        final, que es lo que un hueco solo no marca.
+     4. Un pie que lo dice con todas las letras.
+
+   La tarjeta vieja (.tarjeta) sigue viva: la usan el aviso de configuración y
+   la pantalla de entrar, que son una sola cosa cada una y no se confunden con
+   nada. */
+
+:root {
+  /* Lo que mide la cabecera pegajosa: los encabezados de sección se cuelgan
+     justo abajo. Este valor es sólo el de arranque, porque el alto real cambia
+     —74 px normalmente, 69 en el celular, 83 abajo de 380 px— y encima crece
+     al iniciar sesión, cuando aparece el botón "Salir". Lo mantiene al día un
+     ResizeObserver en admin.js, que gana porque escribe estilo en línea. */
+  --alto-cabecera: 74px;
+  --aire: 1.4rem;
+}
+
+.seccion {
+  margin-bottom: 2.75rem;          /* 44 px */
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--navy);
+  border-radius: var(--radio);
+}
+.seccion:last-child { margin-bottom: 0; }
+
+.seccion__encabezado {
+  position: sticky;
+  top: var(--alto-cabecera);
+  z-index: 5;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 .55rem;
+  padding: .8rem var(--aire);
+  background: var(--navy);
+  border-radius: 2px 2px 0 0;
+}
+.seccion__titulo {
+  margin: 0;
+  font-variation-settings: "wdth" 108;
+  font-weight: 800;
+  font-size: 1.12rem;
+  line-height: 1.25;
+  color: #fff;
+}
+/* La cuenta de productos, sobre navy en vez de sobre blanco. */
+.seccion__encabezado .cuenta { color: #a8b8d6; }
+
+.seccion__cuerpo { padding: var(--aire); }
+
+/* Qué se hace en esta sección, en castellano y antes de cualquier campo. */
+.seccion__bajada {
+  margin: 0 0 1.3rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--borde);
+  font-size: .9rem;
+  color: #59637a;
+}
+
+.seccion__fin {
+  padding: .5rem var(--aire);
+  background: var(--cemento);
+  border-top: 1px solid var(--borde);
+  border-radius: 0 0 2px 2px;
+  font-variation-settings: "wdth" 80;
+  font-weight: 700;
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #6b7688;
+}
+
+/* Al tocar "Editar", el JS sube hasta el formulario (admin.js, scrollIntoView).
+   Sin esto el formulario queda debajo de las dos barras pegajosas y el primer
+   campo no se ve: 59 px de cabecera más 45 del encabezado de la sección. */
+[data-form-producto], [data-form-rubro] {
+  scroll-margin-top: calc(var(--alto-cabecera) + 3.6rem);
+}
+
+@media (max-width: 480px) {
+  .seccion { margin-bottom: 2.25rem; }
+  .seccion__titulo { font-size: 1.02rem; }
+}
+
+@media (min-width: 560px) {
+  :root { --aire: 1.8rem; }
+}

@@ -2227,3 +2227,65 @@ un error de tipeo.
 **Medido** a 1920, 1000 y 390 en las cuatro páginas: el `mailto:` está en todas,
 **no desborda en el celular** —era el riesgo, son 21 caracteres—, el JSON-LD
 sigue parseando y no hay errores de consola.
+
+**51. ~~El panel se leía como una sola cosa larga.~~ HECHO (1/9/2026).**
+Lo pidió Nico: que se note dónde empieza y dónde termina cada sección, porque
+**lo va a usar Santiago, que no trabaja con computadoras**.
+
+**El número que explica por qué se confundían.** Medido en el panel viejo con
+las listas llenas: el aire **entre** dos tarjetas era de **20 px** y el de
+**adentro** de una, **28,8**. O sea que había más separación entre dos campos
+de un mismo formulario que entre dos secciones distintas, así que la
+proximidad decía exactamente lo contrario de lo que pasaba. Y el borde blanco
+de la tarjeta contra el fondo cemento da **1,19:1** de contraste, que es casi
+no estar.
+
+**El peor corte estaba en los rubros: 0 px.** El formulario para crear un rubro
+terminaba y la lista de rubros ya cargados arrancaba pegada, sin nada en el
+medio: el primer rubro quedaba abajo del botón «Guardar rubro» como si fuera
+parte del formulario. Se ve en la captura de antes y es indefendible.
+
+**Y el formulario no entra en la pantalla:** mide **1360 px** en el escritorio
+y **1541** en el celular. Nunca se ve entero, así que al llegar abajo no hay
+forma de saber en qué sección estás.
+
+Cuatro cosas lo separan ahora, de la que más pesa a la que menos:
+
+1. **Un encabezado navy pegajoso** que se queda arriba mientras dura la
+   sección. Es lo que resuelve lo del formulario de 1360 px.
+2. **44 px de aire entre secciones** (36 en el celular), que ahora sí es más
+   que los 28,8 de adentro.
+3. **Una guarda navy de 3 px** a lo largo de la sección: marca el final, que
+   es lo que un hueco solo no marca.
+4. **Un pie que lo dice con todas las letras** («Hasta acá, cargar un
+   producto»).
+
+**Y son cuatro secciones, no tres:** la de rubros se partió en «Crear un
+rubro» y «Rubros de la página». Con eso las dos parejas quedan iguales —se
+carga, después se ve lo cargado— y desaparece el corte de 0 px.
+
+**El error que casi se publica, y que sólo apareció midiendo.** El encabezado
+de sección se cuelga del alto de la cabecera, que se midió en **59 px**… en la
+pantalla de entrar. Con sesión iniciada aparece el botón **«Salir»** y la
+cabecera pasa a **74**, así que los encabezados quedaban **15 px tapados**
+debajo. Y el alto tampoco es uno solo: **74** normalmente, **69** en el
+celular y **83** abajo de 380 px, donde el título parte en dos renglones. Un
+número fijo en el CSS iba a errar siempre. Lo arregla un **ResizeObserver** en
+`admin.js` que escribe `--alto-cabecera` como estilo en línea, que le gana a
+cualquier regla.
+
+**Lo que había que no romper.** Al tocar «Editar», `admin.js` sube hasta el
+formulario con `scrollIntoView`. Con dos barras pegajosas el primer campo
+quedaba abajo de ellas; se resuelve con `scroll-margin-top`. Medido después:
+el primer campo cae en **132 px** y el encabezado termina en **122**, o sea
+**10 px de aire**.
+
+**Medido al final**, a 1280 y a 390, con las listas llenas: huecos de 44/44/43
+y 36/36/36 contra un padding de 28,8 y 22,4; el encabezado pegajoso queda
+**exactamente a ras** de la cabecera (74 contra 74, y 69 contra 69); los 32
+selectores `data-*` que busca `admin.js` siguen todos en su lugar; **cero
+errores de consola**. El panel quedó más largo —de 2672 a 3381 px— y está
+bien: lo que se ganó es que se entienda.
+
+La tarjeta vieja (`.tarjeta`) sigue viva para el aviso de configuración y la
+pantalla de entrar, que son una sola cosa cada una y no se confunden con nada.
