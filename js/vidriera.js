@@ -36,6 +36,8 @@ import { escapar, direccionDeFicha } from './tarjetas.js';
 
 const pila = document.querySelector('[data-pila]');
 const encabezado = document.querySelector('[data-vidriera-encabezado]');
+/* El de "Próximamente", que es el que se ve mientras no haya nada cargado. */
+const proximamente = document.querySelector('[data-proximamente-encabezado]');
 
 /* Cuatro y no cinco: lo pidió Nico el 24/8: el mazo pasó de cinco tarjetas a
    cuatro y el CSS quedó calibrado para eso (punto 42 de PENDIENTES.md). */
@@ -136,9 +138,19 @@ async function armar() {
 
   pila.textContent = '';
   pila.append(...hojas);
+
+  /* Entra la vidriera y se va el estado encintado. `album--proximamente` es la
+     que le presta al estado vacío el reparto responsivo de acá —cuatro
+     tarjetas, dos abajo de 1280, una sola abajo de 560—: si no se saca,
+     quedarían las dos clases peleando por lo mismo. */
+  pila.closest('.album')?.classList.remove('album--proximamente');
   pila.closest('.album')?.classList.add('album--vidriera', `album--de-${elegidos.length}`);
 
+  /* Se encienden y se apagan los dos encabezados, no uno solo: el de
+     "Próximamente" viene visible desde el HTML porque es el que se publica
+     mientras la base esté vacía. */
   encabezado.hidden = false;
+  proximamente?.setAttribute('hidden', '');
 
   /* El reflejo del piso lo arma main.js clonando la pila, y a esta altura ya lo
      hizo con las fotos del local. Este aviso le pide que lo rehaga con lo que

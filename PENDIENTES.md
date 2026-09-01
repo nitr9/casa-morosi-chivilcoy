@@ -20,9 +20,15 @@ puede extenderse más»— quedó otra cosa: **cuatro tarjetas blancas, lisas,
 derechas y separadas, con el reflejo largo** (puntos 45, 46 y 47). Ya no hay
 abanico, ni fotos, ni franjas rojas.
 
-**Están vacías, y eso no es el estado final** (punto 48). Es la sección de la
-vidriera: el día que Santiago cargue productos se llenan solas. Mientras tanto
-son cuatro rectángulos blancos, y eso hay que resolverlo antes de publicar.
+**El 1/9 las cuatro tarjetas dejaron de estar vacías: van encintadas.** Nico
+avisó que el cliente todavía no decidió qué mostrar ahí, así que en vez de
+esperar se dijo con una imagen: **una cinta de obra cruzando cada tarjeta en
+diagonal, azul y blanca, con «Casa Morosi» repetido**, y arriba un título que
+dice «Próximamente» (punto 48). El día que Santiago cargue productos, las cintas
+desaparecen solas y entra la vidriera —está probado con `?demo=1`—.
+
+Eso dejó **en suspenso el punto 50**, que discutía la forma de la tarjeta: sin
+saber qué foto va adentro no hay nada que elegir.
 
 **La vidriera del punto 33 quedó armada y esperando (punto 43).** El día que
 Santiago cargue productos, esa sección se llena sola con la mejor máquina de
@@ -49,6 +55,18 @@ Para trabajar: `node servidor.mjs` y abrir <http://localhost:8123>. El panel es
 Abierto el 25/8/2026. Nico dijo «quiero pensar el diseño que le podemos dar a
 las tarjetas» y se probó, sin tocar una línea del repositorio: las tres
 variantes se inyectaron con Playwright sobre la página ya cargada.
+
+> **EN SUSPENSO DESDE EL 1/9/2026, y no por falta de datos.** Nico avisó que
+> **el cliente todavía no decidió qué se va a mostrar en esas tarjetas**, así
+> que la sección pasó a las cintas del punto 48 y acá no hay nada que resolver:
+> la forma de la tarjeta se elige mirando la foto que va adentro, y no hay foto.
+> Lo que faltaba medir —la tarjeta cuadrada a 390 px— **no se midió a
+> propósito**: sin saber qué producto va, el número no decidiría nada.
+>
+> Cuando se retome, dos cosas cambiaron abajo de este punto: la sección hoy
+> tiene un estado vacío de verdad, y **la cinta del punto 48 está calculada
+> sobre la relación `5 / 7`** —54,462° y 1,72 anchos—. Si la tarjeta pasa a
+> cuadrada, esos dos números hay que rehacerlos.
 
 **Cómo se miró, que es lo que destrabó el punto 48.** Las tarjetas están vacías
 sólo porque la base está vacía, y vacías no se puede decidir nada. Con
@@ -273,31 +291,73 @@ con 4 tarjetas) y es la proporción de Mercado Libre y Amazon, pero un producto
 vertical como la motosierra se ve más chico. Es una línea en `.producto__foto`.
 
 
-**48. Las cuatro tarjetas están vacías, y así no se publica.**
+**48. ~~Las cuatro tarjetas están vacías, y así no se publica.~~ HECHO
+(1/9/2026): van encintadas.**
 Al sacarles las fotos (punto 46) la sección quedó con cuatro rectángulos
-blancos. No está roto —es lo que se pidió y se ve limpio— pero es lo único de
-la página que no dice nada, y **es lo que ve cualquiera que entre hoy**, porque
-la base está vacía y la vidriera todavía no tiene con qué llenarlas.
+blancos. No estaba roto —era lo que se pidió y se veía limpio— pero era lo
+único de la página que no decía nada, y **era lo que veía cualquiera que
+entrara**, porque la base está vacía y la vidriera todavía no tiene con qué
+llenarlas.
 
-Las salidas, sin decidir:
+**Lo destrabó el cliente, no el diseño.** Nico avisó que **todavía no está
+decidido qué se va a mostrar en esas tarjetas**, así que las cuatro salidas que
+estaban anotadas acá —cargar productos, devolverles una foto, ponerles otra
+cosa, esconder la sección— dejaron de ser cuatro: la única honesta era decir que
+falta. De ahí salió lo que hay ahora, que es de Nico: **una cinta de obra
+cruzando cada tarjeta, con el nombre de la casa repetido**, y arriba un título
+que dice «Próximamente». Una vidriera encintada se entiende sola y no promete
+una fecha que nadie puede prometer.
 
-- **Cargar productos.** Es la buena: la sección existe para eso (punto 43) y
-  con productos se llena sola, sin tocar una línea. Depende de Santiago.
-- **Devolverles alguna foto**, ahora que la tarjeta es blanca y lisa. No es
-  volver atrás: lo que se sacó fueron las franjas rojas y el abanico girado, y
-  eso ya no vuelve. Las cuatro fotos siguen en `img/local/` y además se ven en
-  la tira de «Nosotros», así que repetirlas tiene un costo.
-- **Ponerles algo que no sea foto** —los rubros, los años, las marcas—, que es
-  la única opción que no depende de nadie más.
-- **Esconder la sección mientras no haya productos.** Una línea en
-  `vidriera.js`. Deja la página más corta pero no deja un hueco.
+**Lo primero que apareció y no se veía con las tarjetas vacías: en el teléfono
+las cuatro se pisan.** Todo el CSS que separa las tarjetas y deja una sola en
+pantalla chica colgaba de `album--vidriera`, que **sólo existe cuando hay
+productos**. Medido a 390 px con las tarjetas vacías: las cuatro visibles y
+solapadas —46→174, 96→237, 153→294 y 216→344—, o sea cuatro cintas encimadas.
+Se arregló con una clase `album--proximamente` que le presta al estado vacío el
+mismo reparto: **cuatro tarjetas arriba de 1280, dos abajo de 1280 y una sola
+abajo de 560**, que es la decisión del punto 45. `vidriera.js` se la saca
+cuando llega el contenido de verdad.
 
-**Y el escalón de 760 a 1176 px** (sale del punto 45): en esa franja, separar
-las cuatro las achica. A 760 quedan de 158 px y a 700 —donde todavía se
-solapan— son de 210, así que **agrandando la ventana las tarjetas se hacen más
-chicas**. Se arregla moviendo el corte de «separadas» a 1180 px, que es donde
-las dos cuentas se cruzan; abajo de eso quedarían solapadas, pero derechas. No
-se tocó porque depende de qué termine adentro de las tarjetas.
+**Cómo está dibujada la cinta, que costó cuatro vueltas.** El detalle completo
+está en el CSS, en el bloque «Las cuatro tarjetas encintadas»; acá van las dos
+cosas que conviene no volver a probar:
+
+1. **Las franjas no son un degradado.** Se intentó dos veces —una trama
+   continua de rayas finas, y después grupos de dos— y las dos fallaron por lo
+   mismo: un degradado pinta el fondo de una caja, así que las franjas quedan
+   **cortadas** contra los bordes de esa caja. Nico lo pidió explícito: «que las
+   franjas no estén cortadas, que hagan todo su recorrido». Cada franja es hoy
+   un elemento propio con `skewX(-28deg)`: un paralelogramo entero, de borde a
+   borde de la cinta.
+2. **Y eso arregló de paso la calidad de las líneas**, que Nico había marcado
+   antes. Un degradado CSS no lleva antialiasing: el borde en diagonal sale
+   serruchado, y había que fabricar el suavizado a mano dándole 1 px de
+   transición a cada parada. El borde de un elemento transformado lo dibuja el
+   compositor, que sí suaviza. El parche del medio píxel se fue con el
+   degradado.
+
+**El ángulo no es un número elegido:** la cinta va de esquina a esquina y la
+tarjeta es `5 / 7` clavado, así que la diagonal es la misma en toda pantalla
+—**54,462°**, largo **1,72 anchos** de tarjeta— y está escrita como constante.
+**Si se cambia la relación de la tarjeta —que es justo lo que discute el punto
+50— ese número hay que rehacerlo.**
+
+**Medido al final**, con el reflejo y todo: a 1920 la tarjeta es 343×480 y la
+cinta lleva 3 nombres de 115 px con 4 pares de franjas; a 1000 se ven las
+cuatro; a 1280 dos; a 390 queda una sola de 316×443 —contra los 128×205 de
+antes—. La sección pasó de 913 a 1058 px de alto en escritorio, que es el
+encabezado nuevo. **Cero errores de consola** en los cuatro anchos. Y con
+`?demo=1`, o sea el día que Santiago cargue: **cero cintas**, se va
+`album--proximamente`, entra `album--vidriera` y los dos encabezados se dan
+vuelta solos.
+
+**Lo que este punto deja abierto:** el escalón de 760 a 1176 px (sale del punto
+45). En esa franja, separar las cuatro las achica: a 760 quedan de 158 px y a
+700 —donde todavía se solapan— son de 210, así que **agrandando la ventana las
+tarjetas se hacen más chicas**. Se arregla moviendo el corte de «separadas» a
+1180 px, que es donde las dos cuentas se cruzan. Sigue sin tocarse, pero ahora
+por otro motivo: con las cintas puestas el estado vacío ya se lee bien en esa
+franja, así que el escalón sólo molesta de verdad cuando haya productos.
 
 **33. La vidriera: una sección para lo que entra al local.**
 **Al 24/8/2026 ya no está en debate: se armó, y está esperando productos — ver el

@@ -361,18 +361,29 @@
   </section>
 
   <!-- 6 · LA VIDRIERA ......................................... -->
-  <!-- La sección tiene DOS contenidos posibles y el mazo de fotos del local es
-       el de reserva, no el definitivo.
+  <!-- La sección tiene DOS contenidos posibles y los dos están escritos acá.
 
        Si Firestore tiene productos cargados, `js/vidriera.js` reemplaza las
        hojas por la máquina más cara de cada rubro —la vidriera del punto 33 de
-       PENDIENTES.md— y muestra el encabezado de acá abajo. Si el catálogo está
-       vacío, que es el estado del 24/8/2026, no se toca nada: quedan las cuatro
-       fotos del local y la sección sigue sin título.
+       PENDIENTES.md—, enciende el encabezado de la vidriera y apaga el de
+       "Próximamente". Si el catálogo está vacío, que es el estado de hoy, no
+       toca nada y queda lo que está escrito acá abajo.
 
-       Por eso el encabezado viene `hidden` desde el HTML y no lo escribe el JS:
-       el texto se lee y se corrige acá, con el resto de la página, y no
-       enterrado adentro de un template en un módulo.
+       LO QUE SE VE HOY SON LAS CUATRO TARJETAS ENCINTADAS, Y ES A PROPÓSITO
+       (1/9/2026). Lo decidió Nico: el cliente todavía no resolvió qué exhibir
+       acá, así que las tarjetas van cruzadas por una cinta de obra hasta que lo
+       decida. Antes estaban vacías —cuatro rectángulos blancos sin una palabra,
+       que era lo único de la página que no decía nada, y es lo primero que ve
+       cualquiera que entre—. Es el punto 48 de PENDIENTES.md.
+
+       Arriba va un título y nada más: "Próximamente", sin el párrafo que suelen
+       llevar los encabezados de la página. Lo pidió así Nico —"solamente el
+       título"— y tiene sentido: la cinta ya dice lo que un párrafo iba a
+       explicar, y dos veces lo mismo se lee como una disculpa.
+
+       Los dos encabezados viven en el HTML y no los escribe el JS: el texto se
+       lee y se corrige acá, con el resto de la página, y no enterrado adentro
+       de un template en un módulo.
 
        El mazo salió de "Nosotros" y quedó acá, entre las marcas y el contacto
        (24/8/2026). Adentro de Nosotros competía con la foto del frente y con la
@@ -389,27 +400,96 @@
         </p>
       </header>
 
-      <figure class="album" data-album>
+      <!-- El encabezado del estado vacío. Va visible desde el HTML —al revés
+           que el de arriba— porque es el que se ve mientras la base esté vacía,
+           que es lo que se publica. `vidriera.js` lo apaga el día que haya
+           productos y enciende el otro. -->
+      <header class="encabezado encabezado--claro" data-proximamente-encabezado>
+        <p class="rotulo rotulo--claro"><span class="marca-barras" aria-hidden="true"></span>En la vidriera</p>
+        <h2 class="titulo">Próximamente</h2>
+      </header>
+
+      <figure class="album album--proximamente" data-album>
         <!-- Cuatro tarjetas, derechas y separadas. Lo pidió Nico el 25/8/2026:
              primero "las 4 separadas y derechas" —salió el abanico girado, que
              venía del álbum de fotos— y después "sacale las fotos y el marco
              ese rojo, que ahora sean tarjetas blancas".
 
-             ESTÁN VACÍAS A PROPÓSITO Y NO ES EL ESTADO FINAL. Las fotos que
-             tenían —deposito, bremen, pasillo y mostrador— siguen en
-             `img/local/` y las cuatro se ven en la tira de "Nosotros". Si el
+             Las fotos que tenían —deposito, bremen, pasillo y mostrador— siguen
+             en `img/local/` y las cuatro se ven en la tira de "Nosotros". Si el
              catálogo tiene productos, `js/vidriera.js` reemplaza estas cuatro
              tarjetas por la mejor máquina de cada rubro (punto 43 de
-             PENDIENTES.md); con la base vacía, que es el estado de hoy, lo que
-             queda a la vista son las cuatro tarjetas blancas.
+             PENDIENTES.md).
+
+             La clase `album--proximamente` no es decorativa: es la que le presta
+             al estado vacío el reparto responsivo de la vidriera —cuatro
+             tarjetas, dos abajo de 1280 y una sola abajo de 560—. Sin ella las
+             cuatro se solapan en el teléfono y las cintas se pisan entre sí;
+             está medido en el punto 48 de PENDIENTES.md. `vidriera.js` se la
+             saca cuando llega el contenido de verdad.
+
+             LA CINTA. La pidió Nico el 1/9/2026, con una foto de una cinta de
+             peligro de obra y un dibujo encima de la propia página: una por
+             tarjeta, en diagonal y de esquina a esquina, con el nombre
+             repetido, y en el azul del logo en vez del rojo. Dice "acá se está
+             trabajando" sin tener que escribirlo, que es exactamente lo que
+             pasa: el cliente todavía no decidió qué exhibir.
+
+             Primero se pidió vertical y el dibujo la mostró en diagonal; manda
+             el dibujo. Y la diagonal salió mejor: la tarjeta es 5/7 clavado, así
+             que el ángulo y el largo de la cinta son los mismos en toda pantalla.
+
+             Va entera `aria-hidden`: son tres "Casa Morosi" por tarjeta y cuatro
+             tarjetas, o sea doce seguidos para quien escucha la página, y no
+             agregan nada a lo que ya dice el logo del encabezado.
 
              Las clases izq/der y hoja-1/hoja-2 no son decoración: dicen dónde
              cae cada una en el reparto y las usa `vidriera.js`. -->
         <div class="album__pila" data-pila>
-          <div class="album__hoja izq hoja-2"></div>
-          <div class="album__hoja der hoja-2"></div>
-          <div class="album__hoja izq hoja-1"></div>
-          <div class="album__hoja der hoja-1"></div>
+          <div class="album__hoja izq hoja-2">
+            <div class="cinta" aria-hidden="true">
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+            </div>
+          </div>
+          <div class="album__hoja der hoja-2">
+            <div class="cinta" aria-hidden="true">
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+            </div>
+          </div>
+          <div class="album__hoja izq hoja-1">
+            <div class="cinta" aria-hidden="true">
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+            </div>
+          </div>
+          <div class="album__hoja der hoja-1">
+            <div class="cinta" aria-hidden="true">
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+              <span class="cinta__marca">Casa Morosi</span>
+              <span class="cinta__par"><span class="cinta__franja"></span><span class="cinta__franja"></span></span>
+            </div>
+          </div>
         </div>
       </figure>
     </div>

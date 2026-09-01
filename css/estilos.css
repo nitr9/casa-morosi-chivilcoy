@@ -2216,7 +2216,8 @@ h1, h2, h3 {
    con esta apertura: las cuatro necesitan 958 px de punta a punta y a 1200 de
    ventana el contenedor da 1120. */
 @media (max-width: 1279px) {
-  .album--vidriera .hoja-2 { display: none; }
+  .album--vidriera .hoja-2,
+  .album--proximamente .hoja-2 { display: none; }
   .album--de-3.album--abierto .album__pila { transform: none; }
 }
 
@@ -2233,12 +2234,182 @@ h1, h2, h3 {
    desvanecido quedaba cortado a la mitad. El 34 % de la altura de la pila es lo
    que la máscara deja ver, y esos son los 143 px del tope. */
 @media (max-width: 559px) {
-  .album--vidriera .album__hoja:not(.izq.hoja-1) { display: none; }
-  .album--vidriera.album--abierto .izq.hoja-1 {
+  .album--vidriera .album__hoja:not(.izq.hoja-1),
+  .album--proximamente .album__hoja:not(.izq.hoja-1) { display: none; }
+  .album--vidriera.album--abierto .izq.hoja-1,
+  .album--proximamente.album--abierto .izq.hoja-1 {
     transform: translate3d(0, 0, 50px) scale(1.04);
   }
-  .album--vidriera .album__pila { width: min(76vw, 300px); }
-  .album--vidriera .album__reflejo { height: min(34vw, 143px); }
+  .album--vidriera .album__pila,
+  .album--proximamente .album__pila { width: min(76vw, 300px); }
+  .album--vidriera .album__reflejo,
+  .album--proximamente .album__reflejo { height: min(34vw, 143px); }
+}
+
+/* Las cuatro tarjetas encintadas
+   =========================================================================
+   POR QUÉ EXISTE
+
+   La sección tiene un problema que no es de diseño: **no hay qué exhibir**.
+   El cliente todavía no decidió qué va en la vidriera, y hasta el 1/9/2026 eso
+   se veía como cuatro rectángulos blancos vacíos —lo único de la página que no
+   decía nada, y lo primero que ve cualquiera que entre (punto 48)—.
+
+   Lo resolvió Nico con una imagen, no con una explicación: **una cinta de obra
+   cruzando cada tarjeta**. Una vidriera encintada se entiende sola, en el
+   pueblo y en cualquier lado, y no promete una fecha que nadie puede prometer.
+   La trajo con la foto de una cinta de PELIGRO real —blanca, franjas rojas
+   diagonales, la palabra en negro sobre los tramos blancos— y pidió lo mismo en
+   el azul del logo y con el nombre de la casa repetido.
+
+   EL ÁNGULO NO ES UN NÚMERO ELEGIDO
+
+   La cinta va de esquina a esquina, y la tarjeta tiene `aspect-ratio: 5 / 7`
+   clavado en `.album__pila`, así que la diagonal es la misma en toda pantalla:
+   `atan(7/5)` = **54,462°**, y su largo `sqrt(5² + 7²) / 5` = **1,7205 anchos**
+   de tarjeta. Por eso están escritos como constantes y no como un `clamp`: no
+   dependen del ancho de la ventana sino de la forma de la tarjeta. **Si alguna
+   vez se cambia la relación de la tarjeta —es justo lo que discute el punto
+   50—, estos dos números hay que rehacerlos.** Se va al 190 % de largo y no al
+   172,05 % para que las puntas salgan cortadas por el borde de la tarjeta en
+   vez de terminar justo en el vértice: una cinta pegada se pasa, no calza.
+
+   CÓMO SE ARMA EL DIBUJO DE LA CINTA, Y EL ERROR QUE SE COMETIÓ PRIMERO
+
+   Mirando la cinta de la foto, las franjas **no son una trama continua**: son
+   grupos de **dos franjas gruesas**, y entre grupo y grupo un tramo blanco
+   largo donde va la palabra. Eso es lo que le da el ritmo.
+
+   La primera versión lo hizo al revés: un `repeating-linear-gradient` de fondo
+   sobre toda la cinta, tapado por una caja blanca en cada nombre. Se veía como
+   una tela rayada de punta a punta con parches encima, y a esa escala las
+   franjas salían finas y apretadas. Nico lo bajó — "muy estirado, hacé que las
+   franjas sean más espaciadas, como la que te pasé".
+
+   Ahora la cinta es blanca lisa y las franjas son piezas propias
+   (`.cinta__rayas`) intercaladas entre los nombres, con dos franjas cada una.
+   De paso el nombre dejó de necesitar fondo: la cinta ya es blanca abajo.
+
+   Las franjas van inclinadas **respecto de la cinta**, no de la pantalla: como
+   la cinta ya está rotada 54,46°, en pantalla caen a unos 105°, que es lo que
+   hace que se lean como franjas de la cinta y no como rayas del fondo. */
+.cinta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 190%;
+  transform: translate(-50%, -50%) rotate(54.462deg);
+
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+
+  /* El cuerpo del nombre manda el alto de la cinta, y el aire de arriba y abajo
+     lo pone `.cinta__marca` —no acá—. Es la única forma de que el tramo del
+     nombre llegue a los dos bordes; ver el comentario de esa regla. */
+  font-size: clamp(.62rem, 1.25vw, 1rem);
+
+  background: var(--blanco);
+
+  /* Apoyada encima de la tarjeta, no impresa en ella: la sombra es lo único
+     que dice que la cinta es otro material pegado arriba. */
+  box-shadow: 0 1px 3px rgba(22, 32, 58, .28);
+}
+
+/* El grupo de dos franjas. Ancho fijo, no `flex: 1`: son dos franjas de un
+   grosor determinado, y estirarlas con el hueco disponible las haría más finas
+   o más gruesas según cuántos nombres entren. Lo que se estira es el blanco
+   entre los grupos, que es lo que hace el `space-between` de la cinta.
+
+   EL MEDIO PÍXEL DE CADA BORDE NO ES UN ADORNO: es lo que saca el escalonado.
+   Un degradado con paradas duras —`blanco 14%, navy 14%`— no lleva
+   antialiasing: el navegador decide para cada píxel si es de un color o del
+   otro y el borde sale serruchado. Acá se nota el doble porque la cinta está
+   rotada 54,46°, que es de los peores ángulos: ni vertical ni a 45°, así que
+   ningún borde cae sobre la grilla de píxeles. Lo vio Nico enseguida —
+   "corregí la calidad de las líneas". Con 1 px de transición el degradado
+   interpola esa franja y hace el antialiasing que el navegador no hace solo; a
+   esta escala no se ve como desenfoque sino como un borde limpio.
+
+   Por eso las paradas van en `em` y no en porcentajes, aunque el porcentaje
+   sería más corto de escribir: `calc()` no puede mezclar un `%` del eje del
+   degradado con un `px`, y sin el medio píxel vuelve el serrucho. */
+/* Las franjas van de a dos, y cada una es un elemento propio inclinado.
+
+   POR QUÉ NO ES UN DEGRADADO, QUE ERA LO OBVIO. Se probó de las dos maneras y
+   las dos fallaron por lo mismo: un degradado pinta el fondo de una caja, así
+   que las franjas quedan CORTADAS contra los bordes de esa caja. Primero salió
+   una trama continua de rayas finas de punta a punta, y después dos rombos
+   truncados flotando en el medio del bloque. Nico lo pidió explícito: "que las
+   franjas no estén cortadas, que hagan todo su recorrido".
+
+   Una franja que es un elemento no tiene ese problema. El `skewX` la convierte
+   en un paralelogramo entero, de borde a borde de la cinta, y sus lados son
+   bordes de elemento: los dibuja el compositor con antialiasing de verdad, que
+   es mejor que el medio píxel que había que simular a mano en el degradado.
+   Lo único que las corta es el borde de la tarjeta, y eso es lo que hace una
+   cinta pegada de verdad.
+
+   El par existe para que el `space-between` de la cinta no separe también las
+   dos franjas entre sí: reparte el blanco entre los siete elementos de arriba
+   —cuatro pares y tres nombres— y adentro del par manda el `gap`. */
+.cinta__par {
+  flex: none;
+  display: flex;
+  gap: .45em;
+}
+
+.cinta__franja {
+  width: 1.3em;
+  background: var(--navy);
+  /* La misma inclinación que tienen las franjas de la cinta de la foto. Va en
+     `skewX` y no en `rotate` porque el sesgo mantiene el alto: la franja sigue
+     tocando los dos bordes de la cinta, que es justamente lo que se pedía. */
+  transform: skewX(-28deg);
+}
+
+/* El tramo del nombre es igual al de la cinta de obra de verdad: fondo claro y
+   la palabra oscura encima, entre franja y franja. Se probó al revés —bloque
+   navy con el nombre en blanco, que era lo primero que había pedido Nico— y lo
+   volvió atrás al verlo: "dejalo con la letra como lo habías puesto antes".
+   Mirándolo tiene sentido, el bloque navy competía con las franjas y la cinta
+   se leía como tres cosas azules en fila en vez de como una cinta.
+
+   EL TRAMO BLANCO VA DE BORDE A BORDE DE LA CINTA, Y ES LO QUE COSTÓ.
+   Primero el aire de arriba y abajo lo ponía `.cinta` con su `padding-block`,
+   así que este bloque medía sólo el alto de la letra —12,8 px dentro de una
+   cinta de 35— y quedaban franjas asomando arriba y abajo del rectángulo
+   blanco: se veía un cartelito pegado encima de la cinta, no un pedazo de la
+   cinta. Lo cazó Nico apenas lo vio — "sacale el cuadro, dejá solamente la
+   palabra".
+
+   Por eso el `padding-block` vive acá y no en `.cinta`: la cinta toma su alto
+   de este bloque, así que el blanco llega por definición a los dos bordes y no
+   hay ningún número que mantener igual entre las dos reglas. Y es también lo
+   que le da el alto a `.cinta__rayas`, que no tiene contenido propio.
+
+   Ya no lleva fondo blanco: desde que las franjas son piezas aparte, la cinta
+   es blanca lisa abajo del nombre y no hay nada que tapar. */
+.cinta__marca {
+  display: flex;
+  align-items: center;
+
+  color: var(--navy);
+  padding: .85em .7em;
+
+  font-variation-settings: var(--ancho-rotulo);
+  font-weight: 800;
+  letter-spacing: .1em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* En el teléfono queda UNA tarjeta y es más grande (300 px contra los 128 de
+   antes), así que la cinta también: con el cuerpo atado a `vw` quedaba con
+   letra de tarjeta chica sobre una tarjeta grande. */
+@media (max-width: 559px) {
+  .cinta { font-size: .9rem; }
 }
 
 /* tira de fotos del local */
