@@ -727,7 +727,7 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: min(100svh, 780px);
+  min-height: 100svh;
   padding: 8rem 0 2rem;
   overflow: hidden;
   color: var(--blanco);
